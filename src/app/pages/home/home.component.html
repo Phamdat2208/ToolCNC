@@ -1,0 +1,70 @@
+<div class="home-container">
+  <!-- Banner Carousel -->
+  <nz-carousel [nzEffect]="'fade'" nzAutoPlay nzDotPosition="bottom">
+    <div nz-carousel-content *ngFor="let banner of banners">
+      <div class="banner-slide" [style.background]="banner.color">
+        <div class="banner-text">
+          <h1>{{ banner.title }}</h1>
+          <p>{{ banner.content }}</p>
+          <button
+            nz-button
+            nzType="default"
+            nzSize="large"
+            routerLink="/products"
+          >
+            Khám phá ngay
+          </button>
+        </div>
+      </div>
+    </div>
+  </nz-carousel>
+
+  <!-- Categories Section -->
+  <div class="categories-section">
+    <h2 class="section-title">Danh mục sản phẩm</h2>
+    <div nz-row [nzGutter]="[16, 16]" class="categories-grid">
+      <div nz-col nzXs="12" nzSm="8" nzMd="4" *ngFor="let cat of categories">
+        <div
+          class="category-card"
+          [routerLink]="['/products']"
+          [queryParams]="{ category: cat.name }"
+        >
+          <div class="category-icon-wrapper">
+            <nz-icon
+              [nzType]="cat.icon"
+              nzTheme="outline"
+              class="category-icon"
+            />
+          </div>
+          <span class="category-name">{{ cat.name }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Products -->
+  <div class="featured-section">
+    <h2 class="section-title">Sản phẩm nổi bật</h2>
+    <nz-spin [nzSpinning]="loading">
+      <div nz-row [nzGutter]="[24, 24]">
+        <div
+          nz-col
+          nzXs="24"
+          nzSm="12"
+          nzMd="8"
+          nzMd="8"
+          nzLg="6"
+          *ngFor="let product of featuredProducts"
+        >
+          <app-product-card [product]="product"></app-product-card>
+        </div>
+      </div>
+    </nz-spin>
+
+    <div class="view-all-btn">
+      <button nz-button nzType="dashed" nzSize="large" routerLink="/products">
+        Xem tất cả sản phẩm
+      </button>
+    </div>
+  </div>
+</div>

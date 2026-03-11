@@ -1,1 +1,92 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  /* Brand Colors */
+  --primary-color: #1890ff; /* Ant Design Blue */
+  --danger-color: #ff4d4f; /* Ant Design Red */
+  --success-color: #52c41a; /* Ant Design Green */
+
+  /* Text & Background */
+  --text-main: #262626;
+  --bg-gray: #f5f5f5;
+  --bg-white: #ffffff;
+
+  /* Layout Spacings */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 48px;
+
+  /* header dimensions */
+  --header-height: 64px;
+}
+
+body {
+  font-family:
+    "Roboto",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  background-color: var(--bg-gray);
+  margin: 0;
+  padding: 0;
+}
+
+/* Global utility classes */
+.shadow-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  background: var(--bg-white);
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+.text-danger {
+  color: var(--danger-color);
+}
+.text-success {
+  color: var(--success-color);
+}
+
+/* Global NG-ZORRO component radius overrides */
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-select-selector,
+.ant-picker,
+.ant-btn {
+  border-radius: 6px !important;
+}
+
+.ant-card {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+/* Custom Notification */
+.ant-notification-notice {
+  padding: 16px 20px !important;
+  border-radius: 12px !important;
+  width: 320px !important;
+}
+
+.ant-notification-notice-message {
+  font-size: 15px !important;
+  margin-bottom: 4px !important;
+}
+
+.ant-notification-notice-description {
+  font-size: 13px !important;
+}
+
+/* Global table center utility */
+.text-center-table th,
+.text-center-table td {
+  text-align: center !important;
+  vertical-align: middle !important;
+}

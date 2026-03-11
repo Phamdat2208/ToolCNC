@@ -1,0 +1,75 @@
+<div class="header-container">
+  <div class="logo">
+    <a routerLink="/"
+      ><span style="color: #1890ff; font-weight: bold; font-size: 24px"
+        >Tool</span
+      ><span style="color: #ff4d4f; font-weight: bold; font-size: 24px"
+        >CNC</span
+      ></a
+    >
+  </div>
+  <div class="search-bar">
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input type="text" nz-input placeholder="Tìm kiếm máy CNC, dao cụ..." />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <nz-icon nzType="search" />
+    </ng-template>
+  </div>
+  <div class="nav-menu">
+    <ul
+      nz-menu
+      nzMode="horizontal"
+      style="line-height: 64px; border-bottom: none"
+    >
+      <li nz-menu-item nzSelected routerLink="/">Trang chủ</li>
+      <li nz-menu-item routerLink="/products">Sản phẩm</li>
+      <li nz-menu-item>Khuyến mãi</li>
+      <li nz-menu-item>Hỗ trợ</li>
+    </ul>
+  </div>
+  <div class="header-actions">
+    <button nz-button nzType="text" class="cart-btn" (click)="goToCart()">
+      <nz-badge [nzCount]="cartCount">
+        <nz-icon nzType="shopping-cart" style="font-size: 20px" />
+      </nz-badge>
+    </button>
+
+    <ng-container
+      *ngIf="authService.currentUser$ | async as user; else loginBtn"
+    >
+      <a
+        nz-dropdown
+        [nzDropdownMenu]="userMenu"
+        nzPlacement="bottomRight"
+        class="user-dropdown"
+      >
+        <nz-icon nzType="user" /> {{ user.username }} <nz-icon nzType="down" />
+      </a>
+      <nz-dropdown-menu #userMenu="nzDropdownMenu">
+        <ul nz-menu>
+          <li nz-menu-item routerLink="/profile"><nz-icon nzType="profile" /> Hồ sơ cá nhân</li>
+          <li nz-menu-item routerLink="/profile"><nz-icon nzType="history" /> Đơn hàng của tôi</li>
+          <li nz-menu-divider *ngIf="authService.isAdmin()"></li>
+          <li
+            nz-menu-item
+            *ngIf="authService.isAdmin()"
+            routerLink="/products/new"
+          >
+            <nz-icon nzType="plus-circle" /> Thêm sản phẩm
+          </li>
+          <li nz-menu-divider></li>
+          <li nz-menu-item (click)="logout()" nzDanger>
+            <nz-icon nzType="logout" /> Đăng xuất
+          </li>
+        </ul>
+      </nz-dropdown-menu>
+    </ng-container>
+
+    <ng-template #loginBtn>
+      <button nz-button nzType="primary" nzShape="round" routerLink="/login">
+        Đăng nhập
+      </button>
+    </ng-template>
+  </div>
+</div>

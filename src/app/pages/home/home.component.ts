@@ -1,0 +1,65 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { NzCarouselModule } from 'ng-zorro-antd/carousel';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
+import { ProductService } from '../../services/product.service';
+
+@Component({
+  selector: 'app-home',
+  imports: [CommonModule, RouterLink, NzCarouselModule, NzCardModule, NzGridModule, NzButtonModule, NzIconModule, NzSpinModule, ProductCardComponent],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css'
+})
+export class HomeComponent implements OnInit {
+  private notification = inject(NzNotificationService);
+  private productService = inject(ProductService);
+
+  addToCart(product: any) {
+    this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`, { nzPlacement: 'topRight' });
+  }
+  banners = [
+    { title: 'Công nghệ phay CNC tiên tiến', content: 'Cải thiện độ chính xác và năng suất', color: '#1890ff' },
+    { title: 'Dao cụ giảm giá sốc', content: 'Giảm đến 30% cho đơn hàng dao phay thép gió', color: '#ff4d4f' },
+    { title: 'Tư vấn kỹ thuật gia công', content: 'Đội ngũ chuyên gia hỗ trợ 24/7', color: '#52c41a' }
+  ];
+
+  categories = [
+    { id: 1, name: 'Máy Phay CNC', icon: 'setting', link: '/products' },
+    { id: 2, name: 'Máy Tiện CNC', icon: 'tool', link: '/products' },
+    { id: 3, name: 'Dao Cụ Cắt Gọt', icon: 'scissor', link: '/products' },
+    { id: 4, name: 'Phụ Kiện Máy', icon: 'appstore', link: '/products' },
+    { id: 5, name: 'Dụng Cụ Đo', icon: 'dashboard', link: '/products' },
+    { id: 6, name: 'Vật Tư Tiêu Hao', icon: 'experiment', link: '/products' }
+  ];
+
+  featuredProducts: any[] = [];
+  loading = true;
+
+  ngOnInit() {
+    this.loadFeaturedProducts();
+  }
+
+  loadFeaturedProducts() {
+    this.loading = true;
+    this.productService.getProducts(0, 8, 'Mới nhất').subscribe({
+      next: (res) => {
+        this.featuredProducts = res.content.map((p: any) => ({
+          ...p,
+          img: p.imageUrl || `https://placehold.co/300x200?text=${encodeURIComponent(p.name)}`
+        }));
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching featured products', err);
+        this.loading = false;
+      }
+    });
+  }
+}

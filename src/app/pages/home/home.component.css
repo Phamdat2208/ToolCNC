@@ -1,0 +1,124 @@
+.home-container {
+  margin-top: -24px;
+  margin-left: -24px;
+  margin-right: -24px;
+}
+
+.banner-slide {
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+}
+
+.banner-text h1 {
+  color: #fff;
+  font-size: 42px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.banner-text p {
+  font-size: 20px;
+  margin-bottom: var(--space-xl);
+}
+
+.categories-section {
+  padding: var(--space-xl) var(--space-lg) 0 var(--space-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.category-card {
+  background-color: var(--bg-white);
+  border-radius: 8px;
+  padding: var(--space-lg);
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(24, 144, 255, 0.15); /* primary color shadow */
+}
+
+.category-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #e6f7ff; /* light primary color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+  transition: background-color 0.3s ease;
+}
+
+.category-card:hover .category-icon-wrapper {
+  background-color: var(--primary-color);
+}
+
+.category-icon {
+  font-size: 32px;
+  color: var(--primary-color);
+  transition: color 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+  color: var(--bg-white);
+}
+
+.category-name {
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--text-main);
+}
+
+.featured-section {
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: var(--text-main);
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--primary-color);
+  margin: 12px auto 0;
+  border-radius: 2px;
+}
+
+.product-price {
+  color: var(--danger-color);
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.card-actions {
+  margin-top: 16px;
+}
+
+.view-all-btn {
+  text-align: center;
+  margin-top: 48px;
+}

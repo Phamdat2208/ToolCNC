@@ -1,0 +1,10 @@
+<nz-breadcrumb class="app-breadcrumb">
+  <nz-breadcrumb-item *ngFor="let item of items; let last = last">
+    <ng-container *ngIf="!last && item.url; else textOnly">
+      <a [routerLink]="item.url">{{ item.label }}</a>
+    </ng-container>
+    <ng-template #textOnly>
+      {{ item.label }}
+    </ng-template>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>

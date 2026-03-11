@@ -1,0 +1,82 @@
+<div class="login-container">
+  <button
+    nz-button
+    class="back-button"
+    nzType="default"
+    nzShape="circle"
+    routerLink="/"
+  >
+    <nz-icon nzType="arrow-left" />
+  </button>
+  <div class="login-box">
+    <div class="login-header">
+      <h2>Đăng nhập Hệ thống</h2>
+      <p>Nhập tên tài khoản và mật khẩu để tiếp tục</p>
+    </div>
+
+    <form
+      nz-form
+      [formGroup]="loginForm"
+      class="login-form"
+      (ngSubmit)="submitForm()"
+    >
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng nhập tên đăng nhập!">
+          <nz-input-group nzPrefixIcon="user">
+            <input
+              type="text"
+              nz-input
+              formControlName="username"
+              placeholder="Tên đăng nhập"
+            />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng nhập mật khẩu!">
+          <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
+            <input
+              [type]="passwordVisible ? 'text' : 'password'"
+              nz-input
+              formControlName="password"
+              placeholder="Mật khẩu"
+            />
+          </nz-input-group>
+          <ng-template #suffixTemplate>
+            <nz-icon
+              [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+              (click)="passwordVisible = !passwordVisible"
+              class="password-toggle"
+            />
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <div nz-row class="login-form-margin">
+        <div nz-col [nzSpan]="13">
+          <label nz-checkbox formControlName="remember">
+            <span>Ghi nhớ đăng nhập</span>
+          </label>
+        </div>
+        <div nz-col [nzSpan]="11" class="login-form-forgot">
+          <a class="login-form-forgot">Quên mật khẩu?</a>
+        </div>
+      </div>
+
+      <button
+        nz-button
+        class="login-form-button login-form-margin"
+        [nzType]="'primary'"
+        [nzLoading]="isLoading"
+        nzBlock
+      >
+        Đăng nhập
+      </button>
+
+      <div class="login-footer">
+        Hoặc <a routerLink="/register">đăng ký ngay!</a>
+      </div>
+    </form>
+  </div>
+</div>

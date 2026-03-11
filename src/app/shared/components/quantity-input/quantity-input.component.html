@@ -1,0 +1,9 @@
+<div class="quantity-wrapper">
+  <nz-input-number
+    [ngModel]="quantity"
+    (ngModelChange)="onQuantityChange($event)"
+    [nzMin]="1"
+    [nzMax]="maxStock"
+    [nzStep]="1"
+  ></nz-input-number>
+</div>

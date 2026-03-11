@@ -1,0 +1,17 @@
+.app-layout {
+  min-height: 100vh;
+  margin-top: var(--header-height, 64px); /* Space for fixed header */
+}
+.inner-content {
+  padding: 24px;
+  background: var(--bg-gray, #f0f2f5);
+  min-height: calc(
+    100vh - var(--header-height, 64px) - 69px
+  ); /* approx header and footer height */
+}
+
+@media (max-width: 820px) {
+  .app-layout {
+    margin-top: 156px; /* Space for the wrapped header on small screens */
+  }
+}

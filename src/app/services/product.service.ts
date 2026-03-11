@@ -1,0 +1,59 @@
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProductService {
+  private apiUrl = 'http://localhost:8080/api/v1/public/products';
+  private adminApiUrl = 'http://localhost:8080/api/v1/admin/products';
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+
+  getProducts(page: number = 0, size: number = 12, sort?: string, keyword?: string): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    if (sort) {
+      if (sort === 'Giá: Thấp đến Cao') {
+        params = params.set('sort', 'price,asc');
+      } else if (sort === 'Giá: Cao đến Thấp') {
+        params = params.set('sort', 'price,desc');
+      }
+    }
+
+    if (keyword) {
+      params = params.set('keyword', keyword);
+    }
+
+    return this.http.get<any>(this.apiUrl, { params });
+  }
+
+  getProductById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
+
+  private getAuthHeaders(): { headers: HttpHeaders } {
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return { headers };
+  }
+
+  createProduct(product: any): Observable<any> {
+    return this.http.post<any>(this.adminApiUrl, product, this.getAuthHeaders());
+  }
+
+  updateProduct(id: number, product: any): Observable<any> {
+    return this.http.put<any>(`${this.adminApiUrl}/${id}`, product, this.getAuthHeaders());
+  }
+
+  createProductsBulk(products: any[]): Observable<any> {
+    return this.http.post<any>(`${this.adminApiUrl}/bulk`, products, this.getAuthHeaders());
+  }
+}

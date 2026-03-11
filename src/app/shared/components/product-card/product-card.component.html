@@ -1,0 +1,44 @@
+<nz-card
+  nzHoverable
+  [nzCover]="coverTemplate"
+  [routerLink]="['/products', product.id]"
+>
+  <nz-card-meta
+    [nzTitle]="product.name"
+    [nzDescription]="priceTemplate"
+  ></nz-card-meta>
+  <div
+    class="card-actions"
+    style="display: flex; flex-direction: column; gap: 8px"
+  >
+    <button
+      nz-button
+      nzType="primary"
+      nzBlock
+      (click)="$event.stopPropagation(); addToCart(product)"
+    >
+      <nz-icon nzType="shopping-cart" /> Thêm vào giỏ
+    </button>
+    <button
+      *ngIf="authService.isAdmin()"
+      nz-button
+      nzType="default"
+      nzBlock
+      (click)="$event.stopPropagation(); editProduct(product)"
+    >
+      <nz-icon nzType="edit" /> Sửa
+    </button>
+  </div>
+</nz-card>
+
+<ng-template #coverTemplate>
+  <div class="product-cover">
+    <img [alt]="product.name" [src]="product.img" />
+  </div>
+</ng-template>
+
+<ng-template #priceTemplate>
+  <span class="product-price">{{
+    product.price | currency: "VND" : "symbol"
+  }}</span>
+</ng-template>

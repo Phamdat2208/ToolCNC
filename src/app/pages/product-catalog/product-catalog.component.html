@@ -1,0 +1,108 @@
+<div class="catalog-container">
+  <app-page-breadcrumb [items]="breadcrumbItems"></app-page-breadcrumb>
+
+  <div nz-row nzGutter="24">
+    <!-- Sidebar / Filters -->
+    <div nz-col nzXs="24" nzMd="6" class="filters-sidebar">
+      <div class="filter-group">
+        <h3>Danh mục sản phẩm</h3>
+        <ul nz-menu nzMode="inline" class="category-menu">
+          <li
+            nz-menu-item
+            *ngFor="let cat of categories"
+            [nzSelected]="cat.name === activeCategory"
+            [routerLink]="['/products']"
+            [queryParams]="{ category: cat.name }"
+          >
+            <span>{{ cat.name }}</span>
+            <span class="count-badge">{{ cat.count }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="filter-group">
+        <h3>Khoảng giá (VND)</h3>
+        <nz-slider
+          nzRange
+          [nzMin]="0"
+          [nzMax]="200000000"
+          [nzStep]="1000000"
+          [(ngModel)]="priceRange"
+        ></nz-slider>
+        <div class="price-inputs">
+          <input nz-input [ngModel]="priceRange[0]" />
+          <span> - </span>
+          <input nz-input [ngModel]="priceRange[1]" />
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h3>Thương hiệu</h3>
+        <div class="brand-filters">
+          <label nz-checkbox>Haas</label><br />
+          <label nz-checkbox>Mazak</label><br />
+          <label nz-checkbox>Mitsubishi</label><br />
+          <label nz-checkbox>Sandvik</label>
+        </div>
+      </div>
+
+      <button nz-button nzType="primary" nzBlock>Lọc kết quả</button>
+    </div>
+
+    <!-- Product Grid -->
+    <div nz-col nzXs="24" nzMd="18">
+      <div class="catalog-header">
+        <h2>Tất cả sản phẩm</h2>
+        <div class="catalog-sort">
+          <span>Sắp xếp theo: </span>
+          <button
+            nz-button
+            nzType="text"
+            nz-dropdown
+            [nzDropdownMenu]="sortMenu"
+            nzPlacement="bottomRight"
+          >
+            {{ currentSort }} <nz-icon nzType="down" />
+          </button>
+          <nz-dropdown-menu #sortMenu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item (click)="changeSort('Mới nhất')">Mới nhất</li>
+              <li nz-menu-item (click)="changeSort('Giá: Thấp đến Cao')">
+                Giá: Thấp đến Cao
+              </li>
+              <li nz-menu-item (click)="changeSort('Giá: Cao đến Thấp')">
+                Giá: Cao đến Thấp
+              </li>
+              <li nz-menu-item (click)="changeSort('Bán chạy nhất')">
+                Bán chạy nhất
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+      </div>
+
+      <nz-spin [nzSpinning]="loading">
+        <div nz-row [nzGutter]="[16, 16]">
+          <div
+            nz-col
+            nzXs="24"
+            nzSm="12"
+            nzLg="8"
+            *ngFor="let product of products"
+          >
+            <app-product-card [product]="product"></app-product-card>
+          </div>
+        </div>
+
+        <div class="pagination-wrapper" *ngIf="totalProducts > 0">
+          <nz-pagination
+            [(nzPageIndex)]="pageIndex"
+            [nzTotal]="totalProducts"
+            [nzPageSize]="pageSize"
+            (nzPageIndexChange)="changePage($event)"
+          ></nz-pagination>
+        </div>
+      </nz-spin>
+    </div>
+  </div>
+</div>
