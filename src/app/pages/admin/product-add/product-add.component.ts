@@ -7,13 +7,13 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../services/product.service';
 
 @Component({
   selector: 'app-product-add',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzFormModule, NzInputModule, NzButtonModule, NzInputNumberModule, NzRadioModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzFormModule, NzInputModule, NzButtonModule, NzInputNumberModule, NzTabsModule],
   templateUrl: './product-add.component.html',
   styleUrl: './product-add.component.css'
 })
@@ -48,6 +48,10 @@ export class ProductAddComponent implements OnInit {
         this.loadProductDetails(this.productId);
       }
     });
+  }
+
+  back(): void {
+    this.router.navigate(['/']);
   }
 
   loadProductDetails(id: number): void {

@@ -1,0 +1,72 @@
+.orders-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+h2 {
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+.empty-orders {
+  text-align: center;
+  padding: 40px 0;
+  background: #fafafa;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.empty-orders p {
+  color: #8c8c8c;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.orders-content {
+  overflow-x: auto;
+}
+
+::ng-deep .status-pending .ant-select-selector {
+  border-color: #faad14 !important;
+  color: #faad14 !important;
+  font-weight: 600;
+}
+
+::ng-deep .status-confirmed .ant-select-selector {
+  border-color: #2f54eb !important;
+  color: #2f54eb !important;
+  font-weight: 600;
+}
+
+::ng-deep .status-shipped .ant-select-selector {
+  border-color: #1890ff !important;
+  color: #1890ff !important;
+  font-weight: 600;
+}
+
+::ng-deep .status-delivered .ant-select-selector {
+  border-color: #52c41a !important;
+  color: #52c41a !important;
+  font-weight: 600;
+}
+
+::ng-deep .status-cancelled .ant-select-selector {
+  border-color: #f5222d !important;
+  color: #f5222d !important;
+  font-weight: 600;
+}

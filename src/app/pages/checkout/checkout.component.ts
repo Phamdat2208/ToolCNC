@@ -101,7 +101,7 @@ export class CheckoutComponent {
         this.cartService.clearCart();
 
         this.currentStep = onSuccessStep; 
-        this.notification.success('Đặt hàng thành công!', successMsg, { nzPlacement: 'topRight' });
+        this.notification.success('Đặt hàng thành công!', successMsg);
       },
       error: (err) => {
         this.isSubmitting = false;

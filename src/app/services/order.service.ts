@@ -24,6 +24,14 @@ export class OrderService {
     return this.http.get<any[]>(`${this.apiUrl}/my-orders`, this.getAuthHeaders());
   }
 
+  getAllOrders(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/all`, this.getAuthHeaders());
+  }
+
+  updateOrderStatus(orderId: number, status: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${orderId}/status`, { status }, this.getAuthHeaders());
+  }
+
   createOrder(orderPayload: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/checkout`, orderPayload, this.getAuthHeaders());
   }

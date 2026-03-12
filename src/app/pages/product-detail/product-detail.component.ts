@@ -78,7 +78,7 @@ export class ProductDetailComponent implements OnInit {
     if (!this.product) return;
     this.cartService.addToCart(this.product, this.quantity, this.mainImage).subscribe(success => {
       if (success) {
-        this.notification.success('Thành công', `Đã thêm ${this.quantity} sản phẩm vào giỏ hàng`, { nzPlacement: 'topRight' });
+        this.notification.success('Thành công', `Đã thêm ${this.quantity} sản phẩm vào giỏ hàng`);
       }
     });
   }

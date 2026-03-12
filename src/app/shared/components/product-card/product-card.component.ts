@@ -27,7 +27,7 @@ export class ProductCardComponent {
   addToCart(product: any) {
     this.cartService.addToCart(product, 1, product.img).subscribe(success => {
       if (success) {
-        this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`, { nzPlacement: 'topRight' });
+        this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`);
       }
     });
   }

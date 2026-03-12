@@ -38,10 +38,26 @@
   border-right: none;
 }
 
-.category-menu .ant-menu-item {
+::ng-deep .category-menu .ant-menu-item {
+  display: flex !important;
+  align-items: center;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.cat-item-row {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 0;
+  width: 100%;
+}
+
+.cat-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 8px;
 }
 
 .count-badge {
@@ -50,6 +66,7 @@
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 12px;
+  flex-shrink: 0;
 }
 
 .price-inputs {

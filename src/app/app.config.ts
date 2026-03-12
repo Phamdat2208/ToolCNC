@@ -76,7 +76,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideNzI18n(vi_VN),
     provideNzIcons(icons),
-    provideNzConfig({ notification: { nzDuration: 3000, nzMaxStack: 3 } }),
+    provideNzConfig({ notification: { nzDuration: 3000, nzMaxStack: 3, nzPlacement: 'bottomRight' } }),
     importProvidersFrom(NzModalModule)
   ]
 };

@@ -12,7 +12,7 @@ export class ProductService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
 
-  getProducts(page: number = 0, size: number = 12, sort?: string, keyword?: string): Observable<any> {
+  getProducts(page: number = 0, size: number = 12, sort?: string, keyword?: string, category?: string, minPrice?: number, maxPrice?: number, brand?: string): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
@@ -25,9 +25,11 @@ export class ProductService {
       }
     }
 
-    if (keyword) {
-      params = params.set('keyword', keyword);
-    }
+    if (keyword) params = params.set('keyword', keyword);
+    if (category) params = params.set('category', category);
+    if (minPrice !== undefined && minPrice > 0) params = params.set('minPrice', minPrice.toString());
+    if (maxPrice !== undefined && maxPrice < 200000000) params = params.set('maxPrice', maxPrice.toString());
+    if (brand) params = params.set('brand', brand);
 
     return this.http.get<any>(this.apiUrl, { params });
   }

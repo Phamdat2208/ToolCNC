@@ -34,7 +34,7 @@ export class CartComponent {
 
   removeItem(id: number) {
     this.cartService.removeItem(id);
-    this.notification.success('Đã xóa sản phẩm', 'Sản phẩm đã được gỡ khỏi giỏ hàng.', { nzPlacement: 'topRight' });
+    this.notification.success('Đã xóa sản phẩm', 'Sản phẩm đã được gỡ khỏi giỏ hàng.');
   }
 
   updateQuantity(id: number, quantity: number) {

@@ -34,7 +34,11 @@ export class ProductCatalogComponent implements OnInit {
   pageSize = 12;
   pageIndex = 1;
 
-  priceRange: number[] = [0, 50000000];
+  priceRange: number[] = [0, 200000000];
+  readonly MAX_PRICE = 200000000;
+  selectedBrands: Set<string> = new Set();
+  knownBrands = ['Haas', 'Mazak', 'Mitsubishi', 'Sandvik'];
+
   categories = [
     { name: 'Máy Phay CNC', count: 12 },
     { name: 'Máy Tiện CNC', count: 8 },
@@ -60,8 +64,9 @@ export class ProductCatalogComponent implements OnInit {
   loadProducts() {
     this.loading = true;
     const apiPage = this.pageIndex - 1;
+    const brandStr = this.selectedBrands.size > 0 ? [...this.selectedBrands].join(',') : undefined;
 
-    this.productService.getProducts(apiPage, this.pageSize, this.currentSort).subscribe({
+    this.productService.getProducts(apiPage, this.pageSize, this.currentSort, undefined, this.activeCategory || undefined, this.priceRange[0], this.priceRange[1], brandStr).subscribe({
       next: (res) => {
         this.products = res.content.map((p: any) => ({
           ...p,
@@ -76,6 +81,19 @@ export class ProductCatalogComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  applyFilters() {
+    this.pageIndex = 1;
+    this.loadProducts();
+  }
+
+  toggleBrand(brand: string, checked: boolean) {
+    if (checked) {
+      this.selectedBrands.add(brand);
+    } else {
+      this.selectedBrands.delete(brand);
+    }
   }
 
   changePage(page: number) {

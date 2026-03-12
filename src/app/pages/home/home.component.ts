@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
   private productService = inject(ProductService);
 
   addToCart(product: any) {
-    this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`, { nzPlacement: 'topRight' });
+    this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`);
   }
   banners = [
     { title: 'Công nghệ phay CNC tiên tiến', content: 'Cải thiện độ chính xác và năng suất', color: '#1890ff' },

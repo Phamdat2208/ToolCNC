@@ -48,8 +48,14 @@
       </a>
       <nz-dropdown-menu #userMenu="nzDropdownMenu">
         <ul nz-menu>
-          <li nz-menu-item routerLink="/profile"><nz-icon nzType="profile" /> Hồ sơ cá nhân</li>
-          <li nz-menu-item routerLink="/profile"><nz-icon nzType="history" /> Đơn hàng của tôi</li>
+          <li nz-menu-item routerLink="/profile">
+            <nz-icon nzType="profile" /> Hồ sơ cá nhân
+          </li>
+          <li nz-menu-item routerLink="/orders">
+            <nz-icon nzType="history" />{{
+              authService.isAdmin() ? "Tất cả đơn hàng" : "Đơn hàng của tôi"
+            }}
+          </li>
           <li nz-menu-divider *ngIf="authService.isAdmin()"></li>
           <li
             nz-menu-item

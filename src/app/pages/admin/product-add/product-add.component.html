@@ -1,19 +1,27 @@
 <div class="product-add-container">
   <h2>{{ isEditMode ? "Sửa Sản Phẩm" : "Thêm Sản Phẩm Mới" }}</h2>
 
-  <nz-radio-group
-    *ngIf="!isEditMode"
-    [(ngModel)]="addMode"
-    class="mode-selector"
-  >
-    <label nz-radio-button nzValue="single">Thêm Đơn Lẻ</label>
-    <label nz-radio-button nzValue="bulk">Thêm Hàng Loạt (JSON)</label>
-  </nz-radio-group>
+  <!-- Màn hình Sửa: Hiển thị ngay Form đơn -->
+  <div class="form-wrapper" *ngIf="isEditMode">
+    <ng-container *ngTemplateOutlet="singleForm"></ng-container>
+  </div>
 
-  <div class="form-wrapper">
-    <!-- Single Product Form -->
+  <!-- Màn hình Thêm Mới: Hiển thị dạng Tabs -->
+  <nz-tabset *ngIf="!isEditMode">
+    <nz-tab nzTitle="Thêm Đơn Lẻ">
+      <div class="form-wrapper" style="padding-top: 16px">
+        <ng-container *ngTemplateOutlet="singleForm"></ng-container>
+      </div>
+    </nz-tab>
+    <nz-tab nzTitle="Thêm Hàng Loạt (JSON)">
+      <div class="form-wrapper" style="padding-top: 16px">
+        <ng-container *ngTemplateOutlet="bulkForm"></ng-container>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+
+  <ng-template #singleForm>
     <form
-      *ngIf="addMode === 'single'"
       nz-form
       [formGroup]="productForm"
       (ngSubmit)="submitSingle()"
@@ -73,21 +81,35 @@
 
       <nz-form-item>
         <nz-form-control>
-          <button
-            nz-button
-            nzType="primary"
-            nzSize="large"
-            [nzLoading]="isSubmitting"
-            style="width: 200px"
-          >
-            {{ isEditMode ? "Cập nhật" : "Lưu sản phẩm" }}
-          </button>
+          <div style="display: flex; gap: 12px">
+            <button
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              [nzLoading]="isSubmitting"
+              style="width: 200px"
+            >
+              {{ isEditMode ? "Cập nhật" : "Lưu sản phẩm" }}
+            </button>
+            <button
+              *ngIf="isEditMode"
+              nz-button
+              nzType="primary"
+              nzDanger
+              nzSize="large"
+              style="width: 200px"
+              (click)="back()"
+            >
+              Hủy bỏ
+            </button>
+          </div>
         </nz-form-control>
       </nz-form-item>
     </form>
+  </ng-template>
 
-    <!-- Bulk Product Form -->
-    <div *ngIf="addMode === 'bulk'" class="bulk-section">
+  <ng-template #bulkForm>
+    <div class="bulk-section">
       <p style="margin-bottom: 16px">
         Vui lòng dán danh sách chứa mảng (Array) các đối tượng JSON của sản
         phẩm. Mỗi đối tượng cần có `name`, `price`, `brand`.
@@ -122,5 +144,5 @@
         Thực thi nhập JSON
       </button>
     </div>
-  </div>
+  </ng-template>
 </div>

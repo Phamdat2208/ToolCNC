@@ -7,15 +7,32 @@
       <div class="filter-group">
         <h3>Danh mục sản phẩm</h3>
         <ul nz-menu nzMode="inline" class="category-menu">
+          <!-- Option All -->
+          <li
+            nz-menu-item
+            [nzSelected]="activeCategory === ''"
+            [routerLink]="['/products']"
+            [queryParams]="{}"
+            (click)="activeCategory = ''; loadProducts()"
+          >
+            <span class="cat-item-row">
+              <span class="cat-name">Tất cả sản phẩm</span>
+              <span class="count-badge">{{ totalProducts }}</span>
+            </span>
+          </li>
+
           <li
             nz-menu-item
             *ngFor="let cat of categories"
             [nzSelected]="cat.name === activeCategory"
             [routerLink]="['/products']"
             [queryParams]="{ category: cat.name }"
+            (click)="loadProducts()"
           >
-            <span>{{ cat.name }}</span>
-            <span class="count-badge">{{ cat.count }}</span>
+            <span class="cat-item-row">
+              <span class="cat-name">{{ cat.name }}</span>
+              <span class="count-badge">{{ cat.count }}</span>
+            </span>
           </li>
         </ul>
       </div>
@@ -30,23 +47,25 @@
           [(ngModel)]="priceRange"
         ></nz-slider>
         <div class="price-inputs">
-          <input nz-input [ngModel]="priceRange[0]" />
+          <input nz-input type="number" [(ngModel)]="priceRange[0]" placeholder="Từ" />
           <span> - </span>
-          <input nz-input [ngModel]="priceRange[1]" />
+          <input nz-input type="number" [(ngModel)]="priceRange[1]" placeholder="Đến" />
         </div>
       </div>
 
       <div class="filter-group">
         <h3>Thương hiệu</h3>
         <div class="brand-filters">
-          <label nz-checkbox>Haas</label><br />
-          <label nz-checkbox>Mazak</label><br />
-          <label nz-checkbox>Mitsubishi</label><br />
-          <label nz-checkbox>Sandvik</label>
+          <ng-container *ngFor="let brand of knownBrands">
+            <label nz-checkbox
+              [nzChecked]="selectedBrands.has(brand)"
+              (nzCheckedChange)="toggleBrand(brand, $event)"
+            >{{ brand }}</label><br />
+          </ng-container>
         </div>
       </div>
 
-      <button nz-button nzType="primary" nzBlock>Lọc kết quả</button>
+      <button nz-button nzType="primary" nzBlock (click)="applyFilters()">Lọc kết quả</button>
     </div>
 
     <!-- Product Grid -->
