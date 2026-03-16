@@ -39,6 +39,15 @@ export class HomeComponent implements OnInit {
     { id: 6, name: 'Vật Tư Tiêu Hao', icon: 'experiment', link: '/products' }
   ];
 
+  featuredBrands = [
+    { name: 'Makino', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/23/MAKINO-Logo.svg' },
+    { name: 'Mazak', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Mazak_logo.svg' },
+    { name: 'DMG Mori', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/da/Logo_DMG_MORI_black_png_%281%29.png' },
+    { name: 'Okuma', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/11/Okuma_Corporation_company_logo.svg' },
+    { name: 'SMTCL', logoUrl: 'https://www.smtcl-en.com/wp-content/uploads/2024/06/SMTCL%E9%80%8F%E6%98%8Emini.png' },
+    { name: 'Hitachi', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/76/Hitachi_Group_Logo.svg' }
+  ];
+
   featuredProducts: any[] = [];
   loading = true;
 
@@ -48,7 +57,7 @@ export class HomeComponent implements OnInit {
 
   loadFeaturedProducts() {
     this.loading = true;
-    this.productService.getProducts(0, 8, 'Mới nhất').subscribe({
+    this.productService.getProducts(0, 12, 'Mới nhất').subscribe({
       next: (res) => {
         this.featuredProducts = res.content.map((p: any) => ({
           ...p,

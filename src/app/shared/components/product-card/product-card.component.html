@@ -7,27 +7,47 @@
     [nzTitle]="product.name"
     [nzDescription]="priceTemplate"
   ></nz-card-meta>
-  <div
-    class="card-actions"
-    style="display: flex; flex-direction: column; gap: 8px"
-  >
-    <button
-      nz-button
-      nzType="primary"
-      nzBlock
-      (click)="$event.stopPropagation(); addToCart(product)"
-    >
-      <nz-icon nzType="shopping-cart" /> Thêm vào giỏ
-    </button>
-    <button
-      *ngIf="authService.isAdmin()"
-      nz-button
-      nzType="default"
-      nzBlock
-      (click)="$event.stopPropagation(); editProduct(product)"
-    >
-      <nz-icon nzType="edit" /> Sửa
-    </button>
+  <div class="card-actions">
+    <div class="action-row">
+      <!-- Thêm vào giỏ hàng -->
+      <button
+        nz-button
+        nzType="primary"
+        nzBlock
+        nz-tooltip
+        nzTooltipTitle="Thêm vào giỏ hàng"
+        (click)="$event.stopPropagation(); addToCart(product)"
+        class="btn-cart"
+      >
+        <nz-icon nzType="shopping-cart" />
+      </button>
+
+      <!-- Yêu thích -->
+      <button
+        nz-button
+        [nzType]="
+          wishlistService.isWishlisted(product.id) ? 'primary' : 'default'
+        "
+        [nzDanger]="wishlistService.isWishlisted(product.id)"
+        nz-tooltip
+        [nzTooltipTitle]="
+          wishlistService.isWishlisted(product.id)
+            ? 'Xóa khỏi yêu thích'
+            : 'Thêm vào yêu thích'
+        "
+        (click)="$event.stopPropagation(); toggleWishlist(product)"
+        class="btn-wishlist"
+      >
+        <nz-icon
+          [nzType]="
+            wishlistService.isWishlisted(product.id) ? 'heart' : 'heart'
+          "
+          [nzTheme]="
+            wishlistService.isWishlisted(product.id) ? 'fill' : 'outline'
+          "
+        />
+      </button>
+    </div>
   </div>
 </nz-card>
 

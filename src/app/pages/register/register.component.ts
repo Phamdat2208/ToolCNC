@@ -66,8 +66,11 @@ export class RegisterComponent {
         error: (err) => {
           this.isLoading = false;
           let errorMsg = 'Có lỗi xảy ra, vui lòng thử lại sau.';
-          if (err.status === 400 && err.error) {
-            errorMsg = err.error.message || err.error;
+          const beMsg: string = (err.error?.message || err.error || '').toLowerCase();
+          if (beMsg.includes('username')) {
+            errorMsg = 'Tên đăng nhập này đã được sử dụng. Vui lòng chọn tên khác.';
+          } else if (beMsg.includes('email')) {
+            errorMsg = 'Email này đã được đăng ký. Vui lòng dùng email khác.';
           }
           this.notification.error('Đăng ký thất bại', errorMsg);
         }

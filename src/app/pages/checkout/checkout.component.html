@@ -25,12 +25,23 @@
           <div nz-col nzXs="24" nzMd="12">
             <nz-form-item>
               <nz-form-label nzRequired>Số điện thoại</nz-form-label>
-              <nz-form-control nzErrorTip="Vui lòng nhập số điện thoại!">
+              <nz-form-control [nzErrorTip]="phoneErrorTpl">
                 <input
                   nz-input
                   formControlName="phone"
                   placeholder="VD: 0912345678"
+                  [minlength]="10"
+                  [maxlength]="11"
                 />
+                <ng-template #phoneErrorTpl let-control>
+                  <ng-container *ngIf="control.hasError('required')"
+                    >Vui lòng nhập số điện thoại!</ng-container
+                  >
+                  <ng-container *ngIf="control.hasError('pattern')"
+                    >Định dạng không hợp lệ (Bắt đầu bằng 0 hoặc
+                    +84)!</ng-container
+                  >
+                </ng-template>
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -42,10 +53,13 @@
             <nz-select
               formControlName="city"
               nzPlaceHolder="Chọn Tỉnh / Thành phố"
+              nzShowSearch
             >
-              <nz-option nzValue="hanoi" nzLabel="Hà Nội"></nz-option>
-              <nz-option nzValue="hcm" nzLabel="Hồ Chí Minh"></nz-option>
-              <nz-option nzValue="danang" nzLabel="Đà Nẵng"></nz-option>
+              <nz-option
+                *ngFor="let city of cities"
+                [nzValue]="city.value"
+                [nzLabel]="city.label"
+              ></nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -185,19 +199,19 @@
               </p>
               <p style="margin-bottom: 8px">
                 Số tiền:
-                <strong style="color: #f5222d; font-size: 16px">{{
+                <strong class="price-red text-lg">{{
                   finalTotal | currency: "VND" : "symbol"
                 }}</strong>
               </p>
               <p style="margin-bottom: 0">
                 Nội dung CK:
-                <strong style="color: #52c41a; font-size: 16px"
+                <strong class="text-success text-lg"
                   >DH DT {{ validateForm.value.phone }}</strong
                 >
               </p>
             </div>
           </div>
-          <div style="display: flex; gap: 16px; justify-content: center">
+          <div class="flex-center flex-gap-16">
             <button
               nz-button
               nzType="default"
@@ -213,7 +227,7 @@
               (click)="confirmTransfer()"
               [nzLoading]="isSubmitting"
               nzSize="large"
-              style="min-width: 200px"
+              class="min-w-200"
             >
               Tôi đã chuyển khoản
             </button>
@@ -237,100 +251,49 @@
         }}. Chúng tôi sẽ liên hệ trong ít phút để xác nhận đơn hàng."
       >
         <div nz-result-extra>
-          <div style="max-width: 600px; margin: 0 auto; margin-bottom: 24px">
-            <div
-              class="order-review-box"
-              style="
-                text-align: left;
-                background: #fafafa;
-                padding: 24px;
-                border-radius: 12px;
-                border: 1px solid #f0f0f0;
-              "
-            >
-              <h3
-                style="
-                  margin-top: 0;
-                  margin-bottom: 16px;
-                  border-bottom: 1px solid #f0f0f0;
-                  padding-bottom: 12px;
-                "
-              >
+          <div class="mb-24" style="max-width: 600px; margin-left: auto; margin-right: auto;">
+            <div class="order-review-box pt-16 shadow-card" style="text-align: left; padding: 24px; border: 1px solid var(--border-color);">
+              <h3 class="mb-16 pb-12" style="margin-top: 0; border-bottom: 1px solid var(--border-color);">
                 Biên lai điện tử
               </h3>
               <div
                 *ngFor="let item of checkedOutItems"
-                style="
-                  display: flex;
-                  align-items: center;
-                  margin-bottom: 16px;
-                  border-bottom: 1px dashed #f0f0f0;
-                  padding-bottom: 16px;
-                "
+                class="flex-center mb-16 pb-16"
+                style="border-bottom: 1px dashed var(--border-color);"
               >
                 <img
                   [src]="item.img"
                   alt="product"
-                  style="
-                    width: 50px;
-                    height: 50px;
-                    object-fit: cover;
-                    border-radius: 6px;
-                    margin-right: 16px;
-                    border: 1px solid #f0f0f0;
-                  "
+                  style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 16px; border: 1px solid var(--border-color);"
                 />
                 <div style="flex: 1">
-                  <div
-                    style="
-                      font-weight: 500;
-                      font-size: 14px;
-                      margin-bottom: 4px;
-                      line-height: 1.2;
-                    "
-                  >
+                  <div class="font-bold text-md mb-4" style="line-height: 1.2">
                     {{ item.name }}
                   </div>
-                  <div style="color: #8c8c8c; font-size: 12px">
+                  <div class="text-secondary text-sm">
                     Số lượng: {{ item.quantity }}
                   </div>
                 </div>
-                <div
-                  style="
-                    font-weight: bold;
-                    color: #f5222d;
-                    margin-left: 16px;
-                    white-space: nowrap;
-                  "
-                >
+                <div class="price-red whitespace-nowrap" style="margin-left: 16px">
                   {{ item.price * item.quantity | currency: "VND" : "symbol" }}
                 </div>
               </div>
-              <div
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  font-weight: bold;
-                  font-size: 18px;
-                  margin-top: 24px;
-                  padding-top: 16px;
-                "
-              >
+              <div class="flex-between font-bold text-lg mt-24 pt-16">
                 <span>Tổng số tiền:</span>
-                <span style="color: #f5222d">{{
+                <span class="text-danger">{{
                   finalTotal | currency: "VND" : "symbol"
                 }}</span>
               </div>
             </div>
           </div>
 
-          <button
-            nz-button
-            nzType="primary"
-            (click)="goHome()"
-            nzSize="large"
-            style="min-width: 200px"
-          >
+            <button
+              nz-button
+              nzType="primary"
+              (click)="goHome()"
+              nzSize="large"
+              class="min-w-200"
+            >
             Tiếp tục mua sắm
           </button>
         </div>

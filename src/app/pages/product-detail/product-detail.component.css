@@ -53,8 +53,29 @@
 .product-title {
   font-size: 28px;
   font-weight: bold;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   color: #262626;
+  flex: 1;
+}
+
+.title-with-admin {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.admin-edit-btn {
+  border-color: #fa8c16;
+  color: #fa8c16;
+  margin-top: 4px;
+}
+
+.admin-edit-btn:hover {
+  border-color: #ffa940;
+  color: #ffa940;
+  background-color: #fff7e6;
 }
 
 .product-meta {

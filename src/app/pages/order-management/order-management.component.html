@@ -22,7 +22,7 @@
           <td><strong>{{ order.trackingNumber }}</strong></td>
           <td *ngIf="isAdmin">
             {{ order.customerName }}<br>
-            <small style="color: #8c8c8c;">{{ order.phone }}</small>
+            <small class="text-secondary">{{ order.phone }}</small>
           </td>
           <td>{{ order.dateCreated | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ order.totalPrice | currency:'VND':'symbol' }}</td>
@@ -48,7 +48,7 @@
       </tbody>
     </nz-table>
     <div *ngIf="orders.length === 0" class="empty-orders">
-      <nz-icon nzType="inbox" nzTheme="outline" style="font-size: 40px; color: #ccc;" />
+      <nz-icon nzType="inbox" nzTheme="outline" style="font-size: 40px; color: var(--text-secondary);" />
       <p>Hệ thống chưa có đơn hàng nào.</p>
     </div>
   </div>
@@ -69,29 +69,29 @@
   >
     <ng-container *nzModalContent>
       <div *ngIf="selectedOrder">
-        <div style="margin-bottom: 16px; display: flex; justify-content: space-between;">
-          <span style="color: #8c8c8c;">Ngày đặt: {{ selectedOrder.dateCreated | date:'dd/MM/yyyy HH:mm' }}</span>
+        <div class="mb-16 flex-between">
+          <span class="text-secondary">Ngày đặt: {{ selectedOrder.dateCreated | date:'dd/MM/yyyy HH:mm' }}</span>
           <nz-tag [nzColor]="getStatusColor(selectedOrder.status)">{{ selectedOrder.status }}</nz-tag>
         </div>
         
         <nz-divider nzText="Danh sách sản phẩm" nzOrientation="left"></nz-divider>
 
         <div style="max-height: 400px; overflow-y: auto;">
-          <div *ngFor="let item of selectedOrder.items" style="display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #f0f0f0;">
-            <img [src]="item.imageUrl || 'https://placehold.co/80x80?text=No+Image'" alt="product image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-right: 16px; border: 1px solid #d9d9d9;" />
-            <div style="flex: 1;">
+          <div *ngFor="let item of selectedOrder.items" class="flex-center" style="padding: 12px; border-bottom: 1px solid var(--border-color);">
+            <img [src]="item.imageUrl || 'https://placehold.co/80x80?text=No+Image'" alt="product image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-right: 16px; border: 1px solid var(--border-color);" />
+            <div class="flex-1">
               <h4 style="margin: 0; font-size: 15px;">{{ item.productName }}</h4>
-              <p style="margin: 4px 0 0; color: #8c8c8c; font-size: 13px;">Đơn giá: {{ item.unitPrice | currency:'VND':'symbol' }} x {{ item.quantity }}</p>
+              <p class="mt-4 text-secondary text-sm" style="margin: 0;">Đơn giá: {{ item.unitPrice | currency:'VND':'symbol' }} x {{ item.quantity }}</p>
             </div>
-            <div style="font-weight: bold; color: #f5222d; font-size: 16px;">
+            <div class="price-red text-lg">
               {{ item.unitPrice * item.quantity | currency:'VND':'symbol' }}
             </div>
           </div>
         </div>
 
-        <div style="margin-top: 24px; padding: 16px; background: #fafafa; border-radius: 8px; text-align: right;">
-          <p style="margin: 0; font-size: 14px; color: #595959;">Tổng số lượng: <strong>{{ selectedOrder.totalQuantity }}</strong></p>
-          <p style="margin: 8px 0 0; font-size: 18px; color: #262626;">Thành tiền: <strong style="color: #f5222d;">{{ selectedOrder.totalPrice | currency:'VND':'symbol' }}</strong></p>
+        <div class="mt-24 pt-16 bg-gray shadow-card" style="text-align: right; padding: 16px;">
+          <p class="mb-8 text-md text-light">Tổng số lượng: <strong>{{ selectedOrder.totalQuantity }}</strong></p>
+          <p class="mb-0 text-lg">Thành tiền: <strong class="price-red">{{ selectedOrder.totalPrice | currency:'VND':'symbol' }}</strong></p>
         </div>
       </div>
     </ng-container>

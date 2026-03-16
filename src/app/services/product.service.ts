@@ -28,7 +28,7 @@ export class ProductService {
     if (keyword) params = params.set('keyword', keyword);
     if (category) params = params.set('category', category);
     if (minPrice !== undefined && minPrice > 0) params = params.set('minPrice', minPrice.toString());
-    if (maxPrice !== undefined && maxPrice < 200000000) params = params.set('maxPrice', maxPrice.toString());
+    if (maxPrice !== undefined && maxPrice < 2000000000) params = params.set('maxPrice', maxPrice.toString());
     if (brand) params = params.set('brand', brand);
 
     return this.http.get<any>(this.apiUrl, { params });

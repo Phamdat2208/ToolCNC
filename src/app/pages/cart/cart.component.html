@@ -1,16 +1,28 @@
 <div class="cart-container">
   <h2><nz-icon nzType="shopping-cart" /> Giỏ hàng của bạn</h2>
 
+  <div class="cart-actions-top" *ngIf="cartItems.length > 0">
+    <button nz-button nzType="default" routerLink="/products" nzSize="default">
+      <nz-icon nzType="arrow-left" /> Tiếp tục mua sắm
+    </button>
+  </div>
+
   <div nz-row nzGutter="24" *ngIf="cartItems.length > 0; else emptyCart">
     <div nz-col nzXs="24" nzLg="16">
-      <nz-table #cartTable [nzData]="cartItems" [nzShowPagination]="false" class="text-center-table">
+      <nz-table
+        #cartTable
+        [nzData]="cartItems"
+        [nzShowPagination]="false"
+        class="text-center-table"
+        [nzScroll]="{ x: '750px' }"
+      >
         <thead>
           <tr>
             <th>Sản phẩm</th>
-            <th>Đơn giá</th>
-            <th>Số lượng</th>
-            <th>Thành tiền</th>
-            <th>Thao tác</th>
+            <th nzWidth="130px">Đơn giá</th>
+            <th nzWidth="100px">Số lượng</th>
+            <th nzWidth="130px">Thành tiền</th>
+            <th nzWidth="80px">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -31,28 +43,13 @@
               {{ data.price * data.quantity | currency: "VND" : "symbol" }}
             </td>
             <td>
-              <a
-                nz-popconfirm
-                nzPopconfirmTitle="Bạn chắc chắn muốn xóa?"
-                (nzOnConfirm)="removeItem(data.id)"
-              >
-                <nz-icon
-                  nzType="delete"
-                  nzTheme="twotone"
-                  nzTwotoneColor="#1890ff"
-                  style="font-size: 20px"
-                />
-              </a>
+              <button nz-button nzDanger (click)="removeItem(data.id)">
+                <nz-icon nzType="delete" />
+              </button>
             </td>
           </tr>
         </tbody>
       </nz-table>
-
-      <div class="cart-actions-left">
-        <button nz-button nzType="default" routerLink="/products">
-          <nz-icon nzType="arrow-left" /> Tiếp tục mua sắm
-        </button>
-      </div>
     </div>
 
     <div nz-col nzXs="24" nzLg="8">

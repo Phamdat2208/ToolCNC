@@ -1,0 +1,28 @@
+<div class="wishlist-container">
+  <h2><nz-icon nzType="heart" nzTheme="fill" class="text-danger" /> Sản phẩm yêu thích</h2>
+
+  <nz-empty *ngIf="wishlistService.items().length === 0"
+    nzNotFoundContent="Bạn chưa có sản phẩm yêu thích nào"
+  ></nz-empty>
+
+  <div class="wishlist-grid" *ngIf="wishlistService.items().length > 0">
+    <div class="wishlist-item" *ngFor="let product of wishlistService.items()">
+      <a [routerLink]="['/products', product.id]" class="item-image-wrap">
+        <img [src]="product.img || product.imageUrl || 'https://placehold.co/200x200?text=No+Image'" [alt]="product.name" />
+      </a>
+      <div class="item-info">
+        <a [routerLink]="['/products', product.id]" class="item-name">{{ product.name }}</a>
+        <p class="item-brand">{{ product.brand }}</p>
+        <p class="item-price">{{ product.price | currency:'VND':'symbol' }}</p>
+      </div>
+      <div class="item-actions">
+        <button nz-button nzType="primary" (click)="addToCart(product)">
+          <nz-icon nzType="shopping-cart" /> Thêm vào giỏ
+        </button>
+        <button nz-button nzDanger (click)="removeFromWishlist(product.id)">
+          <nz-icon nzType="delete" />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

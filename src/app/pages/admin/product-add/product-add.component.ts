@@ -8,12 +8,15 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { FormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 import { ProductService } from '../../../services/product.service';
+import { CategoryService } from '../../../services/category.service';
 
 @Component({
   selector: 'app-product-add',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzFormModule, NzInputModule, NzButtonModule, NzInputNumberModule, NzTabsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzFormModule, NzInputModule, NzButtonModule, NzInputNumberModule, NzTabsModule, NzSelectModule],
   templateUrl: './product-add.component.html',
   styleUrl: './product-add.component.css'
 })
@@ -28,18 +31,23 @@ export class ProductAddComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
+  private categoryService = inject(CategoryService);
+  private location = inject(Location);
 
   isSubmitting = false;
+  categories: any[] = [];
 
   productForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     price: [0, [Validators.required, Validators.min(0)]],
     brand: ['', [Validators.required]],
+    categoryId: [null, [Validators.required]],
     description: [''],
     imageUrl: ['']
   });
 
   ngOnInit(): void {
+    this.loadCategories();
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -50,8 +58,23 @@ export class ProductAddComponent implements OnInit {
     });
   }
 
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (list) => {
+        this.categories = list;
+      },
+      error: (err) => {
+        console.error('Error loading categories', err);
+      }
+    });
+  }
+
+  onCategoryChange(event: any) {
+    console.log(event)
+  }
+
   back(): void {
-    this.router.navigate(['/']);
+    this.location.back();
   }
 
   loadProductDetails(id: number): void {
@@ -61,6 +84,7 @@ export class ProductAddComponent implements OnInit {
           name: product.name,
           price: product.price,
           brand: product.brand,
+          categoryId: product.category?.id,
           description: product.description,
           imageUrl: product.imageUrl
         });
@@ -86,7 +110,8 @@ export class ProductAddComponent implements OnInit {
           },
           error: (err) => {
             this.isSubmitting = false;
-            this.notification.error('Thất bại', 'Không thể cập nhật sản phẩm do lỗi máy chủ.');
+            const msg = typeof err.error === 'string' ? err.error : 'Không thể cập nhật sản phẩm do lỗi máy chủ.';
+            this.notification.error('Thất bại', msg);
             console.error(err);
           }
         });
@@ -99,7 +124,8 @@ export class ProductAddComponent implements OnInit {
           },
           error: (err) => {
             this.isSubmitting = false;
-            this.notification.error('Thất bại', 'Không thể thêm sản phẩm. Vui lòng kiểm tra quyền Admin hoặc server.');
+            const msg = typeof err.error === 'string' ? err.error : 'Không thể thêm sản phẩm. Vui lòng kiểm tra quyền Admin hoặc server.';
+            this.notification.error('Thất bại', msg);
             console.error(err);
           }
         });
@@ -135,7 +161,8 @@ export class ProductAddComponent implements OnInit {
         },
         error: (err) => {
           this.isSubmitting = false;
-          this.notification.error('Thất bại', 'Có lỗi xảy ra khi lưu trên server');
+          const msg = typeof err.error === 'string' ? err.error : 'Có lỗi xảy ra khi lưu trên server';
+          this.notification.error('Thất bại', msg);
           console.error(err);
         }
       });

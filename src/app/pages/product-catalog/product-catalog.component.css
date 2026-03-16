@@ -112,3 +112,12 @@
   display: flex;
   justify-content: center;
 }
+
+.empty-state-container {
+  padding: 60px 0;
+  text-align: center;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px dashed #d9d9d9;
+  margin-top: 24px;
+}

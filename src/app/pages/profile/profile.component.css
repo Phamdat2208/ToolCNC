@@ -1,20 +1,65 @@
 .profile-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 24px;
+  max-width: 800px;
+  margin: 24px auto;
+  padding: 32px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  margin-top: 24px;
 }
 
 .profile-container h2 {
   margin-bottom: 24px;
   color: #262626;
+  font-size: 22px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #262626;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 12px;
+}
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.info-table tr {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-table tr:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  background: #fafafa;
+  color: #595959;
+  font-weight: 500;
+  padding: 14px 20px;
+  width: 200px;
+  white-space: nowrap;
+  border-right: 1px solid #f0f0f0;
+}
+
+.info-value {
+  padding: 14px 20px;
+  color: #262626;
+}
+
+.role-badge {
+  color: #1890ff;
+  font-weight: bold;
 }
 
 .tab-content {
-  padding: 16px 0;
+  padding: 8px 0;
 }
 
 .loading-state {
@@ -22,18 +67,4 @@
   justify-content: center;
   align-items: center;
   height: 200px;
-}
-
-.empty-orders {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
-  color: #8c8c8c;
-}
-
-.empty-orders p {
-  margin-top: 16px;
-  font-size: 16px;
 }

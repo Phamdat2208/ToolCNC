@@ -28,8 +28,8 @@
   font-weight: bold;
   color: #f5222d;
 }
-.cart-actions-left {
-  margin: 24px 0 24px 0;
+.cart-actions-top {
+  margin-bottom: 16px;
 }
 .cart-summary {
   background: #fafafa;
@@ -81,4 +81,9 @@
   font-size: 18px;
   color: #8c8c8c;
   margin-bottom: 24px;
+}
+@media (max-width: 768px) {
+  .cart-container {
+    padding: 16px;
+  }
 }

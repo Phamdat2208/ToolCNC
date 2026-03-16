@@ -35,7 +35,12 @@ import {
   HistoryOutline,
   LogoutOutline,
   PlusCircleOutline,
-  EditOutline
+  EditOutline,
+  HeartOutline,
+  HeartFill,
+  InboxOutline,
+  MoonOutline,
+  SunOutline
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -44,6 +49,8 @@ const icons = [
   DownOutline,
   ArrowLeftOutline,
   ShoppingOutline,
+  HeartOutline,
+  HeartFill,
   SearchOutline,
   PhoneOutline,
   MailOutline,
@@ -63,7 +70,10 @@ const icons = [
   HistoryOutline,
   LogoutOutline,
   PlusCircleOutline,
-  EditOutline
+  EditOutline,
+  InboxOutline,
+  MoonOutline,
+  SunOutline
 ];
 
 registerLocaleData(vi);

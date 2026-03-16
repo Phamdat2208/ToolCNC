@@ -1,26 +1,88 @@
 <div class="header-container">
   <div class="logo">
     <a routerLink="/"
-      ><span style="color: #1890ff; font-weight: bold; font-size: 24px"
+      ><span
+        class="text-primary font-bold"
+        style="font-size: var(--font-size-title)"
         >Tool</span
-      ><span style="color: #ff4d4f; font-weight: bold; font-size: 24px"
+      ><span
+        class="text-danger font-bold"
+        style="font-size: var(--font-size-title)"
         >CNC</span
       ></a
     >
   </div>
   <div class="search-bar">
-    <nz-input-group [nzSuffix]="suffixIconSearch">
-      <input type="text" nz-input placeholder="Tìm kiếm máy CNC, dao cụ..." />
-    </nz-input-group>
-    <ng-template #suffixIconSearch>
-      <nz-icon nzType="search" />
-    </ng-template>
+    <div class="search-wrapper">
+      <nz-input-group [nzSuffix]="suffixIconSearch">
+        <input
+          type="text"
+          nz-input
+          placeholder="Tìm kiếm máy CNC, dao cụ..."
+          [(ngModel)]="searchKeyword"
+          (input)="onSearchInput()"
+          (keyup.enter)="onSearchEnter()"
+          (focus)="showDropdown = searchResults.length > 0 || isSearching"
+          autocomplete="off"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <nz-icon
+          *ngIf="!isSearching"
+          nzType="search"
+          (click)="onSearchEnter()"
+          style="cursor: pointer"
+        />
+        <nz-spin *ngIf="isSearching" nzSimple [nzSize]="'small'"></nz-spin>
+      </ng-template>
+
+      <!-- Dropdown kết quả tìm kiếm -->
+      <div class="search-dropdown" *ngIf="showDropdown">
+        <div *ngIf="isSearching" class="search-loading">Đang tìm kiếm...</div>
+        <ng-container *ngIf="!isSearching">
+          <div
+            *ngFor="let product of searchResults"
+            class="search-item"
+            (click)="goToProduct(product)"
+          >
+            <img
+              [src]="product.img"
+              [alt]="product.name"
+              class="search-item-img"
+            />
+            <div class="search-item-info">
+              <div class="search-item-name" [title]="product.name">
+                {{ product.name }}
+              </div>
+              <div class="search-item-price">
+                {{ product.price | currency: "VND" : "symbol" }}
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="searchResults.length === 0 && searchKeyword.trim()"
+            class="search-empty"
+          >
+            Không tìm thấy sản phẩm nào
+          </div>
+          <div
+            *ngIf="searchResults.length > 0"
+            class="search-view-all"
+            (click)="onSearchEnter()"
+          >
+            Xem tất cả kết quả cho "<strong>{{ searchKeyword }}</strong
+            >"
+          </div>
+        </ng-container>
+      </div>
+    </div>
   </div>
   <div class="nav-menu">
     <ul
       nz-menu
       nzMode="horizontal"
-      style="line-height: 64px; border-bottom: none"
+      class="no-border"
+      style="line-height: var(--header-height)"
     >
       <li nz-menu-item nzSelected routerLink="/">Trang chủ</li>
       <li nz-menu-item routerLink="/products">Sản phẩm</li>
@@ -32,6 +94,12 @@
     <button nz-button nzType="text" class="cart-btn" (click)="goToCart()">
       <nz-badge [nzCount]="cartCount">
         <nz-icon nzType="shopping-cart" style="font-size: 20px" />
+      </nz-badge>
+    </button>
+
+    <button nz-button nzType="text" class="cart-btn" (click)="gotoWishList()">
+      <nz-badge [nzCount]="wishlistCount">
+        <nz-icon nzType="heart" style="font-size: 20px" />
       </nz-badge>
     </button>
 

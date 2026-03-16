@@ -22,7 +22,19 @@
           </div>
 
           <div nz-col nzXs="24" nzMd="14" class="product-info">
-            <h1 class="product-title">{{ product.name }}</h1>
+            <div class="title-with-admin">
+              <h1 class="product-title">{{ product.name }}</h1>
+              <button
+                *ngIf="authService.isAdmin()"
+                nz-button
+                nzType="default"
+                nzShape="round"
+                class="admin-edit-btn"
+                (click)="editProduct()"
+              >
+                <nz-icon nzType="edit" /> Sửa thông tin
+              </button>
+            </div>
             <div class="product-meta">
               <span
                 >Mã SP: <b>{{ product.sku }}</b></span
@@ -55,7 +67,7 @@
                 <nz-icon
                   nzType="check-circle"
                   nzTheme="outline"
-                  style="color: #52c41a"
+                  style="color: var(--success-color)"
                 />
                 {{ feature }}
               </li>
@@ -98,7 +110,7 @@
       </div>
 
       <div class="detail-bottom shadow-card">
-        <nz-tabset>
+        <nz-tabset [nzAnimated]="false">
           <nz-tab nzTitle="Mô tả chi tiết">
             <div class="tab-content">
               <h3>Đặc điểm nổi bật</h3>

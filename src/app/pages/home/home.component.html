@@ -42,6 +42,24 @@
     </div>
   </div>
 
+  <!-- Featured Brands Section -->
+  <div class="brands-section">
+    <h2 class="section-title">Thương hiệu nổi bật</h2>
+    <div nz-row [nzGutter]="[16, 16]" class="brands-grid">
+      <div nz-col nzXs="12" nzSm="8" nzMd="4" *ngFor="let brand of featuredBrands">
+        <div
+          class="brand-card"
+          [routerLink]="['/products']"
+          [queryParams]="{ brand: brand.name }"
+        >
+          <div class="brand-logo-wrapper">
+            <img [src]="brand.logoUrl" [alt]="brand.name" class="brand-logo-img" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Featured Products -->
   <div class="featured-section">
     <h2 class="section-title">Sản phẩm nổi bật</h2>

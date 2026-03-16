@@ -23,3 +23,21 @@
 .card-actions {
   margin-top: 16px;
 }
+
+.action-row {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-cart {
+  flex: 1;
+}
+
+.btn-wishlist {
+  width: 44px;
+  flex-shrink: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -2,11 +2,23 @@
   <h2><nz-icon nzType="user" /> Quản lý Tài khoản</h2>
 
   <div class="tab-content" *ngIf="!isLoadingProfile; else loadingTemplate">
-    <nz-descriptions nzTitle="Thông tin cá nhân" nzBordered [nzColumn]="{ xxl: 2, xl: 2, lg: 2, md: 1, sm: 1, xs: 1 }">
-      <nz-descriptions-item nzTitle="Tên Đăng Nhập">{{ userInfo?.username }}</nz-descriptions-item>
-      <nz-descriptions-item nzTitle="Email">{{ userInfo?.email || 'Chưa cập nhật' }}</nz-descriptions-item>
-      <nz-descriptions-item nzTitle="Quyền hạn">{{ userInfo?.role }}</nz-descriptions-item>
-    </nz-descriptions>
+    <h3 class="section-title">Thông tin cá nhân</h3>
+    <table class="info-table">
+      <tbody>
+        <tr>
+          <td class="info-label">Tên Đăng Nhập</td>
+          <td class="info-value">{{ userInfo?.username }}</td>
+        </tr>
+        <tr>
+          <td class="info-label">Email</td>
+          <td class="info-value">{{ userInfo?.email || 'Chưa cập nhật' }}</td>
+        </tr>
+        <tr>
+          <td class="info-label">Quyền hạn</td>
+          <td class="info-value role-badge">{{ userInfo?.role }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <ng-template #loadingTemplate>

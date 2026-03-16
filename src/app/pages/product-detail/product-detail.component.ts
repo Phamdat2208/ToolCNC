@@ -9,9 +9,10 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
+import { AuthService } from '../../services/auth.service';
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { QuantityInputComponent } from '../../shared/components/quantity-input/quantity-input.component';
 
@@ -24,7 +25,9 @@ import { QuantityInputComponent } from '../../shared/components/quantity-input/q
 export class ProductDetailComponent implements OnInit {
   cartService = inject(CartService);
   productService = inject(ProductService);
+  authService = inject(AuthService);
   route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   product: any = null;
   breadcrumbItems: any[] = [];
@@ -81,6 +84,12 @@ export class ProductDetailComponent implements OnInit {
         this.notification.success('Thành công', `Đã thêm ${this.quantity} sản phẩm vào giỏ hàng`);
       }
     });
+  }
+
+  editProduct() {
+    if (this.product) {
+      this.router.navigate(['/products', this.product.id, 'edit']);
+    }
   }
 }
 

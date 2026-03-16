@@ -7,14 +7,14 @@
   </div>
 
   <!-- Màn hình Thêm Mới: Hiển thị dạng Tabs -->
-  <nz-tabset *ngIf="!isEditMode">
+  <nz-tabset *ngIf="!isEditMode" [nzAnimated]="false">
     <nz-tab nzTitle="Thêm Đơn Lẻ">
-      <div class="form-wrapper" style="padding-top: 16px">
+      <div class="form-wrapper pt-16">
         <ng-container *ngTemplateOutlet="singleForm"></ng-container>
       </div>
     </nz-tab>
     <nz-tab nzTitle="Thêm Hàng Loạt (JSON)">
-      <div class="form-wrapper" style="padding-top: 16px">
+      <div class="form-wrapper pt-16">
         <ng-container *ngTemplateOutlet="bulkForm"></ng-container>
       </div>
     </nz-tab>
@@ -62,6 +62,23 @@
       </nz-form-item>
 
       <nz-form-item>
+        <nz-form-label nzRequired>Danh mục</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng chọn danh mục">
+          <nz-select
+            (onChange)="onCategoryChange($event)"
+            formControlName="categoryId"
+            nzPlaceHolder="Chọn danh mục sản phẩm"
+          >
+            <nz-option
+              *ngFor="let cat of categories"
+              [nzValue]="cat.id"
+              [nzLabel]="cat.name"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
         <nz-form-label>Mô tả chi tiết</nz-form-label>
         <nz-form-control>
           <textarea nz-input formControlName="description" rows="4"></textarea>
@@ -81,23 +98,24 @@
 
       <nz-form-item>
         <nz-form-control>
-          <div style="display: flex; gap: 12px">
+          <div class="flex-gap-12">
             <button
               nz-button
               nzType="primary"
               nzSize="large"
               [nzLoading]="isSubmitting"
-              style="width: 200px"
+              class="w-200"
             >
               {{ isEditMode ? "Cập nhật" : "Lưu sản phẩm" }}
             </button>
             <button
               *ngIf="isEditMode"
               nz-button
+              type="button"
               nzType="primary"
               nzDanger
               nzSize="large"
-              style="width: 200px"
+              class="w-200"
               (click)="back()"
             >
               Hủy bỏ
@@ -110,27 +128,33 @@
 
   <ng-template #bulkForm>
     <div class="bulk-section">
-      <p style="margin-bottom: 16px">
+      <p class="mb-16">
         Vui lòng dán danh sách chứa mảng (Array) các đối tượng JSON của sản
         phẩm. Mỗi đối tượng cần có `name`, `price`, `brand`.
       </p>
       <textarea
         nz-input
         [(ngModel)]="bulkJson"
-        rows="15"
+        rows="18"
         placeholder='[
   { 
     "name": "Sản phẩm 1",
     "price": 500000,
-    "brand": "Makita"
+    "brand": "Makita",
+    "description": "...",
+    "imageUrl": "...",
+    "categoryId": 1
   },
   { 
     "name": "Sản phẩm 2",
     "price": 1200000,
-    "brand": "Bosch"
+    "brand": "Bosch",
+    "description": "...",
+    "imageUrl": "...",
+    "categoryId": 1
   }
 ]'
-        style="font-family: monospace"
+        class="font-mono"
       ></textarea>
 
       <button
@@ -138,7 +162,7 @@
         nzType="primary"
         nzSize="large"
         [nzLoading]="isSubmitting"
-        style="margin-top: 24px"
+        class="mt-24"
         (click)="submitBulk()"
       >
         Thực thi nhập JSON

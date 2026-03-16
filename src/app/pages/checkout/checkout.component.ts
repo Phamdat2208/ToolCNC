@@ -16,6 +16,7 @@ import { OrderService } from '../../services/order.service';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { VIETNAM_CITIES } from '../../shared/constants/cities';
 
 @Component({
   selector: 'app-checkout',
@@ -29,6 +30,8 @@ export class CheckoutComponent {
   isSubmitting = false;
   orderTrackingNumber = '';
   finalTotal = 0;
+
+  cities = VIETNAM_CITIES;
 
   get isTransfer() {
     return this.paymentMethod === 'transfer';
@@ -54,7 +57,14 @@ export class CheckoutComponent {
 
   validateForm: FormGroup = this.fb.group({
     fullName: [null, [Validators.required]],
-    phone: [null, [Validators.required]],
+    phone: [
+      null,
+      [
+        Validators.required,
+        Validators.pattern((/^(0|\+84)\d+$/)),
+        Validators.minLength(10), Validators.maxLength(11)
+      ]
+    ],
     address: [null, [Validators.required]],
     city: [null, [Validators.required]],
   });
@@ -75,7 +85,7 @@ export class CheckoutComponent {
   private submitOrder(onSuccessStep: number, successMsg: string) {
     this.isSubmitting = true;
     const formVal = this.validateForm.value;
-    
+
     const payload = {
       fullName: formVal.fullName,
       phone: formVal.phone,
@@ -93,14 +103,14 @@ export class CheckoutComponent {
       next: (res) => {
         this.isSubmitting = false;
         this.orderTrackingNumber = res.trackingNumber;
-        
+
         // Lấy items ra review trước khi clear giỏ hàng
         this.checkedOutItems = [...this.cartService.cartItems()];
         this.finalTotal = this.cartService.totalAmount;
-        
+
         this.cartService.clearCart();
 
-        this.currentStep = onSuccessStep; 
+        this.currentStep = onSuccessStep;
         this.notification.success('Đặt hàng thành công!', successMsg);
       },
       error: (err) => {

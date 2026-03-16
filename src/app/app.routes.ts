@@ -10,6 +10,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { ProductAddComponent } from './pages/admin/product-add/product-add.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { OrderManagementComponent } from './pages/order-management/order-management.component';
+import { WishlistComponent } from './pages/wishlist/wishlist.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -26,7 +27,8 @@ export const routes: Routes = [
       { path: 'cart', component: CartComponent },
       { path: 'checkout', component: CheckoutComponent },
       { path: 'profile', component: ProfileComponent },
-      { path: 'orders', component: OrderManagementComponent }
+      { path: 'orders', component: OrderManagementComponent },
+      { path: 'wishlist', component: WishlistComponent }
     ]
   }
 ];
