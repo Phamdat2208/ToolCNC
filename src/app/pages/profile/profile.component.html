@@ -1,29 +1,87 @@
 <div class="profile-container">
-  <h2><nz-icon nzType="user" /> Quản lý Tài khoản</h2>
+  <div class="profile-header-main">
+    <h2><nz-icon nzType="user" /> Quản lý Tài khoản</h2>
+    <div class="header-actions">
+      <ng-container *ngIf="!editMode; else editActionsTpl">
+        <button nz-button nzType="primary" *ngIf="!isLoadingProfile" (click)="toggleEdit()">
+          <nz-icon nzType="edit" /> Chỉnh sửa hồ sơ
+        </button>
+      </ng-container>
+      <ng-template #editActionsTpl>
+        <div class="form-actions-header">
+          <button nz-button nzType="default" (click)="cancelEdit()" [disabled]="isSaving">Hủy bỏ</button>
+          <button nz-button nzType="primary" [nzLoading]="isSaving" (click)="saveProfile()" class="btn-save-inline">
+            <nz-icon nzType="check" /> Lưu thay đổi
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
 
-  <div class="tab-content" *ngIf="!isLoadingProfile; else loadingTemplate">
-    <h3 class="section-title">Thông tin cá nhân</h3>
-    <table class="info-table">
-      <tbody>
-        <tr>
-          <td class="info-label">Tên Đăng Nhập</td>
-          <td class="info-value">{{ userInfo?.username }}</td>
-        </tr>
-        <tr>
-          <td class="info-label">Email</td>
-          <td class="info-value">{{ userInfo?.email || 'Chưa cập nhật' }}</td>
-        </tr>
-        <tr>
-          <td class="info-label">Quyền hạn</td>
-          <td class="info-value role-badge">{{ userInfo?.role }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="profile-card shadow-premium" *ngIf="!isLoadingProfile; else loadingTemplate">
+    <div class="view-mode">
+      <form nz-form [formGroup]="profileForm" nzLayout="vertical">
+        <div class="user-info-grid">
+          <div class="info-row">
+            <div class="info-label">Tên đăng nhập</div>
+            <div class="info-value">{{ userInfo?.username }}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Email</div>
+            <div class="info-value">{{ userInfo?.email || 'Chưa cập nhật' }}</div>
+          </div>
+          <div class="info-divider"></div>
+
+          <!-- Inline Editable: Họ và tên -->
+          <div class="info-row" [class.editing]="editMode">
+            <div class="info-label">Họ và tên</div>
+            <div class="info-value">
+              <ng-container *ngIf="!editMode; else editFullNameTpl">
+                <span class="emphasis">{{ userInfo?.fullName || 'Chưa cập nhật' }}</span>
+              </ng-container>
+              <ng-template #editFullNameTpl>
+                <nz-form-item class="inline-form-item">
+                  <nz-form-control>
+                    <input nz-input formControlName="fullName" placeholder="VD: Nguyễn Văn A" class="inline-input" />
+                  </nz-form-control>
+                </nz-form-item>
+              </ng-template>
+            </div>
+          </div>
+
+          <!-- Inline Editable: Số điện thoại -->
+          <div class="info-row" [class.editing]="editMode">
+            <div class="info-label">Số điện thoại</div>
+            <div class="info-value">
+              <ng-container *ngIf="!editMode; else editPhoneTpl">
+                <span class="emphasis">{{ userInfo?.phone || 'Chưa cập nhật' }}</span>
+              </ng-container>
+              <ng-template #editPhoneTpl>
+                <nz-form-item class="inline-form-item">
+                  <nz-form-control [nzErrorTip]="phoneErrorTpl">
+                    <input nz-input formControlName="phone" placeholder="VD: 0912345678" class="inline-input" />
+                    <ng-template #phoneErrorTpl let-control>
+                      <ng-container *ngIf="control.hasError('pattern')">Số điện thoại không hợp lệ!</ng-container>
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </ng-template>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-label">Quyền hạn</div>
+            <div class="info-value"><span class="role-badge">{{ userInfo?.role }}</span></div>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 
   <ng-template #loadingTemplate>
     <div class="loading-state">
       <nz-spin nzSimple nzSize="large"></nz-spin>
+      <p>Đang tải thông tin...</p>
     </div>
   </ng-template>
 </div>

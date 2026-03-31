@@ -12,6 +12,6 @@
 
 @media (max-width: 820px) {
   .app-layout {
-    margin-top: 156px; /* Space for the wrapped header on small screens */
+    margin-top: 100px; /* Adjusted from 156px to remove the gap */
   }
 }

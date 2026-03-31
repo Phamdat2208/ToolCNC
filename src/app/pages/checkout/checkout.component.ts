@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -16,22 +16,126 @@ import { OrderService } from '../../services/order.service';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { VIETNAM_CITIES } from '../../shared/constants/cities';
+import { LocationService, Province, Ward } from '../../services/location.service';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-checkout',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NzStepsModule, NzFormModule, NzInputModule, NzSelectModule, NzButtonModule, NzRadioModule, NzGridModule, NzDividerModule, NzResultModule, NzSpinModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    ReactiveFormsModule, 
+    NzStepsModule, 
+    NzFormModule, 
+    NzInputModule, 
+    NzSelectModule, 
+    NzButtonModule, 
+    NzRadioModule, 
+    NzGridModule, 
+    NzDividerModule, 
+    NzResultModule, 
+    NzSpinModule, 
+    NzTagModule, 
+    NzIconModule
+  ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnInit {
   currentStep = 0;
   paymentMethod = 'cod';
   isSubmitting = false;
   orderTrackingNumber = '';
   finalTotal = 0;
 
-  cities = VIETNAM_CITIES;
+  // New Location Fields
+  provinces: Province[] = [];
+  wards: Ward[] = [];
+  isLoadingProvinces = false;
+  isLoadingWards = false;
+
+  private fb = inject(FormBuilder);
+  private notification = inject(NzNotificationService);
+  private router = inject(Router);
+  cartService = inject(CartService);
+  private orderService = inject(OrderService);
+  private authService = inject(AuthService);
+  private locationService = inject(LocationService);
+
+  ngOnInit(): void {
+    this.loadProvinces();
+
+    // Tự động điền dữ liệu từ profile nếu có
+    this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.validateForm.patchValue({
+          fullName: this.validateForm.get('fullName')?.value || user.fullName || '',
+          phone: this.validateForm.get('phone')?.value || user.phone || ''
+        });
+      }
+    });
+
+    // Nếu quay lại trang này khi đã có dữ liệu, re-validate
+    if (this.validateForm.get('fullName')?.value) {
+      this.validateForm.get('fullName')?.updateValueAndValidity();
+    }
+
+    // Khởi tạo trạng thái disable cho xã/phường nếu chưa chọn tỉnh
+    if (!this.validateForm.get('provinceCode')?.value) {
+      this.validateForm.get('wardCode')?.disable();
+    }
+  }
+
+  loadProvinces() {
+    this.isLoadingProvinces = true;
+    this.locationService.getProvinces().subscribe({
+      next: (data) => {
+        this.provinces = data;
+        this.isLoadingProvinces = false;
+      },
+      error: () => {
+        this.notification.error('Lỗi', 'Không thể tải danh sách tỉnh thành');
+        this.isLoadingProvinces = false;
+      }
+    });
+  }
+
+  onProvinceChange(code: number | null) {
+    if (!code) {
+      // Nếu xóa chọn tỉnh, xóa và disable xã/phường
+      this.validateForm.get('wardCode')?.disable();
+      this.validateForm.patchValue({ provinceName: null, wardCode: null, wardName: null });
+      this.wards = [];
+      return;
+    }
+
+    const province = this.provinces.find(p => p.code === code);
+    if (province) {
+      this.validateForm.get('wardCode')?.enable();
+      this.validateForm.patchValue({ provinceName: province.name, wardCode: null, wardName: null });
+    }
+    
+    this.wards = [];
+    this.isLoadingWards = true;
+    this.locationService.getWards(code).subscribe({
+      next: (data) => {
+        this.wards = data;
+        this.isLoadingWards = false;
+      },
+      error: () => {
+        this.notification.error('Lỗi', 'Không thể tải danh sách xã/phường');
+        this.isLoadingWards = false;
+      }
+    });
+  }
+
+  onWardChange(code: number) {
+    const ward = this.wards.find(w => w.code === code);
+    if (ward) {
+      this.validateForm.patchValue({ wardName: ward.name });
+    }
+  }
 
   get isTransfer() {
     return this.paymentMethod === 'transfer';
@@ -44,33 +148,34 @@ export class CheckoutComponent {
     return ['Thông tin giao hàng', 'Xác nhận & Thanh toán', 'Hoàn tất'];
   }
 
-  private fb = inject(FormBuilder);
-  private notification = inject(NzNotificationService);
-  private router = inject(Router);
-  cartService = inject(CartService);
-  private orderService = inject(OrderService);
-  private authService = inject(AuthService);
-
   get cartTotal() {
     return this.cartService.totalAmount;
   }
 
   validateForm: FormGroup = this.fb.group({
-    fullName: [null, [Validators.required]],
+    fullName: [null],
     phone: [
       null,
       [
-        Validators.required,
         Validators.pattern((/^(0|\+84)\d+$/)),
         Validators.minLength(10), Validators.maxLength(11)
       ]
     ],
+    provinceCode: [null, [Validators.required]],
+    provinceName: [null, [Validators.required]],
+    wardCode: [null, [Validators.required]],
+    wardName: [null, [Validators.required]],
     address: [null, [Validators.required]],
-    city: [null, [Validators.required]],
   });
 
   goHome(): void {
     this.router.navigate(['/']);
+  }
+
+  copyToClipboard(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      this.notification.success('Đã sao chép', `Nội dung: ${text}`);
+    });
   }
 
   // MOCK DATA for Success Screen
@@ -89,7 +194,10 @@ export class CheckoutComponent {
     const payload = {
       fullName: formVal.fullName,
       phone: formVal.phone,
-      city: formVal.city,
+      provinceCode: formVal.provinceCode,
+      provinceName: formVal.provinceName,
+      wardCode: formVal.wardCode,
+      wardName: formVal.wardName,
       address: formVal.address,
       paymentMethod: this.paymentMethod,
       items: this.cartService.cartItems().map(item => ({

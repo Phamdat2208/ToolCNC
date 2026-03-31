@@ -1,0 +1,255 @@
+<div class="support-container">
+  <!-- Hero Section -->
+  <section class="support-hero">
+    <div class="container animate-up">
+      <h1 class="hero-title">Chúng tôi có thể giúp gì cho bạn?</h1>
+      <div class="hero-search-container">
+        <nz-input-group [nzPrefix]="prefixIcon" [nzSuffix]="suffixButton" class="hero-search-group">
+          <input 
+            type="text" 
+            nz-input 
+            placeholder="Tìm kiếm giải pháp kỹ thuật, mẫu máy CNC..." 
+            [(ngModel)]="searchQuery"
+            (input)="onSearch()"
+          />
+        </nz-input-group>
+        <ng-template #prefixIcon>
+          <nz-icon nzType="search" class="search-icon-anim" />
+        </ng-template>
+        <ng-template #suffixButton>
+          <button nz-button nzType="primary" class="search-btn-hero" (click)="onSearch()">
+            Tìm kiếm
+          </button>
+        </ng-template>
+      </div>
+      <p class="hero-subtitle">Hoặc chọn một trong những chủ đề phổ biến dưới đây</p>
+    </div>
+  </section>
+
+  <!-- Categories Grid -->
+  <section class="container mt-xxl categories-section">
+    <div nz-row [nzGutter]="[24, 24]">
+      <div *ngFor="let cat of categories" nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6">
+        <div class="category-card-wrapper">
+          <nz-card class="category-card hover-glow">
+            <div class="cat-icon-box">
+              <nz-icon [nzType]="cat.icon" />
+            </div>
+            <h3 class="cat-title">{{ cat.title }}</h3>
+            <p class="cat-desc">{{ cat.desc }}</p>
+            <a class="cat-link">Xem thêm <nz-icon nzType="arrow-right" /></a>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs Section -->
+  <section class="container mt-xl faq-section">
+    <h2 class="section-title text-center">Câu hỏi thường gặp</h2>
+    <div class="faq-content mt-xl">
+      <nz-collapse [nzBordered]="false" class="custom-collapse">
+        <nz-collapse-panel 
+          *ngFor="let faq of filteredFaqs" 
+          [nzHeader]="faq.question" 
+          [nzActive]="faq.active"
+          class="faq-panel"
+        >
+          <p class="faq-answer">{{ faq.answer }}</p>
+        </nz-collapse-panel>
+      </nz-collapse>
+      <div *ngIf="filteredFaqs.length === 0" class="text-center py-xl">
+        <p class="text-secondary">Không tìm thấy kết quả phù hợp cho "{{ searchQuery }}"</p>
+        <button nz-button nzType="link" (click)="searchQuery=''; onSearch()">Xóa tìm kiếm</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Order Tracking Section -->
+  <section class="container mt-xl tracking-section">
+    <div class="tracking-card">
+      <div class="tracking-header">
+        <div class="tracking-icon-box">
+          <nz-icon nzType="search" />
+        </div>
+        <div>
+          <h2 class="tracking-title">Theo dõi đơn hàng</h2>
+          <p class="tracking-subtitle">Nhập mã đơn hàng để xem tiến trình vận chuyển theo thời gian thực</p>
+        </div>
+      </div>
+
+      <div class="tracking-search-row">
+        <nz-input-group [nzPrefix]="trackPrefix" class="tracking-input-group">
+          <input nz-input class="tracking-input" placeholder="Nhập mã đơn hàng (VD: TCNC-A1B2C3D4)"
+            [(ngModel)]="trackingCode" (keyup.enter)="trackOrderByCode()" />
+        </nz-input-group>
+        <ng-template #trackPrefix>
+          <nz-icon nzType="barcode" style="font-size: 18px; color: var(--primary-color)" />
+        </ng-template>
+        <button nz-button nzType="primary" class="tracking-btn" (click)="trackOrderByCode()" [nzLoading]="isTracking">
+          <nz-icon nzType="search" /> Tra cứu
+        </button>
+      </div>
+
+      <div *ngIf="isTracking" class="tracking-loading">
+        <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+        <p>Đang tra cứu đơn hàng...</p>
+      </div>
+
+      <div *ngIf="trackingError && !isTracking" class="tracking-error animate-up">
+        <nz-icon nzType="exclamation-circle" />
+        <p>{{ trackingError }}</p>
+      </div>
+
+      <div *ngIf="trackedOrder && !isTracking" class="tracking-result animate-up">
+        <nz-divider></nz-divider>
+
+        <div class="track-summary">
+          <div class="track-code-badge">
+            <nz-icon nzType="barcode" /> {{ trackedOrder.trackingNumber }}
+          </div>
+          <nz-tag [nzColor]="getStatusColor(trackedOrder.status)" class="status-tag">
+            {{ getStatusLabel(trackedOrder.status) }}
+          </nz-tag>
+        </div>
+
+        <div *ngIf="!isCancelled()" class="order-timeline">
+          <div *ngFor="let step of ORDER_STEPS; let i = index"
+            class="timeline-step"
+            [class.step-finish]="getStepState(step.status, trackedOrder.status) === 'finish'"
+            [class.step-process]="getStepState(step.status, trackedOrder.status) === 'process'"
+            [class.step-wait]="getStepState(step.status, trackedOrder.status) === 'wait'">
+            <div class="step-connector-line" *ngIf="i > 0"></div>
+            <div class="step-dot">
+              <nz-icon [nzType]="getStepState(step.status, trackedOrder.status) === 'finish' ? 'check' : step.icon" />
+            </div>
+            <div class="step-label">{{ step.label }}</div>
+          </div>
+        </div>
+
+        <div *ngIf="isCancelled()" class="cancelled-banner">
+          <nz-icon nzType="close-circle" /> Đơn hàng này đã bị hủy.
+        </div>
+
+        <div nz-row [nzGutter]="[24, 16]" class="track-details mt-lg">
+          <div nz-col [nzXs]="24" [nzSm]="12">
+            <div class="detail-item"><span class="detail-label"><nz-icon nzType="user" /> Người nhận</span><span class="detail-value">{{ trackedOrder.fullName }}</span></div>
+          </div>
+          <div nz-col [nzXs]="24" [nzSm]="12">
+            <div class="detail-item"><span class="detail-label"><nz-icon nzType="phone" /> Điện thoại</span><span class="detail-value">{{ trackedOrder.phone }}</span></div>
+          </div>
+          <div nz-col [nzXs]="24" [nzSm]="12">
+            <div class="detail-item"><span class="detail-label"><nz-icon nzType="environment" /> Địa chỉ</span><span class="detail-value">{{ trackedOrder.address }}</span></div>
+          </div>
+          <div nz-col [nzXs]="24" [nzSm]="12">
+            <div class="detail-item"><span class="detail-label"><nz-icon nzType="credit-card" /> Thanh toán</span><span class="detail-value">{{ trackedOrder.paymentMethod === 'COD' ? 'Thu hộ (COD)' : 'Chuyển khoản' }}</span></div>
+          </div>
+          <div nz-col [nzXs]="24" [nzSm]="12">
+            <div class="detail-item"><span class="detail-label"><nz-icon nzType="calendar" /> Ngày đặt</span><span class="detail-value">{{ trackedOrder.dateCreated | date: 'dd/MM/yyyy HH:mm' }}</span></div>
+          </div>
+          <div nz-col [nzXs]="24" [nzSm]="12">
+            <div class="detail-item"><span class="detail-label"><nz-icon nzType="dollar" /> Tổng tiền</span><span class="detail-value price-value">{{ trackedOrder.totalPrice | currency: 'VND' : 'symbol' }}</span></div>
+          </div>
+        </div>
+
+        <div class="track-items mt-lg" *ngIf="trackedOrder.items?.length">
+          <h4 class="items-title">Sản phẩm trong đơn ({{ trackedOrder.totalQuantity }} sản phẩm)</h4>
+          <div class="item-row" *ngFor="let item of trackedOrder.items">
+            <img [src]="item.imageUrl || 'https://placehold.co/48x48?text=?'" [alt]="item.productName" class="item-img" />
+            <div class="item-info">
+              <div class="item-name">{{ item.productName }}</div>
+              <div class="item-meta">x{{ item.quantity }} &nbsp;·&nbsp; {{ item.unitPrice | currency: 'VND' : 'symbol' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="container mt-xl pb-xxl contact-section">
+    <div nz-row [nzGutter]="[48, 48]" class="contact-grid">
+      <!-- Contact Info -->
+      <div nz-col [nzXs]="24" [nzMd]="10" class="contact-info-panel animate-left">
+        <h2 class="section-title mb-lg">Liên hệ với chúng tôi</h2>
+        <p class="section-desc mb-xl">
+          Đội ngũ kỹ thuật của ToolCNC luôn sẵn sàng giải đáp mọi thắc mắc của bạn về sản phẩm và giải pháp gia công.
+        </p>
+
+        <div class="contact-item">
+          <div class="contact-icon icon-cyan">
+            <nz-icon nzType="phone" />
+          </div>
+          <div class="contact-text">
+            <h4>Hotline Kỹ thuật</h4>
+            <p>1900 123 456 (24/7)</p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon icon-blue">
+            <nz-icon nzType="mail" />
+          </div>
+          <div class="contact-text">
+            <h4>Email Hỗ trợ</h4>
+            <p>support&#64;toolcnc.com.vn</p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon icon-slate">
+            <nz-icon nzType="environment" />
+          </div>
+          <div class="contact-text">
+            <h4>Văn phòng đại diện</h4>
+            <p>Khu Công nghệ cao, Quận 9, TP. Thủ Đức</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div nz-col [nzXs]="20" [nzMd]="14" class="contact-form-panel animate-right">
+        <form nz-form nzLayout="vertical" [formGroup]="contactForm" (ngSubmit)="submitForm()" class="support-form">
+          <div nz-row [nzGutter]="[16, 16]">
+            <div nz-col [nzXs]="24" [nzSm]="12">
+              <nz-form-item>
+                <nz-form-label [nzRequired]="true">Họ và tên</nz-form-label>
+                <nz-form-control nzErrorTip="Vui lòng nhập họ tên">
+                  <input nz-input formControlName="name" placeholder="VD: Nguyễn Văn A" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col [nzXs]="24" [nzSm]="12">
+              <nz-form-item>
+                <nz-form-label [nzRequired]="true">Email</nz-form-label>
+                <nz-form-control nzErrorTip="Vui lòng nhập email hợp lệ">
+                  <input nz-input formControlName="email" placeholder="email&#64;example.com" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Chủ đề</nz-form-label>
+            <nz-form-control nzErrorTip="Vui lòng nhập chủ đề">
+              <input nz-input formControlName="subject" placeholder="VD: Yêu cầu sửa chữa máy CNC..." />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Nội dung</nz-form-label>
+            <nz-form-control nzErrorTip="Vui lòng nhập nội dung yêu cầu">
+              <textarea nz-input formControlName="message" [nzAutosize]="{ minRows: 4, maxRows: 8 }" placeholder="Mô tả chi tiết yêu cầu của bạn..."></textarea>
+            </nz-form-control>
+          </nz-form-item>
+
+          <div class="form-actions mt-lg">
+            <button nz-button nzType="primary" nzBlock class="btn-submit">
+              Gửi yêu cầu <nz-icon nzType="send" />
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>

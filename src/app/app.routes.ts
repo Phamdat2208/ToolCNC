@@ -12,6 +12,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { OrderManagementComponent } from './pages/order-management/order-management.component';
 import { WishlistComponent } from './pages/wishlist/wishlist.component';
 
+import { SupportComponent } from './pages/support/support.component';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
@@ -28,7 +30,8 @@ export const routes: Routes = [
       { path: 'checkout', component: CheckoutComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'orders', component: OrderManagementComponent },
-      { path: 'wishlist', component: WishlistComponent }
+      { path: 'wishlist', component: WishlistComponent },
+      { path: 'support', component: SupportComponent }
     ]
   }
 ];

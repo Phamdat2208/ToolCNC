@@ -35,4 +35,8 @@ export class OrderService {
   createOrder(orderPayload: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/checkout`, orderPayload, this.getAuthHeaders());
   }
+
+  trackOrder(trackingNumber: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/track/${trackingNumber}`, this.getAuthHeaders());
+  }
 }

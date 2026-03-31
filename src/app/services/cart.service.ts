@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { AuthService } from './auth.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, distinctUntilChanged } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 export interface CartItem {
@@ -37,7 +37,9 @@ export class CartService {
 
   constructor() {
     // When user logs in or out, refetch the cart automatically
-    this.authService.currentUser$.subscribe(user => {
+    this.authService.currentUser$.pipe(
+      distinctUntilChanged((prev, curr) => prev?.username === curr?.username)
+    ).subscribe(user => {
       this.loadCart();
     });
   }

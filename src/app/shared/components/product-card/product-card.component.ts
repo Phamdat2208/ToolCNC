@@ -10,10 +10,12 @@ import { Router } from '@angular/router';
 import { CartService } from '../../../services/cart.service';
 import { AuthService } from '../../../services/auth.service';
 import { WishlistService } from '../../../services/wishlist.service';
+import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
 
 @Component({
   selector: 'app-product-card',
-  imports: [CommonModule, RouterLink, NzCardModule, NzButtonModule, NzIconModule, NzToolTipModule],
+  standalone: true,
+  imports: [CommonModule, NzCardModule, NzButtonModule, NzIconModule, NzToolTipModule, RouterLink, ScrollRevealDirective],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css'
 })

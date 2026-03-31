@@ -1,322 +1,435 @@
-<div class="checkout-container">
-  <h2>Thanh toán an toàn</h2>
-
-  <nz-steps [nzCurrent]="currentStep" class="checkout-steps">
-    <nz-step *ngFor="let s of steps" [nzTitle]="s"></nz-step>
-  </nz-steps>
-
-  <div class="step-content">
-    <!-- Step 1: Info -->
-    <div *ngIf="currentStep === 0" class="step-card">
-      <form nz-form [formGroup]="validateForm" nzLayout="vertical">
-        <div nz-row nzGutter="16">
-          <div nz-col nzXs="24" nzMd="12">
-            <nz-form-item>
-              <nz-form-label nzRequired>Họ và tên người nhận</nz-form-label>
-              <nz-form-control nzErrorTip="Vui lòng nhập họ tên!">
-                <input
-                  nz-input
-                  formControlName="fullName"
-                  placeholder="VD: Nguyễn Văn A"
-                />
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-          <div nz-col nzXs="24" nzMd="12">
-            <nz-form-item>
-              <nz-form-label nzRequired>Số điện thoại</nz-form-label>
-              <nz-form-control [nzErrorTip]="phoneErrorTpl">
-                <input
-                  nz-input
-                  formControlName="phone"
-                  placeholder="VD: 0912345678"
-                  [minlength]="10"
-                  [maxlength]="11"
-                />
-                <ng-template #phoneErrorTpl let-control>
-                  <ng-container *ngIf="control.hasError('required')"
-                    >Vui lòng nhập số điện thoại!</ng-container
-                  >
-                  <ng-container *ngIf="control.hasError('pattern')"
-                    >Định dạng không hợp lệ (Bắt đầu bằng 0 hoặc
-                    +84)!</ng-container
-                  >
-                </ng-template>
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-        </div>
-
-        <nz-form-item>
-          <nz-form-label nzRequired>Tỉnh / Thành phố</nz-form-label>
-          <nz-form-control nzErrorTip="Vui lòng chọn thành phố!">
-            <nz-select
-              formControlName="city"
-              nzPlaceHolder="Chọn Tỉnh / Thành phố"
-              nzShowSearch
-            >
-              <nz-option
-                *ngFor="let city of cities"
-                [nzValue]="city.value"
-                [nzLabel]="city.label"
-              ></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label nzRequired>Địa chỉ cụ thể</nz-form-label>
-          <nz-form-control nzErrorTip="Vui lòng nhập địa chỉ cụ thể!">
-            <textarea
-              nz-input
-              formControlName="address"
-              placeholder="VD: Số 123, đường ABC, Phường X, Quận Y"
-              [nzAutosize]="{ minRows: 2, maxRows: 4 }"
-            ></textarea>
-          </nz-form-control>
-        </nz-form-item>
-      </form>
+<div class="checkout-page-wrapper">
+  <!-- Header -->
+  <header class="checkout-header">
+    <div class="container-fluid">
+      <h1 class="checkout-title">Hoàn tất đơn hàng</h1>
+      <nz-steps
+        [nzCurrent]="currentStep"
+        nzLabelPlacement="horizontal"
+        class="checkout-steps-nav"
+      >
+        <nz-step *ngFor="let s of steps" [nzTitle]="s"></nz-step>
+      </nz-steps>
     </div>
+  </header>
 
-    <!-- Step 2: Payment -->
-    <div *ngIf="currentStep === 1" class="step-card">
-      <div nz-row nzGutter="32">
-        <div nz-col nzXs="24" nzMd="14">
-          <h3>Phương thức thanh toán</h3>
-          <nz-radio-group [(ngModel)]="paymentMethod" class="payment-methods">
-            <label nz-radio nzValue="cod" class="payment-option">
-              <div class="pay-label">
-                <strong>Thanh toán khi nhận hàng (COD)</strong>
-                <p>
-                  Khách hàng thanh toán tiền mặt khi thiết bị được giao đến
-                  xưởng.
-                </p>
+  <div class="container-fluid py-xl">
+    <div nz-row [nzGutter]="[32, 32]">
+      <!-- Main Content (Left) -->
+      <div
+        nz-col
+        [nzXs]="24"
+        [nzLg]="currentStep < 2 ? 16 : 24"
+        class="checkout-main"
+      >
+        <div class="step-content-container">
+          <!-- Step 1: Info -->
+          <div *ngIf="currentStep === 0" class="checkout-step-panel animate-up">
+            <div class="panel-header">
+              <div class="header-icon"><nz-icon nzType="user" /></div>
+              <h3>Thông tin người nhận</h3>
+            </div>
+            <form
+              nz-form
+              [formGroup]="validateForm"
+              nzLayout="vertical"
+              class="checkout-form"
+            >
+              <div nz-row [nzGutter]="[20, 0]">
+                <div nz-col [nzXs]="24" [nzMd]="12">
+                  <nz-form-item>
+                    <nz-form-label>Họ và tên người nhận</nz-form-label>
+                    <nz-form-control>
+                      <nz-input-group nzPrefixIcon="user">
+                        <input
+                          nz-input
+                          formControlName="fullName"
+                          placeholder="VD: Nguyễn Văn A"
+                        />
+                      </nz-input-group>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col [nzXs]="24" [nzMd]="12">
+                  <nz-form-item>
+                    <nz-form-label>Số điện thoại</nz-form-label>
+                    <nz-form-control [nzErrorTip]="phoneErrorTpl">
+                      <nz-input-group nzPrefixIcon="phone">
+                        <input
+                          nz-input
+                          formControlName="phone"
+                          placeholder="VD: 0912345678"
+                          [minlength]="10"
+                          [maxlength]="11"
+                        />
+                      </nz-input-group>
+                      <ng-template #phoneErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('pattern')"
+                          >Định dạng không hợp lệ!</ng-container
+                        >
+                      </ng-template>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
               </div>
-            </label>
-            <label nz-radio nzValue="transfer" class="payment-option">
-              <div class="pay-label">
-                <strong>Chuyển khoản ngân hàng</strong>
-                <p>Chuyển khoản qua số tài khoản công ty ToolCNC.</p>
+
+              <nz-form-item>
+                <nz-form-label nzRequired>Tỉnh / Thành phố</nz-form-label>
+                <nz-form-control nzErrorTip="Vui lòng chọn tỉnh / thành phố!">
+                  <nz-select
+                    [nzAllowClear]="true"
+                    formControlName="provinceCode"
+                    nzPlaceHolder="Chọn Tỉnh / Thành phố"
+                    nzShowSearch
+                    [nzLoading]="isLoadingProvinces"
+                    (ngModelChange)="onProvinceChange($event)"
+                  >
+                    <nz-option
+                      *ngFor="let p of provinces"
+                      [nzValue]="p.code"
+                      [nzLabel]="p.name"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+
+              <nz-form-item>
+                <nz-form-label nzRequired>Xã / Phường</nz-form-label>
+                <nz-form-control nzErrorTip="Vui lòng chọn xã / phường!">
+                  <nz-select
+                    [nzAllowClear]="true"
+                    formControlName="wardCode"
+                    nzPlaceHolder="Chọn Xã / Phường"
+                    nzShowSearch
+                    [nzLoading]="isLoadingWards"
+                    (ngModelChange)="onWardChange($event)"
+                  >
+                    <nz-option
+                      *ngFor="let w of wards"
+                      [nzValue]="w.code"
+                      [nzLabel]="w.name"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+
+              <nz-form-item>
+                <nz-form-label nzRequired>Địa chỉ cụ thể</nz-form-label>
+                <nz-form-control nzErrorTip="Vui lòng nhập địa chỉ cụ thể!">
+                  <textarea
+                    nz-input
+                    formControlName="address"
+                    placeholder="Tên đường, số nhà, ngõ..."
+                    [nzAutosize]="{ minRows: 2, maxRows: 4 }"
+                  ></textarea>
+                </nz-form-control>
+              </nz-form-item>
+            </form>
+          </div>
+
+          <!-- Step 2: Payment Selector -->
+          <div *ngIf="currentStep === 1" class="checkout-step-panel animate-up">
+            <div class="panel-header">
+              <div class="header-icon"><nz-icon nzType="wallet" /></div>
+              <h3>Hình thức thanh toán</h3>
+            </div>
+
+            <div class="payment-selection-grid">
+              <!-- COD Option -->
+              <div
+                class="payment-card"
+                [class.active]="paymentMethod === 'cod'"
+                (click)="paymentMethod = 'cod'"
+              >
+                <div class="card-radio"></div>
+                <div class="card-icon"><nz-icon nzType="car" /></div>
+                <div class="card-text">
+                  <h4>Thanh toán khi nhận hàng (COD)</h4>
+                  <p>
+                    Kiểm tra thiết bị tại xưởng trước khi thanh toán tiền mặt
+                  </p>
+                </div>
               </div>
-            </label>
-          </nz-radio-group>
+
+              <!-- Bank Transfer Option -->
+              <div
+                class="payment-card"
+                [class.active]="paymentMethod === 'transfer'"
+                (click)="paymentMethod = 'transfer'"
+              >
+                <div class="card-radio"></div>
+                <div class="card-icon"><nz-icon nzType="credit-card" /></div>
+                <div class="card-text">
+                  <h4>Chuyển khoản qua ngân hàng</h4>
+                  <p>Thanh toán nhanh chóng qua QR Code hoặc STK công ty</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2/3: QR Code (Bank Transfer) -->
+          <div
+            *ngIf="currentStep === 2 && isTransfer"
+            class="checkout-step-panel bank-transfer-panel animate-up"
+          >
+            <div class="qr-header-compact mb-xl">
+              <h3>Vui lòng thanh toán qua QR</h3>
+              <p>Quét mã bên dưới để thanh toán tự động với đầy đủ nội dung</p>
+            </div>
+
+            <div nz-row [nzGutter]="[32, 24]">
+              <!-- Left side: QR -->
+              <div nz-col [nzXs]="24" [nzMd]="10" class="flex-center">
+                <div class="qr-box-inner">
+                  <div class="qr-frame">
+                    <img
+                      [src]="
+                        'https://img.vietqr.io/image/970422-0987654321-compact2.jpg?amount=' +
+                        finalTotal +
+                        '&addInfo=DH%20DT%20' +
+                        validateForm.value.phone +
+                        '&accountName=CONG%20TY%20TNHH%20TOOLCNC'
+                      "
+                      alt="QR Code"
+                    />
+                  </div>
+                  <div class="mt-md text-center">
+                    <nz-tag nzColor="blue"> MBBank Scan & Pay </nz-tag>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right side: Details -->
+              <div nz-col [nzXs]="24" [nzMd]="14">
+                <div class="transfer-info-lines">
+                  <div class="info-row">
+                    <label>Ngân hàng</label>
+                    <div class="value">MBBank (Quân Đội)</div>
+                  </div>
+                  <div class="info-row">
+                    <label>Số tài khoản</label>
+                    <div class="value-group">
+                      <span class="value emphasis">0987654321</span>
+                      <button
+                        nz-button
+                        nzType="text"
+                        (click)="copyToClipboard('0987654321')"
+                        nz-tooltip
+                        nzTooltipTitle="Sao chép"
+                      >
+                        <nz-icon nzType="copy" />
+                      </button>
+                    </div>
+                  </div>
+                  <div class="info-row">
+                    <label>Chủ tài khoản</label>
+                    <div class="value">CONG TY TNHH TOOLCNC</div>
+                  </div>
+                  <div class="info-row">
+                    <label>Số tiền</label>
+                    <div class="value-group">
+                      <span class="value price-cyan">{{
+                        finalTotal | currency: "VND" : "symbol"
+                      }}</span>
+                      <button
+                        nz-button
+                        nzType="text"
+                        (click)="copyToClipboard(finalTotal.toString())"
+                        nz-tooltip
+                        nzTooltipTitle="Sao chép"
+                      >
+                        <nz-icon nzType="copy" />
+                      </button>
+                    </div>
+                  </div>
+                  <div class="info-row highlight-box">
+                    <label>Nội dung</label>
+                    <div class="value-group">
+                      <span class="value emphasis"
+                        >DH DT {{ validateForm.value.phone }}</span
+                      >
+                      <button
+                        nz-button
+                        nzType="text"
+                        (click)="
+                          copyToClipboard('DH DT ' + validateForm.value.phone)
+                        "
+                        nz-tooltip
+                        nzTooltipTitle="Sao chép"
+                      >
+                        <nz-icon nzType="copy" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="qr-actions mt-xxl pt-xl">
+              <button
+                nz-button
+                nzType="default"
+                (click)="prevStep()"
+                class="btn-back"
+              >
+                Quay lại
+              </button>
+              <button
+                nz-button
+                nzType="primary"
+                (click)="confirmTransfer()"
+                [nzLoading]="isSubmitting"
+                class="btn-confirm btn-primary-glow"
+              >
+                Tôi đã chuyển khoản hoàn tất
+              </button>
+            </div>
+          </div>
+
+          <!-- Step Finish: Success -->
+          <div
+            *ngIf="
+              (currentStep === 2 && !isTransfer) ||
+              (currentStep === 3 && isTransfer)
+            "
+            class="checkout-success-view animate-up"
+          >
+            <nz-result
+              nzStatus="success"
+              nzTitle="Đã nhận đơn hàng thành công!"
+              nzSubTitle="ToolCNC đang chuẩn bị thiết bị của bạn. Chúng tôi sẽ sớm liên hệ qua điện thoại."
+            >
+              <div nz-result-extra>
+                <div class="order-receipt shadow-premium">
+                  <h4 class="receipt-title">
+                    Mã đơn hàng: #{{ orderTrackingNumber }}
+                  </h4>
+                  <div class="receipt-items-list">
+                    <div
+                      *ngFor="let item of checkedOutItems"
+                      class="receipt-item"
+                    >
+                      <img [src]="item.img" alt="product" />
+                      <div class="item-info">
+                        <div class="item-name">{{ item.name }}</div>
+                        <div class="item-qty">x{{ item.quantity }}</div>
+                      </div>
+                      <div class="item-price">
+                        {{
+                          item.price * item.quantity
+                            | currency: "VND" : "symbol"
+                        }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="receipt-total">
+                    <span>Tổng tiền thanh toán</span>
+                    <span class="total-value">{{
+                      finalTotal | currency: "VND" : "symbol"
+                    }}</span>
+                  </div>
+                </div>
+                <button
+                  nz-button
+                  nzType="primary"
+                  (click)="goHome()"
+                  nzSize="large"
+                  class="mt-xl btn-home-modern mt-24"
+                >
+                  Tiếp tục mua sắm
+                </button>
+              </div>
+            </nz-result>
+          </div>
         </div>
-        <div nz-col nzXs="24" nzMd="10">
-          <div class="order-summary-box">
-            <h3>Đơn hàng của bạn</h3>
-            <div class="summary-row">
-              <span>Tổng sản phẩm ({{ cartService.totalItems }})</span>
-              <span>{{ cartTotal | currency: "VND" : "symbol" }}</span>
+
+        <!-- Navigation Actions (Only for Info/Payment steps) -->
+        <div class="step-actions mt-xl" *ngIf="currentStep < 2">
+          <button
+            nz-button
+            nzType="default"
+            (click)="prevStep()"
+            *ngIf="currentStep > 0"
+            class="btn-nav"
+          >
+            <nz-icon nzType="left" /> Quay lại
+          </button>
+          <button
+            nz-button
+            nzType="primary"
+            (click)="nextStep()"
+            [nzLoading]="isSubmitting"
+            class="btn-nav btn-primary-glow"
+          >
+            {{
+              currentStep === 1 && !isTransfer
+                ? "Hoàn tất đặt hàng"
+                : "Tiếp tục"
+            }}
+            <nz-icon nzType="right" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Order Summary (Right - Sticky) -->
+      <div
+        nz-col
+        [nzXs]="24"
+        [nzLg]="8"
+        class="checkout-sidebar"
+        *ngIf="currentStep < 2"
+      >
+        <div class="summary-card sticky-top shadow-premium">
+          <h3 class="panel-title">Tóm tắt đơn hàng</h3>
+          <div class="summary-items">
+            <div *ngFor="let item of cartService.cartItems()" class="mini-item">
+              <div class="item-thumb">
+                <img [src]="item.img" [alt]="item.name" />
+                <span class="badge">{{ item.quantity }}</span>
+              </div>
+              <div class="item-info">
+                <div class="item-name">{{ item.name }}</div>
+                <div class="item-price">
+                  {{ item.price | currency: "VND" : "symbol" }}
+                </div>
+              </div>
             </div>
-            <div class="summary-row">
-              <span>Phí vận chuyển</span>
-              <span>Miễn phí</span>
-            </div>
-            <nz-divider></nz-divider>
-            <div class="summary-row total">
-              <span>Tổng cộng:</span>
-              <span class="price-red">{{
+          </div>
+
+          <nz-divider></nz-divider>
+
+          <div class="price-rows">
+            <div class="price-row">
+              <span class="label">Tổng các sản phẩm</span>
+              <span class="val">{{
                 cartTotal | currency: "VND" : "symbol"
               }}</span>
+            </div>
+            <div class="price-row">
+              <span class="label">Phí vận chuyển</span>
+              <span class="val text-success">Miễn phí</span>
+            </div>
+            <nz-divider class="my-12"></nz-divider>
+            <div class="price-row grand-total">
+              <span class="label">Tổng cộng:</span>
+              <span class="val cyan-accent">{{
+                cartTotal | currency: "VND" : "symbol"
+              }}</span>
+            </div>
+          </div>
+
+          <div class="guarantee-box mt-xl">
+            <div class="guarantee-item">
+              <nz-icon nzType="safety-certificate" />
+              <span>Bảo hành chính hãng 12 tháng</span>
+            </div>
+            <div class="guarantee-item">
+              <nz-icon nzType="car" />
+              <span>Giao lắp tận xưởng toàn quốc</span>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Step 2: QR Code (Bank Transfer) -->
-    <div *ngIf="currentStep === 2 && isTransfer" class="step-card">
-      <nz-result
-        nzStatus="info"
-        nzTitle="Thanh toán chuyển khoản"
-        nzSubTitle="Vui lòng quét mã QR dưới đây hoặc chuyển khoản theo thông tin để hoàn tất đơn hàng."
-      >
-        <div nz-result-extra>
-          <div
-            style="
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              margin-bottom: 24px;
-            "
-          >
-            <div
-              style="
-                background: white;
-                padding: 16px;
-                border-radius: 12px;
-                border: 1px solid #f0f0f0;
-                display: inline-block;
-              "
-            >
-              <img
-                [src]="
-                  'https://img.vietqr.io/image/970422-0987654321-compact2.jpg?amount=' +
-                  finalTotal +
-                  '&addInfo=DH%20DT%20' +
-                  validateForm.value.phone +
-                  '&accountName=CONG%20TY%20TNHH%20TOOLCNC'
-                "
-                alt="QR Code"
-                style="max-width: 250px; border-radius: 8px"
-              />
-            </div>
-
-            <div
-              style="
-                margin-top: 24px;
-                text-align: left;
-                background: #fafafa;
-                padding: 24px;
-                border-radius: 12px;
-                width: 100%;
-                max-width: 400px;
-                border: 1px solid #e8e8e8;
-              "
-            >
-              <h3
-                style="
-                  margin-top: 0;
-                  margin-bottom: 16px;
-                  font-size: 16px;
-                  border-bottom: 1px solid #e8e8e8;
-                  padding-bottom: 8px;
-                "
-              >
-                Thông tin chuyển khoản
-              </h3>
-              <p style="margin-bottom: 8px">
-                Ngân hàng: <strong>MBBank</strong>
-              </p>
-              <p style="margin-bottom: 8px">
-                Số tài khoản:
-                <strong style="color: #1890ff; font-size: 16px"
-                  >0987654321</strong
-                >
-              </p>
-              <p style="margin-bottom: 8px">
-                Chủ tài khoản: <strong>CONG TY TNHH TOOLCNC</strong>
-              </p>
-              <p style="margin-bottom: 8px">
-                Số tiền:
-                <strong class="price-red text-lg">{{
-                  finalTotal | currency: "VND" : "symbol"
-                }}</strong>
-              </p>
-              <p style="margin-bottom: 0">
-                Nội dung CK:
-                <strong class="text-success text-lg"
-                  >DH DT {{ validateForm.value.phone }}</strong
-                >
-              </p>
-            </div>
-          </div>
-          <div class="flex-center flex-gap-16">
-            <button
-              nz-button
-              nzType="default"
-              (click)="prevStep()"
-              nzSize="large"
-              style="min-width: 150px"
-            >
-              Quay lại
-            </button>
-            <button
-              nz-button
-              nzType="primary"
-              (click)="confirmTransfer()"
-              [nzLoading]="isSubmitting"
-              nzSize="large"
-              class="min-w-200"
-            >
-              Tôi đã chuyển khoản
-            </button>
-          </div>
-        </div>
-      </nz-result>
-    </div>
-
-    <!-- Step 3: Success -->
-    <div
-      *ngIf="
-        (currentStep === 2 && !isTransfer) || (currentStep === 3 && isTransfer)
-      "
-      class="step-card step-success"
-    >
-      <nz-result
-        nzStatus="success"
-        nzTitle="Thanh toán thành công!"
-        nzSubTitle="Mã đơn hàng: #{{
-          orderTrackingNumber
-        }}. Chúng tôi sẽ liên hệ trong ít phút để xác nhận đơn hàng."
-      >
-        <div nz-result-extra>
-          <div class="mb-24" style="max-width: 600px; margin-left: auto; margin-right: auto;">
-            <div class="order-review-box pt-16 shadow-card" style="text-align: left; padding: 24px; border: 1px solid var(--border-color);">
-              <h3 class="mb-16 pb-12" style="margin-top: 0; border-bottom: 1px solid var(--border-color);">
-                Biên lai điện tử
-              </h3>
-              <div
-                *ngFor="let item of checkedOutItems"
-                class="flex-center mb-16 pb-16"
-                style="border-bottom: 1px dashed var(--border-color);"
-              >
-                <img
-                  [src]="item.img"
-                  alt="product"
-                  style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 16px; border: 1px solid var(--border-color);"
-                />
-                <div style="flex: 1">
-                  <div class="font-bold text-md mb-4" style="line-height: 1.2">
-                    {{ item.name }}
-                  </div>
-                  <div class="text-secondary text-sm">
-                    Số lượng: {{ item.quantity }}
-                  </div>
-                </div>
-                <div class="price-red whitespace-nowrap" style="margin-left: 16px">
-                  {{ item.price * item.quantity | currency: "VND" : "symbol" }}
-                </div>
-              </div>
-              <div class="flex-between font-bold text-lg mt-24 pt-16">
-                <span>Tổng số tiền:</span>
-                <span class="text-danger">{{
-                  finalTotal | currency: "VND" : "symbol"
-                }}</span>
-              </div>
-            </div>
-          </div>
-
-            <button
-              nz-button
-              nzType="primary"
-              (click)="goHome()"
-              nzSize="large"
-              class="min-w-200"
-            >
-            Tiếp tục mua sắm
-          </button>
-        </div>
-      </nz-result>
-    </div>
-  </div>
-
-  <div class="step-actions" *ngIf="currentStep < 2">
-    <button
-      nz-button
-      nzType="default"
-      (click)="prevStep()"
-      *ngIf="currentStep > 0"
-    >
-      Quay lại
-    </button>
-    <button
-      nz-button
-      nzType="primary"
-      (click)="nextStep()"
-      [nzLoading]="isSubmitting"
-    >
-      {{ currentStep === 1 && !isTransfer ? "Xác nhận Đặt Hàng" : "Tiếp tục" }}
-    </button>
   </div>
 </div>

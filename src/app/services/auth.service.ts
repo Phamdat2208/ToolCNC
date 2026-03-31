@@ -5,6 +5,8 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 export interface User {
   username: string;
   roles: string[];
+  fullName?: string;
+  phone?: string;
 }
 
 @Injectable({
@@ -31,13 +33,48 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
         if (response && response.token) {
-          const userObj = {
+          const userObj: User = {
             username: response.username,
             roles: response.role ? [response.role] : (response.roles || ['CUSTOMER'])
           };
           sessionStorage.setItem(this.TOKEN_KEY, response.token);
           sessionStorage.setItem(this.USER_KEY, JSON.stringify(userObj));
           this.currentUserSubject.next(userObj);
+          
+          // Sau khi login, fetch lại profile đầy đủ
+          this.fetchMe().subscribe();
+        }
+      })
+    );
+  }
+
+  fetchMe(): Observable<any> {
+    const token = this.getToken();
+    return this.http.get<any>(`${this.apiUrl}/me`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).pipe(
+      tap(user => {
+        const currentUser = this.currentUserSubject.value;
+        if (currentUser) {
+          const updatedUser = { ...currentUser, ...user };
+          sessionStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
+          this.currentUserSubject.next(updatedUser);
+        }
+      })
+    );
+  }
+
+  updateProfile(data: { fullName: string, phone: string }): Observable<any> {
+    const token = this.getToken();
+    return this.http.put<any>(`${this.apiUrl}/profile`, data, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).pipe(
+      tap(res => {
+        const currentUser = this.currentUserSubject.value;
+        if (currentUser) {
+          const updatedUser = { ...currentUser, fullName: res.fullName, phone: res.phone };
+          sessionStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
+          this.currentUserSubject.next(updatedUser);
         }
       })
     );
@@ -81,13 +118,17 @@ export class AuthService {
         const userStr = sessionStorage.getItem(this.USER_KEY);
         if (userStr) {
           this.currentUserSubject.next(JSON.parse(userStr));
+          // Refresh data from server
+          this.fetchMe().subscribe();
         } else {
           // Fallback to decode if user object not in storage
           const payload = JSON.parse(atob(token.split('.')[1]));
-          this.currentUserSubject.next({
+          const userObj = {
             username: payload.sub,
             roles: payload.role ? [payload.role] : (payload.roles || ['CUSTOMER'])
-          });
+          };
+          this.currentUserSubject.next(userObj);
+          this.fetchMe().subscribe();
         }
       } catch (e) {
         console.error("Invalid token format or user data storage", e);

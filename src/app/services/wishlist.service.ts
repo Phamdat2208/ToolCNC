@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, distinctUntilChanged } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { Router } from '@angular/router';
@@ -30,7 +30,9 @@ export class WishlistService {
 
   constructor() {
     // Listen to user changes to reload the correct wishlist from backend
-    this.authService.currentUser$.subscribe(() => {
+    this.authService.currentUser$.pipe(
+      distinctUntilChanged((prev, curr) => prev?.username === curr?.username)
+    ).subscribe(() => {
       this.loadWishlist();
     });
   }

@@ -40,7 +40,25 @@ import {
   HeartFill,
   InboxOutline,
   MoonOutline,
-  SunOutline
+  SunOutline,
+  CustomerServiceOutline,
+  FacebookOutline,
+  EnvironmentOutline,
+  MenuOutline,
+  QuestionCircleOutline,
+  SafetyCertificateOutline,
+  ArrowRightOutline,
+  SendOutline,
+  BarcodeOutline,
+  CarOutline,
+  HomeOutline,
+  CreditCardOutline,
+  CalendarOutline,
+  DollarOutline,
+  CloseCircleOutline,
+  FileTextOutline,
+  WalletOutline,
+  ArrowUpOutline
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -73,7 +91,25 @@ const icons = [
   EditOutline,
   InboxOutline,
   MoonOutline,
-  SunOutline
+  SunOutline,
+  CustomerServiceOutline,
+  FacebookOutline,
+  EnvironmentOutline,
+  MenuOutline,
+  QuestionCircleOutline,
+  SafetyCertificateOutline,
+  ArrowRightOutline,
+  SendOutline,
+  BarcodeOutline,
+  CarOutline,
+  HomeOutline,
+  CreditCardOutline,
+  CalendarOutline,
+  DollarOutline,
+  CloseCircleOutline,
+  FileTextOutline,
+  WalletOutline,
+  ArrowUpOutline
 ];
 
 registerLocaleData(vi);

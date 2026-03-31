@@ -8,12 +8,26 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { ProductService } from '../../services/product.service';
+import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink, NzCarouselModule, NzCardModule, NzGridModule, NzButtonModule, NzIconModule, NzSpinModule, ProductCardComponent],
+  imports: [
+    CommonModule, 
+    RouterLink, 
+    NzCarouselModule, 
+    NzCardModule, 
+    NzGridModule, 
+    NzButtonModule, 
+    NzIconModule, 
+    NzSpinModule, 
+    NzBackTopModule, 
+    ProductCardComponent, 
+    ScrollRevealDirective
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -25,9 +39,24 @@ export class HomeComponent implements OnInit {
     this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`);
   }
   banners = [
-    { title: 'Công nghệ phay CNC tiên tiến', content: 'Cải thiện độ chính xác và năng suất', color: '#1890ff' },
-    { title: 'Dao cụ giảm giá sốc', content: 'Giảm đến 30% cho đơn hàng dao phay thép gió', color: '#ff4d4f' },
-    { title: 'Tư vấn kỹ thuật gia công', content: 'Đội ngũ chuyên gia hỗ trợ 24/7', color: '#52c41a' }
+    {
+      title: 'Công nghệ phay CNC tiên tiến',
+      content: 'Cải thiện độ chính xác và năng suất vượt trội',
+      color: 'linear-gradient(135deg, #0ea5e9 0%, #0c4a6e 100%)',
+      image: '/assets/images/may-cnc-banner.png'
+    },
+    {
+      title: 'Dao cụ giảm giá sốc',
+      content: 'Giảm đến 30% cho đơn hàng dao phay thép gió',
+      color: 'linear-gradient(135deg, #64748b 0%, #0f172a 100%)',
+      image: '/assets/images/mui-khoan-banner.png'
+    },
+    {
+      title: 'Tư vấn kỹ thuật gia công',
+      content: 'Đội ngũ chuyên gia hỗ trợ kỹ thuật 24/7',
+      color: 'linear-gradient(135deg, #0ea5e9 0%, #64748b 100%)',
+      image: '/assets/images/chip-dao-tien-cnc-banner.png'
+    }
   ];
 
   categories = [

@@ -1,5 +1,5 @@
 .footer-container {
-  background: #001529;
+  background: #0f172a; /* Midnight Navy Base */
   color: rgba(255, 255, 255, 0.65);
   padding: 48px 48px 0;
 }
@@ -25,4 +25,28 @@
   padding: 24px 0;
   margin-top: 48px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.map-container {
+  margin-top: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  height: 250px; /* Increased height for better interaction */
+  position: relative;
+  background: #2a2a2a;
+}
+
+.map-container iframe {
+  position: absolute;
+  top: -55px; /* Adjust to hide header */
+  left: 0;
+  width: 100%;
+  height: calc(100% + 55px);
+  border: 0;
+  filter: none; /* Hiển thị màu mặc định */
+  transition: all 0.5s ease;
+  pointer-events: auto; /* Ensure events reach the iframe */
 }

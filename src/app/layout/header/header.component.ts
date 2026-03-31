@@ -1,6 +1,6 @@
 import { Component, inject, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -10,16 +10,17 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { ProductService } from '../../services/product.service';
-
+ 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, FormsModule, RouterLink, NzMenuModule, NzInputModule, NzIconModule, NzBadgeModule, NzButtonModule, NzDropDownModule, NzModalModule, NzSpinModule],
+  imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive, NzMenuModule, NzInputModule, NzIconModule, NzBadgeModule, NzButtonModule, NzDropDownModule, NzModalModule, NzSpinModule, NzDrawerModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -36,6 +37,8 @@ export class HeaderComponent {
   searchResults: any[] = [];
   isSearching = false;
   showDropdown = false;
+  isScrolled = false;
+  isDrawerVisible = false;
 
   private search$ = new Subject<string>();
 
@@ -142,8 +145,22 @@ export class HeaderComponent {
     }
   }
 
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    const scroll = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    this.isScrolled = scroll > 20;
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  openDrawer() {
+    this.isDrawerVisible = true;
+  }
+
+  closeDrawer() {
+    this.isDrawerVisible = false;
   }
 }

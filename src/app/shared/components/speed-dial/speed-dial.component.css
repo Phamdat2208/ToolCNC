@@ -1,0 +1,126 @@
+.speed-dial-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+}
+
+.main-fab {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  position: relative;
+  z-index: 2;
+}
+
+.main-fab:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.main-fab.open {
+  background-color: var(--danger-color);
+  transform: rotate(90deg);
+}
+
+.speed-dial-actions {
+  position: absolute;
+  bottom: 64px; /* Move up from the main button */
+  right: 6px; /* Center with button slightly */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(20px) scale(0.5);
+  transform-origin: bottom;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.speed-dial-actions.open {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.dial-item {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.dial-item:hover {
+  transform: scale(1.2);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  z-index: 10;
+}
+
+.dial-item.fb { 
+  background-color: #fff; 
+}
+.dial-item.zalo { 
+  background-color: #fff;
+  padding: 2px; /* Slight padding for the complex SVG */
+}
+
+.dial-item.hotline { 
+  background-color: #25d366; /* Phone/WhatsApp types green */
+  color: #fff; 
+  font-size: 20px;
+  animation: hotline-pulse 2s infinite;
+}
+
+@keyframes hotline-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+.icon-svg {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+
+.dial-item.zalo .icon-svg {
+  width: 34px;
+  height: 34px;
+}
+
+/* Animations for staggered appearance */
+.speed-dial-actions.open .dial-item:nth-child(1) { transition-delay: 0.15s; }
+.speed-dial-actions.open .dial-item:nth-child(2) { transition-delay: 0.1s; }
+.speed-dial-actions.open .dial-item:nth-child(3) { transition-delay: 0.05s; }
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+  .speed-dial-container {
+    bottom: 16px;
+    right: 16px;
+  }
+  .main-fab {
+    width: 48px;
+    height: 48px;
+  }
+}

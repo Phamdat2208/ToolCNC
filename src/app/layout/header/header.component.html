@@ -1,4 +1,4 @@
-<div class="header-container">
+<div class="header-container" [class.floating-header]="isScrolled">
   <div class="logo">
     <a routerLink="/"
       ><span
@@ -81,13 +81,11 @@
     <ul
       nz-menu
       nzMode="horizontal"
-      class="no-border"
-      style="line-height: var(--header-height)"
+      class="no-border nav-list"
     >
-      <li nz-menu-item nzSelected routerLink="/">Trang chủ</li>
-      <li nz-menu-item routerLink="/products">Sản phẩm</li>
-      <li nz-menu-item>Khuyến mãi</li>
-      <li nz-menu-item>Hỗ trợ</li>
+      <li nz-menu-item routerLink="/" routerLinkActive="ant-menu-item-selected" [routerLinkActiveOptions]="{exact: true}">Trang chủ</li>
+      <li nz-menu-item routerLink="/products" routerLinkActive="ant-menu-item-selected">Sản phẩm</li>
+      <li nz-menu-item routerLink="/support" routerLinkActive="ant-menu-item-selected">Hỗ trợ</li>
     </ul>
   </div>
   <div class="header-actions">
@@ -146,4 +144,33 @@
       </button>
     </ng-template>
   </div>
+
+  <!-- Mobile Menu Button -->
+  <button
+    nz-button
+    nzType="text"
+    class="mobile-menu-btn"
+    (click)="openDrawer()"
+  >
+    <nz-icon nzType="menu" style="font-size: 20px" />
+  </button>
 </div>
+
+<!-- Mobile Drawer Menu -->
+<nz-drawer
+  [nzVisible]="isDrawerVisible"
+  nzPlacement="left"
+  nzTitle="Menu"
+  (nzOnClose)="closeDrawer()"
+>
+  <ng-container *nzDrawerContent>
+    <ul nz-menu nzMode="inline" class="mobile-nav-list">
+      <li nz-menu-item routerLink="/" (click)="closeDrawer()">Trang chủ</li>
+      <li nz-menu-item routerLink="/products" (click)="closeDrawer()">
+        Sản phẩm
+      </li>
+      <li nz-menu-item (click)="closeDrawer()">Khuyến mãi</li>
+      <li nz-menu-item routerLink="/support" (click)="closeDrawer()" routerLinkActive="ant-menu-item-selected">Hỗ trợ</li>
+    </ul>
+  </ng-container>
+</nz-drawer>

@@ -1,0 +1,112 @@
+<div
+  class="speed-dial-container"
+  (mouseenter)="isOpen = true"
+  (mouseleave)="isOpen = false"
+>
+  <div class="speed-dial-actions" [class.open]="isOpen">
+    <!-- Facebook -->
+    <a
+      href="https://facebook.com"
+      target="_blank"
+      class="dial-item fb"
+      nz-tooltip
+      nzTooltipTitle="Facebook"
+      nzTooltipPlacement="left"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 666.667 666.667">
+        <defs>
+          <clipPath id="a" clipPathUnits="userSpaceOnUse">
+            <path d="M0 700h700V0H0Z" />
+          </clipPath>
+        </defs>
+        <g
+          clip-path="url(#a)"
+          transform="matrix(1.33333 0 0 -1.33333 -133.333 800)"
+        >
+          <path
+            d="M0 0c0 138.071-111.929 250-250 250S-500 138.071-500 0c0-117.245 80.715-215.622 189.606-242.638v166.242h-51.552V0h51.552v32.919c0 85.092 38.508 124.532 122.048 124.532 15.838 0 43.167-3.105 54.347-6.211V81.986c-5.901.621-16.149.932-28.882.932-40.993 0-56.832-15.528-56.832-55.9V0h81.659l-14.028-76.396h-67.631v-171.773C-95.927-233.218 0-127.818 0 0"
+            style="
+              fill: #0866ff;
+              fill-opacity: 1;
+              fill-rule: nonzero;
+              stroke: none;
+            "
+            transform="translate(600 350)"
+          />
+          <path
+            d="m0 0 14.029 76.396H-67.63v27.019c0 40.372 15.838 55.899 56.831 55.899 12.733 0 22.981-.31 28.882-.931v69.253c-11.18 3.106-38.509 6.212-54.347 6.212-83.539 0-122.048-39.441-122.048-124.533V76.396h-51.552V0h51.552v-166.242a250.559 250.559 0 0 1 60.394-7.362c10.254 0 20.358.632 30.288 1.831V0Z"
+            style="
+              fill: #fff;
+              fill-opacity: 1;
+              fill-rule: nonzero;
+              stroke: none;
+            "
+            transform="translate(447.918 273.604)"
+          />
+        </g>
+      </svg>
+    </a>
+
+    <!-- Zalo -->
+    <a
+      href="https://zalo.me"
+      target="_blank"
+      class="dial-item zalo"
+      nz-tooltip
+      nzTooltipTitle="Zalo"
+      nzTooltipPlacement="left"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        x="0px"
+        y="0px"
+        width="100"
+        height="100"
+        viewBox="0 0 48 48"
+      >
+        <path
+          fill="#2962ff"
+          d="M15,36V6.827l-1.211-0.811C8.64,8.083,5,13.112,5,19v10c0,7.732,6.268,14,14,14h10	c4.722,0,8.883-2.348,11.417-5.931V36H15z"
+        ></path>
+        <path
+          fill="#eee"
+          d="M29,5H19c-1.845,0-3.601,0.366-5.214,1.014C10.453,9.25,8,14.528,8,19	c0,6.771,0.936,10.735,3.712,14.607c0.216,0.301,0.357,0.653,0.376,1.022c0.043,0.835-0.129,2.365-1.634,3.742	c-0.162,0.148-0.059,0.419,0.16,0.428c0.942,0.041,2.843-0.014,4.797-0.877c0.557-0.246,1.191-0.203,1.729,0.083	C20.453,39.764,24.333,40,28,40c4.676,0,9.339-1.04,12.417-2.916C42.038,34.799,43,32.014,43,29V19C43,11.268,36.732,5,29,5z"
+        ></path>
+        <path
+          fill="#2962ff"
+          d="M36.75,27C34.683,27,33,25.317,33,23.25s1.683-3.75,3.75-3.75s3.75,1.683,3.75,3.75	S38.817,27,36.75,27z M36.75,21c-1.24,0-2.25,1.01-2.25,2.25s1.01,2.25,2.25,2.25S39,24.49,39,23.25S37.99,21,36.75,21z"
+        ></path>
+        <path
+          fill="#2962ff"
+          d="M31.5,27h-1c-0.276,0-0.5-0.224-0.5-0.5V18h1.5V27z"
+        ></path>
+        <path
+          fill="#2962ff"
+          d="M27,19.75v0.519c-0.629-0.476-1.403-0.769-2.25-0.769c-2.067,0-3.75,1.683-3.75,3.75	S22.683,27,24.75,27c0.847,0,1.621-0.293,2.25-0.769V26.5c0,0.276,0.224,0.5,0.5,0.5h1v-7.25H27z M24.75,25.5	c-1.24,0-2.25-1.01-2.25-2.25S23.51,21,24.75,21S27,22.01,27,23.25S25.99,25.5,24.75,25.5z"
+        ></path>
+        <path
+          fill="#2962ff"
+          d="M21.25,18h-8v1.5h5.321L13,26h0.026c-0.163,0.211-0.276,0.463-0.276,0.75V27h7.5	c0.276,0,0.5-0.224,0.5-0.5v-1h-5.321L21,19h-0.026c0.163-0.211,0.276-0.463,0.276-0.75V18z"
+        ></path>
+      </svg>
+    </a>
+
+    <!-- Hotline -->
+    <a
+      href="tel:1900xxxx"
+      class="dial-item hotline"
+      nz-tooltip
+      nzTooltipTitle="Hotline: 1900 xxxx"
+      nzTooltipPlacement="left"
+    >
+      <nz-icon nzType="phone" nzTheme="outline" />
+    </a>
+  </div>
+
+  <button class="main-fab" [class.open]="isOpen" (click)="toggle()">
+    <nz-icon
+      [nzType]="isOpen ? 'close' : 'customer-service'"
+      nzTheme="outline"
+    />
+  </button>
+</div>

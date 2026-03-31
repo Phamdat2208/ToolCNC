@@ -11,8 +11,7 @@
           <li
             nz-menu-item
             [nzSelected]="activeCategory === ''"
-            [routerLink]="['/products']"
-            [queryParams]="{}"
+            (click)="selectCategory('')"
           >
             <span class="cat-item-row">
               <span class="cat-name">Tất cả sản phẩm</span>
@@ -24,8 +23,7 @@
             nz-menu-item
             *ngFor="let cat of categories"
             [nzSelected]="cat.name === activeCategory"
-            [routerLink]="['/products']"
-            [queryParams]="{ category: cat.name }"
+            (click)="selectCategory(cat.name)"
           >
             <span class="cat-item-row">
               <span class="cat-name">{{ cat.name }}</span>
