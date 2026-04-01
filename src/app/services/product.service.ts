@@ -58,4 +58,8 @@ export class ProductService {
   createProductsBulk(products: any[]): Observable<any> {
     return this.http.post<any>(`${this.adminApiUrl}/bulk`, products, this.getAuthHeaders());
   }
+
+  deleteProduct(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.adminApiUrl}/${id}`, this.getAuthHeaders());
+  }
 }

@@ -29,7 +29,6 @@ export class OrderManagementComponent implements OnInit {
 
   orders: any[] = [];
   isLoadingOrders = true;
-  isAdmin = false;
 
   isVisibleOrderModal = false;
   selectedOrder: any = null;
@@ -39,13 +38,12 @@ export class OrderManagementComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
-    this.isAdmin = this.authService.isAdmin();
     this.loadOrders();
   }
 
   loadOrders() {
     this.isLoadingOrders = true;
-    const request = this.isAdmin ? this.orderService.getAllOrders() : this.orderService.getMyOrders();
+    const request = this.orderService.getMyOrders();
     
     request.subscribe({
       next: (data) => {
@@ -59,27 +57,23 @@ export class OrderManagementComponent implements OnInit {
     });
   }
 
-  updateStatus(order: any, newStatus: string) {
-    this.orderService.updateOrderStatus(order.id, newStatus).subscribe({
-      next: (res) => {
-        order.status = res.newStatus;
-        this.message.success('Cập nhật trạng thái thành công!');
-      },
-      error: (err) => {
-        console.error('Lỗi khi cập nhật trạng thái', err);
-        this.message.error('Lỗi cập nhật trạng thái');
-      }
-    });
-  }
-
   getStatusColor(status: string): string {
     switch (status?.toUpperCase()) {
-      case 'PENDING': return 'orange';
-      case 'CONFIRMED': return 'geekblue';
-      case 'SHIPPED': return 'blue';
-      case 'DELIVERED': return 'green';
-      case 'CANCELLED': return 'red';
+      case 'PENDING': return 'warning';
+      case 'SHIPPING': return 'processing';
+      case 'COMPLETED': return 'success';
+      case 'CANCELLED': return 'error';
       default: return 'default';
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    switch (status?.toUpperCase()) {
+      case 'PENDING': return 'Đang xử lý';
+      case 'SHIPPING': return 'Đang giao hàng';
+      case 'COMPLETED': return 'Đã hoàn thành';
+      case 'CANCELLED': return 'Đã hủy';
+      default: return status;
     }
   }
 

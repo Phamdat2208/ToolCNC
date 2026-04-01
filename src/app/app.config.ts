@@ -58,7 +58,14 @@ import {
   CloseCircleOutline,
   FileTextOutline,
   WalletOutline,
-  ArrowUpOutline
+  ArrowUpOutline,
+  MenuUnfoldOutline,
+  MenuFoldOutline,
+  TeamOutline,
+  PlusOutline,
+  UploadOutline,
+  LinkOutline,
+  DashOutline
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -109,7 +116,14 @@ const icons = [
   CloseCircleOutline,
   FileTextOutline,
   WalletOutline,
-  ArrowUpOutline
+  ArrowUpOutline,
+  MenuUnfoldOutline,
+  MenuFoldOutline,
+  TeamOutline,
+  PlusOutline,
+  UploadOutline,
+  LinkOutline,
+  DashOutline
 ];
 
 registerLocaleData(vi);

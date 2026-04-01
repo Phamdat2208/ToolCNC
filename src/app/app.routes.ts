@@ -11,8 +11,14 @@ import { ProductAddComponent } from './pages/admin/product-add/product-add.compo
 import { ProfileComponent } from './pages/profile/profile.component';
 import { OrderManagementComponent } from './pages/order-management/order-management.component';
 import { WishlistComponent } from './pages/wishlist/wishlist.component';
+import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
+import { AdminProductsComponent } from './pages/admin/admin-products/admin-products.component';
+import { AdminOrdersComponent } from './pages/admin/admin-orders/admin-orders.component';
+import { AdminUsersComponent } from './pages/admin/admin-users/admin-users.component';
 
 import { SupportComponent } from './pages/support/support.component';
+import { AdminLayoutComponent } from './layout/admin-layout/admin-layout.component';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -32,6 +38,20 @@ export const routes: Routes = [
       { path: 'orders', component: OrderManagementComponent },
       { path: 'wishlist', component: WishlistComponent },
       { path: 'support', component: SupportComponent }
+    ]
+  },
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    canActivate: [adminGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: AdminDashboardComponent },
+      { path: 'products', component: AdminProductsComponent },
+      { path: 'products/new', component: ProductAddComponent },
+      { path: 'products/:id/edit', component: ProductAddComponent },
+      { path: 'orders', component: AdminOrdersComponent },
+      { path: 'users', component: AdminUsersComponent },
     ]
   }
 ];

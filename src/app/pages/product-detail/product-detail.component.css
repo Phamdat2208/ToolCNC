@@ -154,15 +154,34 @@
 }
 .spec-table {
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   border-collapse: collapse;
-}
-.spec-table td {
-  padding: 12px 16px;
   border: 1px solid #f0f0f0;
 }
-.spec-table td:first-child {
+.spec-table td {
+  padding: 14px 20px;
+  border: 1px solid #f0f0f0;
+}
+.spec-label {
   background: #fafafa;
-  width: 40%;
-  font-weight: bold;
+  width: 35%;
+  font-weight: 600;
+  color: #262626;
+}
+.spec-value {
+  color: #595959;
+}
+
+.no-data {
+  padding: 40px;
+  text-align: center;
+  color: #bfbfbf;
+  background: #fafafa;
+  border-radius: 8px;
+  border: 1px dashed #d9d9d9;
+}
+.no-data nz-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+  display: block;
 }

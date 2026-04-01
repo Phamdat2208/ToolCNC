@@ -86,13 +86,101 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label>Hình ảnh (URL)</nz-form-label>
+        <nz-form-label>Thông số kỹ thuật</nz-form-label>
         <nz-form-control>
-          <input
-            nz-input
-            formControlName="imageUrl"
-            placeholder="https://placehold.co/..."
-          />
+          <div formArrayName="specifications" class="spec-list">
+            <div *ngFor="let spec of specifications.controls; let i = index" [formGroupName]="i" class="spec-row mb-8">
+              <input nz-input formControlName="key" placeholder="Tên (VD: Trọng lượng)" />
+              <input nz-input formControlName="value" placeholder="Giá trị (VD: 1500kg)" />
+              <button nz-button nzType="text" nzDanger (click)="removeSpec(i)" type="button">
+                <nz-icon nzType="delete" />
+              </button>
+            </div>
+            <button nz-button nzType="dashed" (click)="addSpec()" type="button" style="width: 100%;">
+              <nz-icon nzType="plus" /> Thêm thông số kỹ thuật mới
+            </button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Hình ảnh sản phẩm</nz-form-label>
+        <nz-form-control>
+          <!-- Mode toggle -->
+          <nz-radio-group [(ngModel)]="uploadMode" [ngModelOptions]="{standalone: true}" nzButtonStyle="solid" class="image-mode-toggle">
+            <label nz-radio-button nzValue="url">
+              <nz-icon nzType="link" /> Nhập URL
+            </label>
+            <label nz-radio-button nzValue="upload">
+              <nz-icon nzType="upload" /> Tải ảnh lên
+            </label>
+          </nz-radio-group>
+
+          <!-- URL Mode -->
+          <div *ngIf="uploadMode === 'url'">
+            <input
+              nz-input
+              formControlName="imageUrl"
+              placeholder="https://example.com/product-image.jpg"
+              class="mt-8"
+            />
+          </div>
+
+          <!-- Upload Mode -->
+          <div *ngIf="uploadMode === 'upload'" class="upload-area">
+            <!-- Hidden file input -->
+            <input #fileInput type="file" accept="image/*" style="display:none" (change)="onFileSelected($event)" />
+
+            <!-- Drop zone / Trigger -->
+            <div *ngIf="!originalImageSrc" class="upload-dropzone" (click)="triggerFileInput()">
+              <nz-icon nzType="inbox" class="upload-icon" />
+              <p class="upload-text">Nhấp để chọn ảnh từ máy tính</p>
+              <p class="upload-hint">Hỗ trợ JPG, PNG, WEBP</p>
+            </div>
+
+            <!-- Image Editor (after selecting) -->
+            <div *ngIf="originalImageSrc" class="image-editor">
+              <div class="editor-top">
+                <div class="preview-box">
+                  <p class="editor-label">Xem trước ({{ resizeWidth }}×{{ resizeHeight }}px)</p>
+                  <img *ngIf="previewImageSrc" [src]="previewImageSrc" class="preview-img" />
+                  <div *ngIf="isResizing" class="resizing-overlay">Đang xử lý...</div>
+                </div>
+                <div class="editor-controls">
+                  <p class="editor-label">Size mẫu:</p>
+                  <div class="preset-grid">
+                    <button
+                      *ngFor="let p of presetSizes"
+                      nz-button
+                      nzSize="small"
+                      type="button"
+                      (click)="applyPreset(p)"
+                    >{{ p.label }}</button>
+                  </div>
+
+                  <nz-divider nzText="Hoặc tùy chỉnh" nzOrientation="left"></nz-divider>
+
+                  <div class="custom-size">
+                    <div class="size-input-row">
+                      <label>Rộng (px):</label>
+                      <nz-input-number [(ngModel)]="resizeWidth" [ngModelOptions]="{standalone: true}" [nzMin]="50" [nzMax]="2000" [nzStep]="10" style="width: 110px;"></nz-input-number>
+                    </div>
+                    <div class="size-input-row">
+                      <label>Cao (px):</label>
+                      <nz-input-number [(ngModel)]="resizeHeight" [ngModelOptions]="{standalone: true}" [nzMin]="50" [nzMax]="2000" [nzStep]="10" style="width: 110px;"></nz-input-number>
+                    </div>
+                    <button nz-button nzType="primary" nzSize="small" type="button" (click)="applyResize()">
+                      <nz-icon nzType="scissor" /> Áp dụng resize
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <button nz-button nzDanger type="button" nzSize="small" (click)="clearUploadedImage()" class="mt-8">
+                <nz-icon nzType="delete" /> Xóa ảnh & chọn lại
+              </button>
+            </div>
+          </div>
         </nz-form-control>
       </nz-form-item>
 

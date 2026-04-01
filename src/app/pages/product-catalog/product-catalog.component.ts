@@ -40,7 +40,8 @@ export class ProductCatalogComponent implements OnInit {
   priceRange: number[] = [0, 2000000000];
   readonly MAX_PRICE = 2000000000;
   selectedBrands: Set<string> = new Set();
-  knownBrands = ['Makino', 'Mazak', 'DMG Mori', 'Okuma', 'SMTCL', 'Hitachi'];
+  // knownBrands = ['Makino', 'Mazak', 'DMG Mori', 'Okuma', 'SMTCL', 'Hitachi'];
+  knownBrands: string[] = [];
 
   categories: any[] = [];
 
@@ -120,6 +121,15 @@ export class ProductCatalogComponent implements OnInit {
         }));
         this.totalProducts = res.totalElements;
         this.loading = false;
+
+        // Extract brands from products
+        const brands = new Set<string>();
+        this.products.forEach(p => {
+          if (p.brand) {
+            brands.add(p.brand);
+          }
+        });
+        this.knownBrands = Array.from(brands);
       },
       error: (err) => {
         console.error('Error fetching products', err);

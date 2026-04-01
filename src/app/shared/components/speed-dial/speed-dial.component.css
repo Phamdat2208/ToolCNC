@@ -6,22 +6,27 @@
 }
 
 .main-fab {
-  width: 56px;
-  height: 56px;
+  width: var(--fab-size, 56px);
+  height: var(--fab-size, 56px);
   border-radius: 50%;
   background-color: var(--primary-color);
   color: #fff;
-  border: none;
+  border: none !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: var(--fab-icon-size, 25px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
-  position: relative;
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
   z-index: 2;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
 .main-fab:hover {
@@ -97,16 +102,9 @@
   100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
 }
 
-.icon-svg {
-  width: 28px;
-  height: 28px;
-  display: block;
-}
-
-.dial-item.zalo .icon-svg {
-  width: 34px;
-  height: 34px;
-}
+  .main-fab nz-icon {
+    font-size: 26px; /* Slightly larger to match arrow-up visual weight */
+  }
 
 /* Animations for staggered appearance */
 .speed-dial-actions.open .dial-item:nth-child(1) { transition-delay: 0.15s; }

@@ -1,0 +1,86 @@
+<div class="admin-orders-container">
+  <h2 class="page-title">Quản lý đơn hàng</h2>
+
+  <nz-table #ordersTable [nzData]="orders" [nzLoading]="loading" [nzScroll]="{ x: '1000px' }">
+    <thead>
+      <tr>
+        <th>Mã đơn hàng</th>
+        <th>Khách hàng</th>
+        <th>Ngày đặt</th>
+        <th>Tổng tiền</th>
+        <th>Số lượng</th>
+        <th>Trạng thái</th>
+        <th nzWidth="200px">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of ordersTable.data">
+        <td class="font-bold">#{{ order.trackingNumber || order.id }}</td>
+        <td>
+          <div>{{ order.customerName }}</div>
+          <small class="text-secondary">{{ order.phone }}</small>
+        </td>
+        <td>{{ order.dateCreated | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td class="font-bold">{{ order.totalPrice | currency:'VND':'symbol':'1.0-0' }}</td>
+        <td>{{ order.totalQuantity }}</td>
+        <td>
+          <ng-container *ngIf="order.status === 'COMPLETED' || order.status === 'CANCELLED'">
+            <nz-tag [nzColor]="getStatusColor(order.status)">{{ getStatusLabel(order.status) }}</nz-tag>
+          </ng-container>
+          <nz-select *ngIf="order.status !== 'COMPLETED' && order.status !== 'CANCELLED'"
+            [(ngModel)]="order.status" 
+            (ngModelChange)="updateStatus(order)" 
+            [nzSize]="'small'"
+            style="width: 140px;"
+          >
+            <nz-option nzValue="PENDING" nzLabel="Đang xử lý"></nz-option>
+            <nz-option nzValue="SHIPPING" nzLabel="Đang giao hàng"></nz-option>
+            <nz-option nzValue="COMPLETED" nzLabel="Đã hoàn thành"></nz-option>
+            <nz-option nzValue="CANCELLED" nzLabel="Đã hủy"></nz-option>
+          </nz-select>
+        </td>
+        <td>
+          <button nz-button nzType="link" (click)="viewOrderDetails(order)">Xem chi tiết</button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <!-- Modal Chi tiết Đơn hàng -->
+  <nz-modal
+    [(nzVisible)]="isVisibleOrderModal"
+    [nzTitle]="'Chi tiết mã đơn hàng: ' + selectedOrder?.trackingNumber"
+    (nzOnCancel)="closeOrderModal()"
+    [nzFooter]="null"
+    nzWidth="700px"
+  >
+    <ng-container *nzModalContent>
+      <div *ngIf="selectedOrder">
+        <div class="mb-16 flex-between">
+          <span class="text-secondary">Ngày đặt: {{ selectedOrder.dateCreated | date:'dd/MM/yyyy HH:mm' }}</span>
+          <nz-tag [nzColor]="getStatusColor(selectedOrder.status)">{{ getStatusLabel(selectedOrder.status) }}</nz-tag>
+        </div>
+        
+        <nz-divider nzText="Danh sách sản phẩm" nzOrientation="left"></nz-divider>
+
+        <div style="max-height: 400px; overflow-y: auto;">
+          <div *ngFor="let item of selectedOrder.items" class="flex-center" style="padding: 12px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center;">
+            <img [src]="item.imageUrl || 'https://placehold.co/80x80?text=No+Image'" alt="product image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-right: 16px; border: 1px solid var(--border-color);" />
+            <div class="flex-1" style="flex: 1;">
+              <h4 style="margin: 0; font-size: 15px;">{{ item.productName }}</h4>
+              <p class="mt-4 text-secondary text-sm" style="margin: 0;">Đơn giá: {{ item.unitPrice | currency:'VND':'symbol':'1.0-0' }} x {{ item.quantity }}</p>
+            </div>
+            <div class="price-red text-lg" style="color: var(--primary-color); font-weight: bold;">
+              {{ item.unitPrice * item.quantity | currency:'VND':'symbol':'1.0-0' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-24 pt-16 bg-gray shadow-card" style="text-align: right; padding: 16px; background: #fafafa; border-radius: 8px;">
+          <p class="mb-8 text-md text-light">Tổng số lượng: <strong>{{ selectedOrder.totalQuantity }}</strong></p>
+          <p class="mb-0 text-lg">Thành tiền: <strong class="price-red" style="color: var(--primary-color); font-size: 18px;">{{ selectedOrder.totalPrice | currency:'VND':'symbol':'1.0-0' }}</strong></p>
+        </div>
+      </div>
+    </ng-container>
+  </nz-modal>
+</div>

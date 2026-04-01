@@ -3,6 +3,13 @@
   (mouseenter)="isOpen = true"
   (mouseleave)="isOpen = false"
 >
+  <button class="main-fab" [class.open]="isOpen" (click)="toggle()">
+    <nz-icon
+      [nzType]="isOpen ? 'close' : 'customer-service'"
+      nzTheme="outline"
+    />
+  </button>
+
   <div class="speed-dial-actions" [class.open]="isOpen">
     <!-- Facebook -->
     <a
@@ -102,11 +109,4 @@
       <nz-icon nzType="phone" nzTheme="outline" />
     </a>
   </div>
-
-  <button class="main-fab" [class.open]="isOpen" (click)="toggle()">
-    <nz-icon
-      [nzType]="isOpen ? 'close' : 'customer-service'"
-      nzTheme="outline"
-    />
-  </button>
 </div>

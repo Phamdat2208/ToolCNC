@@ -34,6 +34,7 @@ export class ProductDetailComponent implements OnInit {
   mainImage: string = '';
   quantity = 1;
   isLoading = true;
+  parsedSpecs: any[] = [];
 
   private notification = inject(NzNotificationService);
 
@@ -55,8 +56,21 @@ export class ProductDetailComponent implements OnInit {
         this.product.images = this.product.imageUrl ? [this.product.imageUrl] : ['https://placehold.co/600x400?text=No+Image'];
         this.mainImage = this.product.images[0];
 
+        // Parse specifications JSON
+        this.parsedSpecs = [];
+        if (this.product.specifications) {
+          try {
+            const specs = JSON.parse(this.product.specifications);
+            if (Array.isArray(specs)) {
+              this.parsedSpecs = specs.filter(s => s.key && s.value);
+            }
+          } catch (e) {
+            console.error('Error parsing specs', e);
+          }
+        }
+
         // Setup features mock if description is plain
-        this.product.features = this.product.description ? this.product.description.split('\n').filter((f: string) => f.trim().length > 0) : ['Sản phẩm chưa có mô tả chi tiết'];
+        this.product.features = this.product.description ? this.product.description.split('\n').filter((f: string) => f.trim().length > 0) : ['Sản phẩm chưa có đặc điểm nổi bật'];
 
         this.breadcrumbItems = [
           { label: 'Trang chủ', url: '/' },

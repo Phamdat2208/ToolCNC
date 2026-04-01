@@ -1,0 +1,9 @@
+    .admin-products-container { padding: 0; }
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .page-header h2 { margin: 0; font-weight: 600; }
+    .search-bar { margin-bottom: 20px; max-width: 400px; }
