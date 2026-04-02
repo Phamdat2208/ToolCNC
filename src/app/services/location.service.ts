@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 
 export interface Province {
@@ -19,7 +20,7 @@ export interface Ward {
 export class LocationService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = 'http://localhost:8080/api/v1/locations';
+  private apiUrl = `${environment.apiUrl}/api/v1/locations`;
 
   private getAuthHeaders() {
     const token = this.authService.getToken();

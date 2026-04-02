@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 import { catchError, distinctUntilChanged } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
@@ -20,7 +21,7 @@ export interface CartItem {
 export class CartService {
   cartItems = signal<CartItem[]>([]);
 
-  private apiUrl = 'http://localhost:8080/api/v1/cart';
+  private apiUrl = `${environment.apiUrl}/api/v1/cart`;
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private router = inject(Router);

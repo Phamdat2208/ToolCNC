@@ -3,9 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthService } from '../../services/auth.service';
@@ -13,9 +11,15 @@ import { CustomInputComponent } from '../../shared/components/custom-input/custo
 
 @Component({
   selector: 'app-register',
+  standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, RouterLink,
-    NzFormModule, NzButtonModule, NzTypographyModule, NzIconModule, CustomInputComponent
+    CommonModule, 
+    ReactiveFormsModule, 
+    RouterLink,
+    NzFormModule, 
+    NzButtonModule, 
+    NzIconModule, 
+    CustomInputComponent
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -31,7 +35,7 @@ export class RegisterComponent {
   confirmationValidator: ValidatorFn = (control: AbstractControl): { [s: string]: boolean } => {
     if (!control.value) {
       return { required: true };
-    } else if (control.value !== this.registerForm.controls['password'].value) {
+    } else if (this.registerForm && control.value !== this.registerForm.get('password')?.value) {
       return { confirm: true, error: true };
     }
     return {};
@@ -44,8 +48,15 @@ export class RegisterComponent {
     confirmPassword: ['', [Validators.required, this.confirmationValidator]]
   });
 
+  get confirmPasswordError(): string {
+    const control = this.registerForm.get('confirmPassword');
+    if (control?.hasError('required')) return 'Vui lòng xác nhận mật khẩu!';
+    if (control?.hasError('confirm')) return 'Hai mật khẩu không khớp!';
+    return '';
+  }
+
   updateConfirmValidator(): void {
-    Promise.resolve().then(() => this.registerForm.controls['confirmPassword'].updateValueAndValidity());
+    Promise.resolve().then(() => this.registerForm.get('confirmPassword')?.updateValueAndValidity());
   }
 
   submitForm(): void {

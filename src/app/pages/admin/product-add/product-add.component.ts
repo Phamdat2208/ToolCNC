@@ -24,10 +24,11 @@ import { AuthService } from '../../../services/auth.service';
 import { CustomInputComponent } from '../../../shared/components/custom-input/custom-input.component';
 import { CustomSelectComponent, SelectOption } from '../../../shared/components/custom-select/custom-select.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-product-add',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzFormModule, NzInputModule, NzButtonModule, NzInputNumberModule, NzTabsModule, NzSelectModule, NzRadioModule, NzDividerModule, NzIconModule, ImageCropperComponent, CustomInputComponent, CustomSelectComponent, LoadingComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzFormModule, NzInputModule, NzButtonModule, NzInputNumberModule, NzTabsModule, NzSelectModule, NzRadioModule, NzDividerModule, NzIconModule, ImageCropperComponent, CustomInputComponent, CustomSelectComponent],
   templateUrl: './product-add.component.html',
   styleUrl: './product-add.component.css'
 })
@@ -219,9 +220,9 @@ export class ProductAddComponent implements OnInit {
       const headers: any = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      this.http.post<any>('http://localhost:8080/api/v1/admin/upload/image', formData, { headers })
+      this.http.post<any>(`${environment.apiUrl}/api/v1/admin/upload/image`, formData, { headers })
         .subscribe({
-          next: (res) => resolve('http://localhost:8080' + res.url),
+          next: (res) => resolve(environment.apiUrl + res.url),
           error: (err) => reject(err)
         });
     });

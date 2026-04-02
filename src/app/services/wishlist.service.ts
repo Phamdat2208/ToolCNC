@@ -5,12 +5,13 @@ import { catchError, distinctUntilChanged } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WishlistService {
-  private apiUrl = 'http://localhost:8080/api/v1/wishlist';
+  private apiUrl = `${environment.apiUrl}/api/v1/wishlist`;
   private http = inject(HttpClient);
   private authService = inject(AuthService);
 
