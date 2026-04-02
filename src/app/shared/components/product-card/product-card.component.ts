@@ -28,8 +28,12 @@ export class ProductCardComponent {
   private router = inject(Router);
   private notification = inject(NzNotificationService);
 
+  isAddingToCart = false;
+
   addToCart(product: any) {
+    this.isAddingToCart = true;
     this.cartService.addToCart(product, 1, product.img).subscribe(success => {
+      this.isAddingToCart = false;
       if (success) {
         this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`);
       }

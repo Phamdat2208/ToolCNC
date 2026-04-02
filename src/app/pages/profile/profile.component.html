@@ -18,70 +18,65 @@
     </div>
   </div>
 
-  <div class="profile-card shadow-premium" *ngIf="!isLoadingProfile; else loadingTemplate">
-    <div class="view-mode">
-      <form nz-form [formGroup]="profileForm" nzLayout="vertical">
-        <div class="user-info-grid">
-          <div class="info-row">
-            <div class="info-label">Tên đăng nhập</div>
-            <div class="info-value">{{ userInfo?.username }}</div>
-          </div>
-          <div class="info-row">
-            <div class="info-label">Email</div>
-            <div class="info-value">{{ userInfo?.email || 'Chưa cập nhật' }}</div>
-          </div>
-          <div class="info-divider"></div>
+  <app-loading [isLoading]="isLoadingProfile" tip="Đang tải thông tin...">
+    <div class="profile-card shadow-premium" *ngIf="!isLoadingProfile">
+      <div class="view-mode">
+        <form nz-form [formGroup]="profileForm" nzLayout="vertical">
+          <div class="user-info-grid">
+            <div class="info-row">
+              <div class="info-label">Tên đăng nhập</div>
+              <div class="info-value">{{ userInfo?.username }}</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Email</div>
+              <div class="info-value">{{ userInfo?.email || 'Chưa cập nhật' }}</div>
+            </div>
+            <div class="info-divider"></div>
 
-          <!-- Inline Editable: Họ và tên -->
-          <div class="info-row" [class.editing]="editMode">
-            <div class="info-label">Họ và tên</div>
-            <div class="info-value">
-              <ng-container *ngIf="!editMode; else editFullNameTpl">
-                <span class="emphasis">{{ userInfo?.fullName || 'Chưa cập nhật' }}</span>
-              </ng-container>
-              <ng-template #editFullNameTpl>
-                <nz-form-item class="inline-form-item">
-                  <nz-form-control>
-                    <input nz-input formControlName="fullName" placeholder="VD: Nguyễn Văn A" class="inline-input" />
-                  </nz-form-control>
-                </nz-form-item>
-              </ng-template>
+            <!-- Inline Editable: Họ và tên -->
+            <div class="info-row" [class.editing]="editMode">
+              <div class="info-label">Họ và tên</div>
+              <div class="info-value">
+                <ng-container *ngIf="!editMode; else editFullNameTpl">
+                  <span class="emphasis">{{ userInfo?.fullName || 'Chưa cập nhật' }}</span>
+                </ng-container>
+                <ng-template #editFullNameTpl>
+                  <div class="inline-form-item">
+                    <app-custom-input
+                      formControlName="fullName"
+                      placeholder="VD: Nguyễn Văn A"
+                    ></app-custom-input>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+
+            <!-- Inline Editable: Số điện thoại -->
+            <div class="info-row" [class.editing]="editMode">
+              <div class="info-label">Số điện thoại</div>
+              <div class="info-value">
+                <ng-container *ngIf="!editMode; else editPhoneTpl">
+                  <span class="emphasis">{{ userInfo?.phone || 'Chưa cập nhật' }}</span>
+                </ng-container>
+                <ng-template #editPhoneTpl>
+                  <div class="inline-form-item">
+                    <app-custom-input
+                      formControlName="phone"
+                      placeholder="VD: 0912345678"
+                      [errorTip]="profileForm?.get('phone')?.hasError('pattern') ? 'Số điện thoại không hợp lệ!' : ''"
+                    ></app-custom-input>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <div class="info-label">Quyền hạn</div>
+              <div class="info-value"><span class="role-badge">{{ userInfo?.role }}</span></div>
             </div>
           </div>
-
-          <!-- Inline Editable: Số điện thoại -->
-          <div class="info-row" [class.editing]="editMode">
-            <div class="info-label">Số điện thoại</div>
-            <div class="info-value">
-              <ng-container *ngIf="!editMode; else editPhoneTpl">
-                <span class="emphasis">{{ userInfo?.phone || 'Chưa cập nhật' }}</span>
-              </ng-container>
-              <ng-template #editPhoneTpl>
-                <nz-form-item class="inline-form-item">
-                  <nz-form-control [nzErrorTip]="phoneErrorTpl">
-                    <input nz-input formControlName="phone" placeholder="VD: 0912345678" class="inline-input" />
-                    <ng-template #phoneErrorTpl let-control>
-                      <ng-container *ngIf="control.hasError('pattern')">Số điện thoại không hợp lệ!</ng-container>
-                    </ng-template>
-                  </nz-form-control>
-                </nz-form-item>
-              </ng-template>
-            </div>
-          </div>
-
-          <div class="info-row">
-            <div class="info-label">Quyền hạn</div>
-            <div class="info-value"><span class="role-badge">{{ userInfo?.role }}</span></div>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
-
-  <ng-template #loadingTemplate>
-    <div class="loading-state">
-      <nz-spin nzSimple nzSize="large"></nz-spin>
-      <p>Đang tải thông tin...</p>
-    </div>
-  </ng-template>
+  </app-loading>
 </div>

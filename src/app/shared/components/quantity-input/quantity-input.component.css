@@ -1,3 +1,62 @@
-.quantity-wrapper {
-  display: inline-block;
+.modern-quantity-wrapper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  overflow: hidden;
+  background: white;
+  height: 32px;
+  transition: all 0.3s;
+}
+
+.modern-quantity-wrapper:hover {
+  border-color: var(--primary-color);
+}
+
+.qty-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  width: 32px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.qty-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  color: var(--primary-color);
+}
+
+.qty-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: #f8fafc;
+}
+
+.qty-input {
+  width: 38px;
+  text-align: center;
+  border: none;
+  border-left: 1px solid #d9d9d9;
+  border-right: 1px solid #d9d9d9;
+  height: 100%;
+  font-weight: 500;
+  color: #0f172a;
+  outline: none;
+  font-size: 14px;
+}
+
+/* Ẩn mũi tên spinner mặc định của input type="number" */
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.qty-input[type=number] {
+  appearance: textfield;
+  -moz-appearance: textfield;
 }

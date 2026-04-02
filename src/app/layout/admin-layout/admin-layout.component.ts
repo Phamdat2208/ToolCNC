@@ -99,7 +99,10 @@ import { AuthService } from '../../services/auth.service';
     }
     .admin-sider {
       box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-      position: relative;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
       z-index: 100;
     }
     .logo-wrapper {
@@ -139,6 +142,8 @@ import { AuthService } from '../../services/auth.service';
       justify-content: space-between;
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
       z-index: 10;
+      position: sticky;
+      top: 0;
     }
     .user-dropdown {
       display: flex;

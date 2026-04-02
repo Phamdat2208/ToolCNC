@@ -27,63 +27,59 @@
       (ngSubmit)="submitSingle()"
       nzLayout="vertical"
     >
-      <nz-form-item>
-        <nz-form-label nzRequired>Tên sản phẩm</nz-form-label>
-        <nz-form-control nzErrorTip="Vui lòng nhập tên sản phẩm">
-          <input
-            nz-input
-            formControlName="name"
-            placeholder="Ví dụ: Máy phay đo lường CNC..."
-          />
-        </nz-form-control>
-      </nz-form-item>
+      <app-custom-input
+        formControlName="name"
+        label="Tên sản phẩm"
+        placeholder="Ví dụ: Máy phay đo lường CNC..."
+        [required]="true"
+        errorTip="Vui lòng nhập tên sản phẩm"
+      ></app-custom-input>
 
-      <nz-form-item>
-        <nz-form-label nzRequired>Giá (VND)</nz-form-label>
-        <nz-form-control nzErrorTip="Vui lòng nhập giá trị lớn hơn 0">
-          <nz-input-number
-            formControlName="price"
-            [nzMin]="0"
-            [nzStep]="100000"
-            style="width: 100%"
-          ></nz-input-number>
-        </nz-form-control>
-      </nz-form-item>
+      <app-custom-input
+        formControlName="price"
+        label="Giá (VND)"
+        type="number"
+        [min]="0"
+        [step]="100000"
+        [required]="true"
+        errorTip="Vui lòng nhập giá trị lớn hơn 0"
+      ></app-custom-input>
 
-      <nz-form-item>
-        <nz-form-label nzRequired>Thương hiệu</nz-form-label>
-        <nz-form-control nzErrorTip="Vui lòng nhập thương hiệu">
-          <input
-            nz-input
-            formControlName="brand"
-            placeholder="Ví dụ: Mazak, Hitachi..."
-          />
-        </nz-form-control>
-      </nz-form-item>
+      <app-custom-input
+        formControlName="brand"
+        label="Thương hiệu"
+        placeholder="Ví dụ: Mazak, Hitachi..."
+        [required]="true"
+        errorTip="Vui lòng nhập thương hiệu"
+      ></app-custom-input>
 
-      <nz-form-item>
-        <nz-form-label nzRequired>Danh mục</nz-form-label>
-        <nz-form-control nzErrorTip="Vui lòng chọn danh mục">
-          <nz-select
-            (onChange)="onCategoryChange($event)"
-            formControlName="categoryId"
-            nzPlaceHolder="Chọn danh mục sản phẩm"
-          >
-            <nz-option
-              *ngFor="let cat of categories"
-              [nzValue]="cat.id"
-              [nzLabel]="cat.name"
-            ></nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
+      <app-custom-input
+        formControlName="stock"
+        label="Số lượng kho (Stock)"
+        type="number"
+        [min]="0"
+        [step]="1"
+        [required]="true"
+        errorTip="Vui lòng nhập giá trị lớn hơn hoặc bằng 0"
+      ></app-custom-input>
 
-      <nz-form-item>
-        <nz-form-label>Mô tả chi tiết</nz-form-label>
-        <nz-form-control>
-          <textarea nz-input formControlName="description" rows="4"></textarea>
-        </nz-form-control>
-      </nz-form-item>
+      <app-custom-select
+        formControlName="categoryId"
+        label="Danh mục"
+        placeholder="Chọn danh mục sản phẩm"
+        [options]="categoryOptions"
+        [required]="true"
+        errorTip="Vui lòng chọn danh mục"
+        [showSearch]="true"
+        (ngModelChange)="onCategoryChange($event)"
+      ></app-custom-select>
+
+      <app-custom-input
+        formControlName="description"
+        label="Mô tả chi tiết"
+        type="textarea"
+        [rows]="4"
+      ></app-custom-input>
 
       <nz-form-item>
         <nz-form-label>Thông số kỹ thuật</nz-form-label>
@@ -132,14 +128,32 @@
             <input #fileInput type="file" accept="image/*" style="display:none" (change)="onFileSelected($event)" />
 
             <!-- Drop zone / Trigger -->
-            <div *ngIf="!originalImageSrc" class="upload-dropzone" (click)="triggerFileInput()">
+            <div *ngIf="!originalImageSrc && !showCropper" class="upload-dropzone" (click)="triggerFileInput()">
               <nz-icon nzType="inbox" class="upload-icon" />
               <p class="upload-text">Nhấp để chọn ảnh từ máy tính</p>
               <p class="upload-hint">Hỗ trợ JPG, PNG, WEBP</p>
             </div>
 
-            <!-- Image Editor (after selecting) -->
-            <div *ngIf="originalImageSrc" class="image-editor">
+            <!-- CROPPER SECTION -->
+            <div *ngIf="showCropper" class="cropper-section mt-16 p-16" style="border: 1px dashed var(--primary-color); border-radius: 8px;">
+               <p class="editor-label mb-8">Kéo thả khung cắt theo chuẩn 1:1 (Hình Vuông)</p>
+               <image-cropper
+                 [imageChangedEvent]="imageChangedEvent"
+                 [maintainAspectRatio]="true"
+                 [aspectRatio]="1 / 1"
+                 output="base64"
+                 format="jpeg"
+                 (imageCropped)="imageCropped($event)"
+                 style="max-height: 400px;"
+               ></image-cropper>
+               <div class="mt-16 flex-gap-12">
+                 <button nz-button nzType="primary" type="button" (click)="confirmCrop()"><nz-icon nzType="check" /> Xác nhận cắt ảnh</button>
+                 <button nz-button type="button" nzDanger (click)="cancelCrop()">Hủy cắt</button>
+               </div>
+            </div>
+
+            <!-- Image Editor (after selecting and cropping) -->
+            <div *ngIf="originalImageSrc && !showCropper" class="image-editor">
               <div class="editor-top">
                 <div class="preview-box">
                   <p class="editor-label">Xem trước ({{ resizeWidth }}×{{ resizeHeight }}px)</p>

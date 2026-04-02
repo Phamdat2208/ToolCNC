@@ -91,9 +91,8 @@
         </button>
       </div>
 
-      <div *ngIf="isTracking" class="tracking-loading">
-        <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
-        <p>Đang tra cứu đơn hàng...</p>
+      <div *ngIf="isTracking" class="tracking-loading mt-lg">
+        <app-loading [isLoading]="isTracking" tip="Đang tra cứu đơn hàng..."></app-loading>
       </div>
 
       <div *ngIf="trackingError && !isTracking" class="tracking-error animate-up">
@@ -212,36 +211,42 @@
         <form nz-form nzLayout="vertical" [formGroup]="contactForm" (ngSubmit)="submitForm()" class="support-form">
           <div nz-row [nzGutter]="[16, 16]">
             <div nz-col [nzXs]="24" [nzSm]="12">
-              <nz-form-item>
-                <nz-form-label [nzRequired]="true">Họ và tên</nz-form-label>
-                <nz-form-control nzErrorTip="Vui lòng nhập họ tên">
-                  <input nz-input formControlName="name" placeholder="VD: Nguyễn Văn A" />
-                </nz-form-control>
-              </nz-form-item>
+              <app-custom-input
+                formControlName="name"
+                label="Họ và tên"
+                placeholder="VD: Nguyễn Văn A"
+                [required]="true"
+                errorTip="Vui lòng nhập họ tên"
+              ></app-custom-input>
             </div>
             <div nz-col [nzXs]="24" [nzSm]="12">
-              <nz-form-item>
-                <nz-form-label [nzRequired]="true">Email</nz-form-label>
-                <nz-form-control nzErrorTip="Vui lòng nhập email hợp lệ">
-                  <input nz-input formControlName="email" placeholder="email&#64;example.com" />
-                </nz-form-control>
-              </nz-form-item>
+              <app-custom-input
+                formControlName="email"
+                type="email"
+                label="Email"
+                placeholder="email@example.com"
+                [required]="true"
+                errorTip="Vui lòng nhập email hợp lệ"
+              ></app-custom-input>
             </div>
           </div>
 
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Chủ đề</nz-form-label>
-            <nz-form-control nzErrorTip="Vui lòng nhập chủ đề">
-              <input nz-input formControlName="subject" placeholder="VD: Yêu cầu sửa chữa máy CNC..." />
-            </nz-form-control>
-          </nz-form-item>
+          <app-custom-input
+            formControlName="subject"
+            label="Chủ đề"
+            placeholder="VD: Yêu cầu sửa chữa máy CNC..."
+            [required]="true"
+            errorTip="Vui lòng nhập chủ đề"
+          ></app-custom-input>
 
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Nội dung</nz-form-label>
-            <nz-form-control nzErrorTip="Vui lòng nhập nội dung yêu cầu">
-              <textarea nz-input formControlName="message" [nzAutosize]="{ minRows: 4, maxRows: 8 }" placeholder="Mô tả chi tiết yêu cầu của bạn..."></textarea>
-            </nz-form-control>
-          </nz-form-item>
+          <app-custom-textarea
+            formControlName="message"
+            label="Nội dung"
+            placeholder="Mô tả chi tiết yêu cầu của bạn..."
+            [required]="true"
+            [rows]="5"
+            errorTip="Vui lòng nhập nội dung yêu cầu"
+          ></app-custom-textarea>
 
           <div class="form-actions mt-lg">
             <button nz-button nzType="primary" nzBlock class="btn-submit">

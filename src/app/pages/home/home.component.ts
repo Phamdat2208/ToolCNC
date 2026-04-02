@@ -12,6 +12,7 @@ import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { ProductService } from '../../services/product.service';
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-home',
@@ -26,7 +27,8 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
     NzSpinModule, 
     NzBackTopModule, 
     ProductCardComponent, 
-    ScrollRevealDirective
+    ScrollRevealDirective,
+    LoadingComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'

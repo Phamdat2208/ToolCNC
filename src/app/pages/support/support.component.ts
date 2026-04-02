@@ -13,6 +13,9 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { OrderService } from '../../services/order.service';
+import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
+import { CustomTextareaComponent } from '../../shared/components/custom-textarea/custom-textarea.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 interface FAQ {
   question: string;
@@ -36,7 +39,10 @@ interface FAQ {
     NzFormModule,
     NzSpinModule,
     NzTagModule,
-    NzDividerModule
+    NzDividerModule,
+    CustomInputComponent,
+    CustomTextareaComponent,
+    LoadingComponent
   ],
   templateUrl: './support.component.html',
   styleUrls: ['./support.component.css']

@@ -48,35 +48,82 @@
     [(nzVisible)]="isVisibleOrderModal"
     [nzTitle]="'Chi tiết mã đơn hàng: ' + selectedOrder?.trackingNumber"
     (nzOnCancel)="closeOrderModal()"
-    [nzFooter]="null"
+    [nzFooter]="modalFooter"
     nzWidth="700px"
   >
     <ng-container *nzModalContent>
       <div *ngIf="selectedOrder">
-        <div class="mb-16 flex-between">
-          <span class="text-secondary">Ngày đặt: {{ selectedOrder.dateCreated | date:'dd/MM/yyyy HH:mm' }}</span>
-          <nz-tag [nzColor]="getStatusColor(selectedOrder.status)">{{ getStatusLabel(selectedOrder.status) }}</nz-tag>
+        <div class="modal-header-custom mb-16">
+          <h3>Thông tin đơn hàng <span class="text-primary">#{{ selectedOrder.trackingNumber }}</span></h3>
+          <div class="flex-between align-center">
+            <span class="text-secondary"><nz-icon nzType="calendar" /> {{ selectedOrder.dateCreated | date:'dd/MM/yyyy HH:mm' }}</span>
+            <nz-tag [nzColor]="getStatusColor(selectedOrder.status)" style="border-radius: 12px; padding: 2px 12px;">{{ getStatusLabel(selectedOrder.status) }}</nz-tag>
+          </div>
+        </div>
+
+        <div *ngIf="selectedOrder.status === 'CANCELLED' && selectedOrder.cancelReason" class="alert-box-danger mb-24">
+          <strong class="text-danger"><nz-icon nzType="info-circle" /> Lý do hủy:</strong>
+          <span style="margin-left: 8px;">{{ selectedOrder.cancelReason }}</span>
         </div>
         
-        <nz-divider nzText="Danh sách sản phẩm" nzOrientation="left"></nz-divider>
+        <nz-divider nzText="Danh sách sản phẩm" nzOrientation="left" class="divider-custom"></nz-divider>
 
-        <div style="max-height: 400px; overflow-y: auto;">
-          <div *ngFor="let item of selectedOrder.items" class="flex-center" style="padding: 12px; border-bottom: 1px solid var(--border-color);">
-            <img [src]="item.imageUrl || 'https://placehold.co/80x80?text=No+Image'" alt="product image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-right: 16px; border: 1px solid var(--border-color);" />
+        <div class="product-list-wrapper">
+          <div *ngFor="let item of selectedOrder.items" class="product-item">
+            <img [src]="item.imageUrl || 'https://placehold.co/80x80?text=No+Image'" alt="product image" class="product-img" />
             <div class="flex-1">
-              <h4 style="margin: 0; font-size: 15px;">{{ item.productName }}</h4>
-              <p class="mt-4 text-secondary text-sm" style="margin: 0;">Đơn giá: {{ item.unitPrice | currency:'VND':'symbol' }} x {{ item.quantity }}</p>
+              <h4 style="margin: 0; font-size: 15px; font-weight: 600;">{{ item.productName }}</h4>
+              <p class="mt-4 text-secondary text-sm" style="margin: 0;">Đơn giá: {{ item.unitPrice | currency:'VND':'symbol':'1.0-0' }} x {{ item.quantity }}</p>
             </div>
-            <div class="price-red text-lg">
-              {{ item.unitPrice * item.quantity | currency:'VND':'symbol' }}
+            <div class="text-lg" style="color: #333; font-weight: 600;">
+              {{ item.unitPrice * item.quantity | currency:'VND':'symbol':'1.0-0' }}
             </div>
           </div>
         </div>
 
-        <div class="mt-24 pt-16 bg-gray shadow-card" style="text-align: right; padding: 16px;">
-          <p class="mb-8 text-md text-light">Tổng số lượng: <strong>{{ selectedOrder.totalQuantity }}</strong></p>
-          <p class="mb-0 text-lg">Thành tiền: <strong class="price-red">{{ selectedOrder.totalPrice | currency:'VND':'symbol' }}</strong></p>
+        <div class="summary-section mt-24">
+          <p class="mb-8 text-md font-medium">Tổng số lượng: <strong>{{ selectedOrder.totalQuantity }}</strong></p>
+          <p class="mb-0 text-lg">Thành tiền: <strong class="summary-total">{{ selectedOrder.totalPrice | currency:'VND':'symbol':'1.0-0' }}</strong></p>
         </div>
+      </div>
+    </ng-container>
+    <ng-template #modalFooter>
+      <div class="flex-between">
+        <div style="text-align: left;">
+          <button 
+             *ngIf="selectedOrder?.status === 'PENDING'"
+             nz-button nzType="default" nzDanger 
+             (click)="openCancelModal()">
+            <nz-icon nzType="close-circle" /> Hủy đặt đơn hàng
+          </button>
+        </div>
+        <button nz-button nzType="primary" (click)="closeOrderModal()">Đóng</button>
+      </div>
+    </ng-template>
+  </nz-modal>
+
+  <!-- Modal Nhập lý do Hủy đơn -->
+  <nz-modal
+    [(nzVisible)]="isVisibleCancelModal"
+    nzTitle="Xác nhận Hủy Đơn Hàng"
+    (nzOnCancel)="isVisibleCancelModal = false"
+    (nzOnOk)="submitCancelOrder()"
+    [nzOkLoading]="isCancelling"
+    nzOkText="Xác nhận Hủy"
+    nzCancelText="Bỏ qua"
+    nzOkDanger="true"
+  >
+    <ng-container *nzModalContent>
+      <div class="text-center mb-24">
+        <nz-icon nzType="warning" nzTheme="fill" class="text-warning" style="font-size: 48px; color: #faad14;" />
+      </div>
+      <p class="cancel-modal-desc text-center mb-24">
+        Bạn có chắc chắn muốn hủy đơn hàng <strong class="text-primary">#{{ selectedOrder?.trackingNumber }}</strong> không?<br>
+        Dữ liệu kho sẽ tự động được hoàn trả, và không thể hoàn tác.
+      </p>
+      <div class="p-16" style="background: #f9f9f9; border-radius: 8px; border: 1px solid #f0f0f0;">
+        <label class="cancel-reason-label">Lý do hủy đơn <span class="text-danger">*</span></label>
+        <app-custom-input [type]="'textarea'" [placeholder]="'Ví dụ: Thay đổi ý định, Nhầm địa chỉ...'" [(ngModel)]="cancelReasonText" [rows]="4"></app-custom-input>
       </div>
     </ng-container>
   </nz-modal>

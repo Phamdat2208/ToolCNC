@@ -310,6 +310,37 @@ body {
   right: var(--fab-side) !important;
 }
 
+/* Out of Stock Overlay */
+.img-wrapper-relative {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.img-out-of-stock {
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
+.out-of-stock-banner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  background-color: rgba(239, 68, 68, 0.85); /* Red overlay */
+  color: white;
+  padding: 6px 20px;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 2px solid white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  z-index: 10;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
 @media (max-width: 576px) {
   :root {
     --fab-bottom: 16px;

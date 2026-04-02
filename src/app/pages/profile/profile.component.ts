@@ -11,6 +11,8 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AuthService } from '../../services/auth.service';
+import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-profile',
@@ -18,12 +20,10 @@ import { AuthService } from '../../services/auth.service';
   imports: [
     CommonModule, 
     NzDescriptionsModule, 
-    NzSpinModule, 
-    NzIconModule, 
-    NzFormModule, 
-    NzInputModule, 
     NzButtonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CustomInputComponent,
+    LoadingComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'

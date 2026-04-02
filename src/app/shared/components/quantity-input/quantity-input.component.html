@@ -1,9 +1,17 @@
-<div class="quantity-wrapper">
-  <nz-input-number
-    [ngModel]="quantity"
-    (ngModelChange)="onQuantityChange($event)"
-    [nzMin]="1"
-    [nzMax]="maxStock"
-    [nzStep]="1"
-  ></nz-input-number>
+<div class="modern-quantity-wrapper">
+  <button type="button" class="qty-btn" (click)="decrease()" [disabled]="quantity <= 1">
+    <nz-icon nzType="minus" />
+  </button>
+  <input 
+    type="number" 
+    class="qty-input" 
+    [ngModel]="quantity" 
+    (ngModelChange)="onInputChange($event)"
+    (blur)="onBlur()"
+    [min]="1" 
+    [max]="maxStock"
+  />
+  <button type="button" class="qty-btn" (click)="increase()" [disabled]="quantity >= maxStock">
+    <nz-icon nzType="plus" />
+  </button>
 </div>

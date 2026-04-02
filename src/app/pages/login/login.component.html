@@ -20,38 +20,20 @@
       class="login-form"
       (ngSubmit)="submitForm()"
     >
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Vui lòng nhập tên đăng nhập!">
-          <nz-input-group nzPrefixIcon="user">
-            <input
-              type="text"
-              nz-input
-              formControlName="username"
-              placeholder="Tên đăng nhập"
-            />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
+      <app-custom-input
+        formControlName="username"
+        placeholder="Tên đăng nhập"
+        prefixIcon="user"
+        errorTip="Vui lòng nhập tên đăng nhập!"
+      ></app-custom-input>
 
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Vui lòng nhập mật khẩu!">
-          <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
-            <input
-              [type]="passwordVisible ? 'text' : 'password'"
-              nz-input
-              formControlName="password"
-              placeholder="Mật khẩu"
-            />
-          </nz-input-group>
-          <ng-template #suffixTemplate>
-            <nz-icon
-              [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
-              (click)="passwordVisible = !passwordVisible"
-              class="password-toggle"
-            />
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item>
+      <app-custom-input
+        formControlName="password"
+        type="password"
+        placeholder="Mật khẩu"
+        prefixIcon="lock"
+        errorTip="Vui lòng nhập mật khẩu!"
+      ></app-custom-input>
 
       <div nz-row class="login-form-margin">
         <div nz-col [nzSpan]="13">

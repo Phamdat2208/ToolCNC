@@ -7,8 +7,9 @@
 
   <div class="wishlist-grid" *ngIf="wishlistService.items().length > 0">
     <div class="wishlist-item" *ngFor="let product of wishlistService.items()">
-      <a [routerLink]="['/products', product.id]" class="item-image-wrap">
-        <img [src]="product.img || product.imageUrl || 'https://placehold.co/200x200?text=No+Image'" [alt]="product.name" />
+      <a [routerLink]="['/products', product.id]" class="item-image-wrap img-wrapper-relative" style="display: flex; border-radius: 8px;">
+        <img [src]="product.img || product.imageUrl || 'https://placehold.co/200x200?text=No+Image'" [alt]="product.name" [class.img-out-of-stock]="product.stock === 0" />
+        <div class="out-of-stock-banner" *ngIf="product.stock === 0" style="font-size: 10px; padding: 2px 8px;">Hết Hàng</div>
       </a>
       <div class="item-info">
         <a [routerLink]="['/products', product.id]" class="item-name">{{ product.name }}</a>
@@ -16,8 +17,8 @@
         <p class="item-price">{{ product.price | currency:'VND':'symbol' }}</p>
       </div>
       <div class="item-actions">
-        <button nz-button nzType="primary" (click)="addToCart(product)">
-          <nz-icon nzType="shopping-cart" /> Thêm vào giỏ
+        <button nz-button nzType="primary" (click)="addToCart(product)" [disabled]="product.stock === 0" [nzLoading]="isAddingToCart[product.id]">
+          <nz-icon nzType="shopping-cart" *ngIf="!isAddingToCart[product.id]" /> Thêm vào giỏ
         </button>
         <button nz-button nzDanger (click)="removeFromWishlist(product.id)">
           <nz-icon nzType="delete" />

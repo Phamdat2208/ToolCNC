@@ -15,10 +15,11 @@ import { ProductService } from '../../services/product.service';
 import { AuthService } from '../../services/auth.service';
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { QuantityInputComponent } from '../../shared/components/quantity-input/quantity-input.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [CommonModule, FormsModule, NzGridModule, NzButtonModule, NzIconModule, NzTabsModule, NzInputNumberModule, NzDividerModule, NzSpinModule, PageBreadcrumbComponent, QuantityInputComponent],
+  imports: [CommonModule, FormsModule, NzGridModule, NzButtonModule, NzIconModule, NzTabsModule, NzInputNumberModule, NzDividerModule, NzSpinModule, PageBreadcrumbComponent, QuantityInputComponent, LoadingComponent],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
 })
@@ -91,9 +92,13 @@ export class ProductDetailComponent implements OnInit {
     this.mainImage = img;
   }
 
+  isAddingToCart = false;
+
   addToCart() {
     if (!this.product) return;
+    this.isAddingToCart = true;
     this.cartService.addToCart(this.product, this.quantity, this.mainImage).subscribe(success => {
+      this.isAddingToCart = false;
       if (success) {
         this.notification.success('Thành công', `Đã thêm ${this.quantity} sản phẩm vào giỏ hàng`);
       }

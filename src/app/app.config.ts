@@ -65,7 +65,10 @@ import {
   PlusOutline,
   UploadOutline,
   LinkOutline,
-  DashOutline
+  DashOutline,
+  WarningOutline,
+  WarningFill,
+  MinusOutline
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -123,7 +126,10 @@ const icons = [
   PlusOutline,
   UploadOutline,
   LinkOutline,
-  DashOutline
+  DashOutline,
+  WarningOutline,
+  WarningFill,
+  MinusOutline
 ];
 
 registerLocaleData(vi);

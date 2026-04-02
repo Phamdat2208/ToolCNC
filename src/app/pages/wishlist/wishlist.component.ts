@@ -20,8 +20,12 @@ export class WishlistComponent {
   cartService = inject(CartService);
   private notification = inject(NzNotificationService);
 
+  isAddingToCart: { [key: number]: boolean } = {};
+
   addToCart(product: any) {
+    this.isAddingToCart[product.id] = true;
     this.cartService.addToCart(product, 1, product.img || product.imageUrl).subscribe(success => {
+      this.isAddingToCart[product.id] = false;
       if (success) {
         this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`);
       }

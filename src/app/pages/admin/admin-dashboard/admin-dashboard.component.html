@@ -1,60 +1,66 @@
-    <div class="dashboard-container">
-      <h2 class="page-title">Bảng điều khiển quản trị</h2>
-      
-      <div nz-row [nzGutter]="24">
-        <div nz-col [nzSpan]="6">
-          <nz-card>
-            <nz-statistic
-              [nzValue]="(totalSales | number)!"
-              [nzTitle]="'Tổng doanh thu (VNĐ)'"
-              [nzPrefix]="prefixSales"
-              [nzValueStyle]="{ color: '#3f8600' }"
-            ></nz-statistic>
-            <ng-template #prefixSales><nz-icon nzType="dollar" /></ng-template>
-          </nz-card>
-        </div>
-        <div nz-col [nzSpan]="6">
-          <nz-card>
-            <nz-statistic
-              [nzValue]="(totalOrders | number)!"
-              [nzTitle]="'Tổng đơn hàng'"
-              [nzPrefix]="prefixOrders"
-            ></nz-statistic>
-            <ng-template #prefixOrders><nz-icon nzType="shopping-cart" /></ng-template>
-          </nz-card>
-        </div>
-        <div nz-col [nzSpan]="6">
-          <nz-card>
-            <nz-statistic
-              [nzValue]="(totalProducts | number)!"
-              [nzTitle]="'Tổng sản phẩm'"
-              [nzPrefix]="prefixProducts"
-            ></nz-statistic>
-            <ng-template #prefixProducts><nz-icon nzType="appstore" /></ng-template>
-          </nz-card>
-        </div>
-        <div nz-col [nzSpan]="6">
-          <nz-card>
-            <nz-statistic
-              [nzValue]="(activeUsers | number)!"
-              [nzTitle]="'Người dùng hoạt động'"
-              [nzPrefix]="prefixUsers"
-            ></nz-statistic>
-            <ng-template #prefixUsers><nz-icon nzType="team" /></ng-template>
-          </nz-card>
-        </div>
-      </div>
+<div class="dashboard-container">
+  <h2 class="page-title">Bảng điều khiển quản trị</h2>
 
-      <div nz-row [nzGutter]="24" class="mt-24">
-        <div nz-col [nzSpan]="12">
-          <nz-card nzTitle="Cảnh báo hàng sắp hết">
-            <p>Tính năng đang phát triển...</p>
-          </nz-card>
-        </div>
-        <div nz-col [nzSpan]="12">
-          <nz-card nzTitle="Đơn hàng gần đây">
-            <p>Tính năng đang phát triển...</p>
-          </nz-card>
-        </div>
+  <app-loading [isLoading]="isLoading">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="6">
+        <nz-card>
+          <nz-statistic
+            [nzValue]="(totalSales | number)!"
+            [nzTitle]="'Tổng doanh thu (VNĐ)'"
+            [nzPrefix]="prefixSales"
+            [nzValueStyle]="{ color: '#3f8600' }"
+          ></nz-statistic>
+          <ng-template #prefixSales><nz-icon nzType="dollar" /></ng-template>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="6">
+        <nz-card>
+          <nz-statistic
+            [nzValue]="(totalOrders | number)!"
+            [nzTitle]="'Tổng đơn hàng'"
+            [nzPrefix]="prefixOrders"
+          ></nz-statistic>
+          <ng-template #prefixOrders
+            ><nz-icon nzType="shopping-cart"
+          /></ng-template>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="6">
+        <nz-card>
+          <nz-statistic
+            [nzValue]="(totalProducts | number)!"
+            [nzTitle]="'Tổng sản phẩm'"
+            [nzPrefix]="prefixProducts"
+          ></nz-statistic>
+          <ng-template #prefixProducts
+            ><nz-icon nzType="appstore"
+          /></ng-template>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="6">
+        <nz-card>
+          <nz-statistic
+            [nzValue]="(activeUsers | number)!"
+            [nzTitle]="'Người dùng hoạt động'"
+            [nzPrefix]="prefixUsers"
+          ></nz-statistic>
+          <ng-template #prefixUsers><nz-icon nzType="team" /></ng-template>
+        </nz-card>
       </div>
     </div>
+
+    <div nz-row [nzGutter]="24" class="mt-24">
+      <div nz-col [nzSpan]="12">
+        <nz-card nzTitle="Cảnh báo hàng sắp hết">
+          <p>Tính năng đang phát triển...</p>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="12">
+        <nz-card nzTitle="Đơn hàng gần đây">
+          <p>Tính năng đang phát triển...</p>
+        </nz-card>
+      </div>
+    </div>
+  </app-loading>
+</div>

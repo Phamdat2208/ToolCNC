@@ -19,6 +19,9 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { LocationService, Province, Ward } from '../../services/location.service';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
+import { CustomSelectComponent, SelectOption } from '../../shared/components/custom-select/custom-select.component';
+import { CustomTextareaComponent } from '../../shared/components/custom-textarea/custom-textarea.component';
 
 @Component({
   selector: 'app-checkout',
@@ -35,9 +38,11 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     NzGridModule, 
     NzDividerModule, 
     NzResultModule, 
-    NzSpinModule, 
     NzTagModule, 
-    NzIconModule
+    NzIconModule,
+    CustomInputComponent,
+    CustomSelectComponent,
+    CustomTextareaComponent
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
@@ -52,6 +57,8 @@ export class CheckoutComponent implements OnInit {
   // New Location Fields
   provinces: Province[] = [];
   wards: Ward[] = [];
+  provinceOptions: SelectOption[] = [];
+  wardOptions: SelectOption[] = [];
   isLoadingProvinces = false;
   isLoadingWards = false;
 
@@ -92,6 +99,7 @@ export class CheckoutComponent implements OnInit {
     this.locationService.getProvinces().subscribe({
       next: (data) => {
         this.provinces = data;
+        this.provinceOptions = data.map(p => ({ label: p.name, value: p.code }));
         this.isLoadingProvinces = false;
       },
       error: () => {
@@ -107,6 +115,7 @@ export class CheckoutComponent implements OnInit {
       this.validateForm.get('wardCode')?.disable();
       this.validateForm.patchValue({ provinceName: null, wardCode: null, wardName: null });
       this.wards = [];
+      this.wardOptions = [];
       return;
     }
 
@@ -117,10 +126,12 @@ export class CheckoutComponent implements OnInit {
     }
     
     this.wards = [];
+    this.wardOptions = [];
     this.isLoadingWards = true;
     this.locationService.getWards(code).subscribe({
       next: (data) => {
         this.wards = data;
+        this.wardOptions = data.map(w => ({ label: w.name, value: w.code }));
         this.isLoadingWards = false;
       },
       error: () => {
@@ -153,7 +164,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   validateForm: FormGroup = this.fb.group({
-    fullName: [null],
+    fullName: [null, [Validators.required]],
     phone: [
       null,
       [

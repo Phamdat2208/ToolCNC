@@ -13,11 +13,24 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
+import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-order-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, NzTableModule, NzTagModule, NzSpinModule, NzModalModule, NzButtonModule, NzDividerModule, NzSelectModule, NzIconModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    NzTableModule, 
+    NzTagModule, 
+    NzSpinModule, 
+    NzModalModule, 
+    NzButtonModule, 
+    NzDividerModule, 
+    NzSelectModule, 
+    NzIconModule,
+    CustomInputComponent
+  ],
   templateUrl: './order-management.component.html',
   styleUrl: './order-management.component.css'
 })
@@ -32,6 +45,10 @@ export class OrderManagementComponent implements OnInit {
 
   isVisibleOrderModal = false;
   selectedOrder: any = null;
+  
+  isVisibleCancelModal = false;
+  isCancelling = false;
+  cancelReasonText = '';
 
   ngOnInit(): void {
     if (!this.authService.isLoggedIn()) {
@@ -80,6 +97,34 @@ export class OrderManagementComponent implements OnInit {
   viewOrderDetails(order: any) {
     this.selectedOrder = order;
     this.isVisibleOrderModal = true;
+  }
+
+  openCancelModal() {
+    this.isVisibleCancelModal = true;
+    this.cancelReasonText = '';
+  }
+
+  submitCancelOrder() {
+    if (!this.cancelReasonText.trim()) {
+      this.message.warning('Vui lòng nhập lý do hủy đơn hàng');
+      return;
+    }
+
+    this.isCancelling = true;
+    this.orderService.cancelOrder(this.selectedOrder.id, this.cancelReasonText).subscribe({
+      next: (res) => {
+        this.message.success(res.message || 'Hủy đơn thành công');
+        this.isCancelling = false;
+        this.isVisibleCancelModal = false;
+        this.closeOrderModal();
+        this.loadOrders();
+      },
+      error: (err) => {
+        const msg = typeof err.error === 'string' ? err.error : (err.error?.message || 'Có lỗi xảy ra khi hủy đơn');
+        this.message.error(msg);
+        this.isCancelling = false;
+      }
+    });
   }
 
   closeOrderModal() {

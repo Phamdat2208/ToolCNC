@@ -9,12 +9,13 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthService } from '../../services/auth.service';
+import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-register',
   imports: [
     CommonModule, ReactiveFormsModule, RouterLink,
-    NzFormModule, NzInputModule, NzButtonModule, NzTypographyModule, NzIconModule
+    NzFormModule, NzButtonModule, NzTypographyModule, NzIconModule, CustomInputComponent
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -25,8 +26,6 @@ export class RegisterComponent {
   private router = inject(Router);
   private notification = inject(NzNotificationService);
 
-  passwordVisible = false;
-  confirmPasswordVisible = false;
   isLoading = false;
 
   confirmationValidator: ValidatorFn = (control: AbstractControl): { [s: string]: boolean } => {

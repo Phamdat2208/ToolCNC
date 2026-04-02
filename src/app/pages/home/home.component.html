@@ -116,7 +116,7 @@
   <!-- Featured Products -->
   <div class="featured-section">
     <h2 class="section-title">Sản phẩm nổi bật</h2>
-    <nz-spin [nzSpinning]="loading">
+    <app-loading [isLoading]="loading">
       <div nz-row [nzGutter]="[24, 24]">
         <div
           nz-col
@@ -130,7 +130,7 @@
           <app-product-card [product]="product"></app-product-card>
         </div>
       </div>
-    </nz-spin>
+    </app-loading>
 
     <div class="view-all-btn">
       <button nz-button nzType="default" nzSize="large" routerLink="/products" class="btn-explore-more">

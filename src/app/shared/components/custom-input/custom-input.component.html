@@ -1,0 +1,74 @@
+<nz-form-item>
+  <nz-form-label [nzRequired]="required" *ngIf="label">{{ label }}</nz-form-label>
+  <nz-form-control [nzErrorTip]="errorTip" [nzValidateStatus]="isInvalid ? 'error' : ''">
+    
+    <ng-container *ngIf="type === 'text' || type === 'password' || type === 'email'">
+      <!-- Có Icon hoặc là form Password -->
+      <ng-container *ngIf="prefixIcon || type === 'password'; else basicInput">
+        <nz-input-group [nzPrefix]="prefixIcon ? prefixTemplate : undefined" [nzSuffix]="type === 'password' ? suffixPasswordTemplate : undefined">
+           <input
+            nz-input
+            [type]="type === 'password' ? (passwordVisible ? 'text' : 'password') : type"
+            [placeholder]="placeholder"
+            [disabled]="disabled"
+            [ngModel]="value"
+            (ngModelChange)="handleInputChange($event)"
+            (blur)="handleBlur()"
+          />
+        </nz-input-group>
+        
+        <ng-template #prefixTemplate>
+          <nz-icon [nzType]="prefixIcon" />
+        </ng-template>
+
+        <ng-template #suffixPasswordTemplate>
+          <nz-icon
+            [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+            (click)="passwordVisible = !passwordVisible"
+            style="cursor: pointer; color: #8c8c8c"
+          />
+        </ng-template>
+      </ng-container>
+
+      <!-- Input thông thường -->
+      <ng-template #basicInput>
+        <input
+          nz-input
+          [type]="type"
+          [placeholder]="placeholder"
+          [disabled]="disabled"
+          [ngModel]="value"
+          (ngModelChange)="handleInputChange($event)"
+          (blur)="handleBlur()"
+        />
+      </ng-template>
+    </ng-container>
+
+    <ng-container *ngIf="type === 'number'">
+      <nz-input-number
+        [nzPlaceHolder]="placeholder"
+        [nzDisabled]="disabled"
+        [nzMin]="min !== null ? min : -999999999"
+        [nzMax]="max !== null ? max : 999999999"
+        [nzStep]="step"
+        style="width: 100%"
+        [ngModel]="value"
+        (ngModelChange)="handleInputChange($event)"
+        (blur)="handleBlur()"
+      ></nz-input-number>
+    </ng-container>
+
+    <ng-container *ngIf="type === 'textarea'">
+      <textarea
+        nz-input
+        [rows]="rows"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [ngModel]="value"
+        (ngModelChange)="handleInputChange($event)"
+        (blur)="handleBlur()"
+      ></textarea>
+    </ng-container>
+
+  </nz-form-control>
+</nz-form-item>

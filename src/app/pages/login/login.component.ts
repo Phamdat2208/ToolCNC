@@ -10,12 +10,13 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthService } from '../../services/auth.service';
+import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-login',
   imports: [
     CommonModule, ReactiveFormsModule, RouterLink,
-    NzFormModule, NzInputModule, NzButtonModule, NzCheckboxModule, NzTypographyModule, NzIconModule
+    NzFormModule, NzButtonModule, NzCheckboxModule, NzTypographyModule, NzIconModule, CustomInputComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -25,8 +26,6 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private notification = inject(NzNotificationService);
-
-  passwordVisible = false;
 
   loginForm: FormGroup = this.fb.group({
     username: ['', [Validators.required]],

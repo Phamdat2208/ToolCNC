@@ -1,0 +1,14 @@
+<nz-form-item>
+  <nz-form-label [nzRequired]="required" *ngIf="label">{{ label }}</nz-form-label>
+  <nz-form-control [nzErrorTip]="errorTip" [nzValidateStatus]="isInvalid ? 'error' : ''">
+    <textarea
+      nz-input
+      [rows]="rows"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [ngModel]="value"
+      (ngModelChange)="handleInputChange($event)"
+      (blur)="handleBlur()"
+    ></textarea>
+  </nz-form-control>
+</nz-form-item>

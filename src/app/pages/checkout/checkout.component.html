@@ -37,93 +37,55 @@
             >
               <div nz-row [nzGutter]="[20, 0]">
                 <div nz-col [nzXs]="24" [nzMd]="12">
-                  <nz-form-item>
-                    <nz-form-label>Họ và tên người nhận</nz-form-label>
-                    <nz-form-control>
-                      <nz-input-group nzPrefixIcon="user">
-                        <input
-                          nz-input
-                          formControlName="fullName"
-                          placeholder="VD: Nguyễn Văn A"
-                        />
-                      </nz-input-group>
-                    </nz-form-control>
-                  </nz-form-item>
+                  <app-custom-input
+                    formControlName="fullName"
+                    label="Họ và tên người nhận"
+                    placeholder="VD: Nguyễn Văn A"
+                    prefixIcon="user"
+                    [errorTip]="validateForm?.get('fullName')?.hasError('required') ? 'Vui lòng nhập họ và tên!' : 'Độ dài tối thiểu 3 ký tự!'"
+                  ></app-custom-input>
                 </div>
                 <div nz-col [nzXs]="24" [nzMd]="12">
-                  <nz-form-item>
-                    <nz-form-label>Số điện thoại</nz-form-label>
-                    <nz-form-control [nzErrorTip]="phoneErrorTpl">
-                      <nz-input-group nzPrefixIcon="phone">
-                        <input
-                          nz-input
-                          formControlName="phone"
-                          placeholder="VD: 0912345678"
-                          [minlength]="10"
-                          [maxlength]="11"
-                        />
-                      </nz-input-group>
-                      <ng-template #phoneErrorTpl let-control>
-                        <ng-container *ngIf="control.hasError('pattern')"
-                          >Định dạng không hợp lệ!</ng-container
-                        >
-                      </ng-template>
-                    </nz-form-control>
-                  </nz-form-item>
+                  <app-custom-input
+                    formControlName="phone"
+                    label="Số điện thoại"
+                    placeholder="VD: 0912345678"
+                    prefixIcon="phone"
+                    [errorTip]="validateForm?.get('phone')?.hasError('pattern') ? 'Định dạng không hợp lệ!' : 'Độ dài tối thiểu 10 ký tự!'"
+                  ></app-custom-input>
                 </div>
               </div>
 
-              <nz-form-item>
-                <nz-form-label nzRequired>Tỉnh / Thành phố</nz-form-label>
-                <nz-form-control nzErrorTip="Vui lòng chọn tỉnh / thành phố!">
-                  <nz-select
-                    [nzAllowClear]="true"
-                    formControlName="provinceCode"
-                    nzPlaceHolder="Chọn Tỉnh / Thành phố"
-                    nzShowSearch
-                    [nzLoading]="isLoadingProvinces"
-                    (ngModelChange)="onProvinceChange($event)"
-                  >
-                    <nz-option
-                      *ngFor="let p of provinces"
-                      [nzValue]="p.code"
-                      [nzLabel]="p.name"
-                    ></nz-option>
-                  </nz-select>
-                </nz-form-control>
-              </nz-form-item>
+              <app-custom-select
+                formControlName="provinceCode"
+                label="Tỉnh / Thành phố"
+                placeholder="Chọn Tỉnh / Thành phố"
+                [required]="true"
+                errorTip="Vui lòng chọn tỉnh / thành phố!"
+                [showSearch]="true"
+                [options]="provinceOptions"
+                (ngModelChange)="onProvinceChange($event)"
+              ></app-custom-select>
 
-              <nz-form-item>
-                <nz-form-label nzRequired>Xã / Phường</nz-form-label>
-                <nz-form-control nzErrorTip="Vui lòng chọn xã / phường!">
-                  <nz-select
-                    [nzAllowClear]="true"
-                    formControlName="wardCode"
-                    nzPlaceHolder="Chọn Xã / Phường"
-                    nzShowSearch
-                    [nzLoading]="isLoadingWards"
-                    (ngModelChange)="onWardChange($event)"
-                  >
-                    <nz-option
-                      *ngFor="let w of wards"
-                      [nzValue]="w.code"
-                      [nzLabel]="w.name"
-                    ></nz-option>
-                  </nz-select>
-                </nz-form-control>
-              </nz-form-item>
+              <app-custom-select
+                formControlName="wardCode"
+                label="Xã / Phường"
+                placeholder="Chọn Xã / Phường"
+                [required]="true"
+                errorTip="Vui lòng chọn xã / phường!"
+                [showSearch]="true"
+                [options]="wardOptions"
+                (ngModelChange)="onWardChange($event)"
+              ></app-custom-select>
 
-              <nz-form-item>
-                <nz-form-label nzRequired>Địa chỉ cụ thể</nz-form-label>
-                <nz-form-control nzErrorTip="Vui lòng nhập địa chỉ cụ thể!">
-                  <textarea
-                    nz-input
-                    formControlName="address"
-                    placeholder="Tên đường, số nhà, ngõ..."
-                    [nzAutosize]="{ minRows: 2, maxRows: 4 }"
-                  ></textarea>
-                </nz-form-control>
-              </nz-form-item>
+              <app-custom-textarea
+                formControlName="address"
+                label="Địa chỉ cụ thể"
+                placeholder="Tên đường, số nhà, ngõ..."
+                [required]="true"
+                errorTip="Vui lòng nhập địa chỉ cụ thể!"
+                [rows]="3"
+              ></app-custom-textarea>
             </form>
           </div>
 

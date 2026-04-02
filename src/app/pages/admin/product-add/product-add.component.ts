@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -20,9 +21,13 @@ import { CategoryService } from '../../../services/category.service';
 import { AuthService } from '../../../services/auth.service';
 
 
+import { CustomInputComponent } from '../../../shared/components/custom-input/custom-input.component';
+import { CustomSelectComponent, SelectOption } from '../../../shared/components/custom-select/custom-select.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+
 @Component({
   selector: 'app-product-add',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzFormModule, NzInputModule, NzButtonModule, NzInputNumberModule, NzTabsModule, NzSelectModule, NzRadioModule, NzDividerModule, NzIconModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzFormModule, NzInputModule, NzButtonModule, NzInputNumberModule, NzTabsModule, NzSelectModule, NzRadioModule, NzDividerModule, NzIconModule, ImageCropperComponent, CustomInputComponent, CustomSelectComponent, LoadingComponent],
   templateUrl: './product-add.component.html',
   styleUrl: './product-add.component.css'
 })
@@ -44,6 +49,11 @@ export class ProductAddComponent implements OnInit {
   isResizing = false;
   private _selectedFile: File | null = null;
   private _resizedBlob: Blob | null = null;
+  
+  // --- Cropper state ---
+  imageChangedEvent: Event | null = null;
+  croppedImage: string = '';
+  showCropper: boolean = false;
 
   readonly presetSizes = [
     { label: 'Vuông 1:1 (800×800)', w: 800, h: 800 },
@@ -64,12 +74,14 @@ export class ProductAddComponent implements OnInit {
 
   isSubmitting = false;
   categories: any[] = [];
+  categoryOptions: SelectOption[] = [];
 
   productForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     price: [0, [Validators.required, Validators.min(0)]],
     brand: ['', [Validators.required]],
     categoryId: [null, [Validators.required]],
+    stock: [10, [Validators.required, Validators.min(0)]],
     description: [''],
     imageUrl: [''],
     specifications: this.fb.array([])
@@ -107,6 +119,7 @@ export class ProductAddComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (list) => {
         this.categories = list;
+        this.categoryOptions = list.map((c: any) => ({ label: c.name, value: c.id }));
       },
       error: (err) => {
         console.error('Error loading categories', err);
@@ -130,20 +143,40 @@ export class ProductAddComponent implements OnInit {
       this.notification.error('Lỗi', 'Vui lòng chọn file hình ảnh (JPG, PNG, WEBP)');
       return;
     }
-    // Store the original file for later upload
+    
     this._selectedFile = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.originalImageSrc = e.target?.result as string;
-      const img = new Image();
-      img.onload = () => {
-        this.resizeWidth = Math.min(img.naturalWidth, 800);
-        this.resizeHeight = Math.min(img.naturalHeight, 800);
-        this.applyResize();
-      };
-      img.src = this.originalImageSrc!;
+    this.imageChangedEvent = event;
+    this.showCropper = true;
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    if (event.base64) {
+      this.croppedImage = event.base64;
+    } else if (event.objectUrl) {
+      // For ngx-image-cropper newer versions if base64 is null
+      this.croppedImage = event.objectUrl; 
+    }
+  }
+
+  confirmCrop() {
+    this.showCropper = false;
+    this.originalImageSrc = this.croppedImage; // Lấy ảnh đã Crop làm ảnh gốc chuẩn bị Resize
+    
+    const img = new Image();
+    img.onload = () => {
+      // Vì Crop là 1:1, ảnh sẽ là vuông, ta lấy min width/height với tùy chọn preset
+      // Ta để mặc định resize 800x800 cho chuẩn nét
+      this.resizeWidth = Math.min(img.naturalWidth, 800);
+      this.resizeHeight = Math.min(img.naturalHeight, 800);
+      this.applyResize();
     };
-    reader.readAsDataURL(file);
+    img.src = this.croppedImage;
+  }
+
+  cancelCrop() {
+    this.showCropper = false;
+    this.imageChangedEvent = null;
+    this.clearUploadedImage();
   }
 
   applyPreset(preset: { w: number; h: number }) {
@@ -197,6 +230,9 @@ export class ProductAddComponent implements OnInit {
   clearUploadedImage() {
     this.originalImageSrc = null;
     this.previewImageSrc = null;
+    this.imageChangedEvent = null;
+    this.croppedImage = '';
+    this.showCropper = false;
     this._selectedFile = null;
     this._resizedBlob = null;
     this.productForm.patchValue({ imageUrl: '' });
@@ -217,6 +253,7 @@ export class ProductAddComponent implements OnInit {
           price: product.price,
           brand: product.brand,
           categoryId: product.category?.id,
+          stock: product.stock,
           description: product.description,
           imageUrl: product.imageUrl
         });
@@ -263,7 +300,11 @@ export class ProductAddComponent implements OnInit {
           next: () => {
             this.isSubmitting = false;
             this.notification.success('Thành công', this.isEditMode ? 'Đã cập nhật sản phẩm!' : 'Đã thêm sản phẩm mới!');
-            this.router.navigate(['/admin/products']);
+            if (this.router.url.startsWith('/admin')) {
+              this.router.navigate(['/admin/products']);
+            } else {
+              this.router.navigate(['/products', this.productId]);
+            }
           },
           error: (err) => {
             this.isSubmitting = false;

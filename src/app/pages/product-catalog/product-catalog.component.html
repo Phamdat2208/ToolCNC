@@ -118,7 +118,7 @@
         </div>
       </div>
 
-      <nz-spin [nzSpinning]="loading">
+      <app-loading [isLoading]="loading">
         <div nz-row [nzGutter]="[16, 16]">
           <div
             nz-col
@@ -149,7 +149,7 @@
             (nzPageIndexChange)="changePage($event)"
           ></nz-pagination>
         </div>
-      </nz-spin>
+      </app-loading>
     </div>
   </div>
 </div>

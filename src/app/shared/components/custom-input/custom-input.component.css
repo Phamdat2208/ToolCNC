@@ -1,0 +1,4 @@
+/* Custom Input Styles (wrapper level) */
+:host {
+  display: block;
+}

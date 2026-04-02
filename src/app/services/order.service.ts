@@ -28,8 +28,16 @@ export class OrderService {
     return this.http.get<any[]>(`${this.apiUrl}/all`, this.getAuthHeaders());
   }
 
-  updateOrderStatus(orderId: number, status: string): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${orderId}/status`, { status }, this.getAuthHeaders());
+  updateOrderStatus(orderId: number, status: string, cancelReason?: string): Observable<any> {
+    const payload: any = { status };
+    if (cancelReason) {
+      payload.cancelReason = cancelReason;
+    }
+    return this.http.put<any>(`${this.apiUrl}/${orderId}/status`, payload, this.getAuthHeaders());
+  }
+
+  cancelOrder(orderId: number, cancelReason: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${orderId}/cancel`, { cancelReason }, this.getAuthHeaders());
   }
 
   createOrder(orderPayload: any): Observable<any> {
