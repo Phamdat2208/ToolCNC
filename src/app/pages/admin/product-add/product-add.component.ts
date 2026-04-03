@@ -26,6 +26,7 @@ import { CustomInputComponent } from '../../../shared/components/custom-input/cu
 import { CustomSelectComponent, SelectOption } from '../../../shared/components/custom-select/custom-select.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { environment } from '../../../../environments/environment';
+import { UrlUtils } from '../../../shared/utils/url-utils';
 
 @Component({
   selector: 'app-product-add',
@@ -107,6 +108,10 @@ export class ProductAddComponent implements OnInit {
 
   get specifications(): FormArray {
     return this.productForm.get('specifications') as FormArray;
+  }
+
+  getFullUrl(url: string | null | undefined): string {
+    return UrlUtils.getFullUrl(url);
   }
 
   addSpec(key: string = '', value: string = ''): void {
@@ -358,7 +363,7 @@ export class ProductAddComponent implements OnInit {
 
       this.http.post<any>(`${environment.apiUrl}/api/v1/admin/upload/image`, formData, { headers })
         .subscribe({
-          next: (res) => resolve(environment.apiUrl + res.url),
+          next: (res) => resolve(res.url),
           error: (err) => reject(err)
         });
     });

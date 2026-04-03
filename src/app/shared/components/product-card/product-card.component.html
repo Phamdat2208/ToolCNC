@@ -57,7 +57,7 @@
 
 <ng-template #coverTemplate>
   <div class="product-cover img-wrapper-relative" style="width: 100%;">
-    <img [alt]="product.name" [src]="product.img" [class.img-out-of-stock]="product.stock === 0" />
+    <img [alt]="product.name" [src]="imageUrl" [class.img-out-of-stock]="product.stock === 0" />
     <div class="out-of-stock-banner" *ngIf="product.stock === 0">Hết Hàng</div>
   </div>
 </ng-template>

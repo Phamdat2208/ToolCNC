@@ -16,6 +16,7 @@ import { AuthService } from '../../services/auth.service';
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { QuantityInputComponent } from '../../shared/components/quantity-input/quantity-input.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { UrlUtils } from '../../shared/utils/url-utils';
 
 @Component({
   selector: 'app-product-detail',
@@ -69,7 +70,9 @@ export class ProductDetailComponent implements OnInit {
           });
         }
         
-        this.product.images = gallery.length > 0 ? gallery : ['https://placehold.co/600x400?text=No+Image'];
+        this.product.images = gallery.length > 0 
+          ? gallery.map(url => UrlUtils.getFullUrl(url)) 
+          : ['https://placehold.co/600x400?text=No+Image'];
         this.mainImage = this.product.images[0];
 
         // Parse specifications JSON

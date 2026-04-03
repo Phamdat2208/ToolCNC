@@ -11,6 +11,7 @@ import { CartService } from '../../../services/cart.service';
 import { AuthService } from '../../../services/auth.service';
 import { WishlistService } from '../../../services/wishlist.service';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
+import { UrlUtils } from '../../utils/url-utils';
 
 @Component({
   selector: 'app-product-card',
@@ -27,6 +28,10 @@ export class ProductCardComponent {
   wishlistService = inject(WishlistService);
   private router = inject(Router);
   private notification = inject(NzNotificationService);
+
+  get imageUrl(): string {
+    return UrlUtils.getFullUrl(this.product.imageUrl || this.product.img);
+  }
 
   isAddingToCart = false;
 

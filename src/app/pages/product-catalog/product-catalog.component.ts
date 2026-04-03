@@ -21,6 +21,7 @@ import { BrandService, Brand } from '../../services/brand.service';
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { UrlUtils } from '../../shared/utils/url-utils';
 
 @Component({
   selector: 'app-product-catalog',
@@ -133,7 +134,10 @@ export class ProductCatalogComponent implements OnInit {
   loadBrands() {
     this.brandService.getBrands().subscribe({
       next: (list) => {
-        this.knownBrands = list;
+        this.knownBrands = list.map(b => ({
+          ...b,
+          logoUrl: UrlUtils.getFullUrl(b.logoUrl)
+        }));
       },
       error: (err) => console.error('Error fetching brands', err)
     });
@@ -157,7 +161,7 @@ export class ProductCatalogComponent implements OnInit {
       next: (res) => {
         this.products = res.content.map((p: any) => ({
           ...p,
-          img: p.imageUrl || `https://placehold.co/300x200?text=${encodeURIComponent(p.name)}`
+          imageUrl: UrlUtils.getFullUrl(p.imageUrl)
         }));
         this.totalProducts = res.totalElements;
         this.loading = false;

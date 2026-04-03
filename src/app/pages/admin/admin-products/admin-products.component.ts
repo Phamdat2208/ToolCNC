@@ -10,6 +10,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ProductService } from '../../../services/product.service';
 import { FormsModule } from '@angular/forms';
+import { UrlUtils } from '../../../shared/utils/url-utils';
 
 @Component({
   selector: 'app-admin-products',
@@ -48,7 +49,10 @@ export class AdminProductsComponent implements OnInit {
     this.loading = true;
     this.productService.getProducts(this.page - 1, this.size, undefined, this.searchKeyword).subscribe({
       next: (res) => {
-        this.products = res.content;
+        this.products = res.content.map((p: any) => ({
+          ...p,
+          imageUrl: UrlUtils.getFullUrl(p.imageUrl)
+        }));
         this.total = res.totalElements;
         this.loading = false;
       },

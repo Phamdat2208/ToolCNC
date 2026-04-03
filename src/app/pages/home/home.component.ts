@@ -16,6 +16,7 @@ import { BrandService, Brand } from '../../services/brand.service';
 import { Category } from '../../models/category.model';
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { UrlUtils } from '../../shared/utils/url-utils';
 
 @Component({
   selector: 'app-home',
@@ -87,7 +88,10 @@ export class HomeComponent implements OnInit {
   loadBrands() {
     this.brandService.getBrands().subscribe({
       next: (res) => {
-        this.featuredBrands = res;
+        this.featuredBrands = res.map(brand => ({
+          ...brand,
+          logoUrl: UrlUtils.getFullUrl(brand.logoUrl)
+        }));
       },
       error: (err) => console.error('Error loading brands', err)
     });

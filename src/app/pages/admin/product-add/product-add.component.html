@@ -257,7 +257,7 @@
           <!-- Gallery preview grid -->
           <div class="gallery-grid" *ngIf="galleryUrls.length > 0">
             <div *ngFor="let imgUrl of galleryUrls; let i = index" class="gallery-thumb-item">
-              <img [src]="imgUrl" [alt]="'Gallery ' + (i + 1)" class="gallery-thumb-img" />
+              <img [src]="getFullUrl(imgUrl)" [alt]="'Gallery ' + (i + 1)" class="gallery-thumb-img" />
               <div class="gallery-thumb-overlay">
                 <button nz-button nzDanger nzSize="small" type="button" (click)="removeGalleryImage(i)" class="gallery-remove-btn">
                   <nz-icon nzType="delete" />

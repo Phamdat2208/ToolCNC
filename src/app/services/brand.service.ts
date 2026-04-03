@@ -30,11 +30,11 @@ export class BrandService {
 
   // Public APIs
   getBrands(): Observable<Brand[]> {
-    return this.http.get<Brand[]>(`${this.apiUrl}/brands`, this.getAuthHeaders());
+    return this.http.get<Brand[]>(`${this.apiUrl}/public/brands`);
   }
 
   getBrandById(id: number): Observable<Brand> {
-    return this.http.get<Brand>(`${this.apiUrl}/brands/${id}`, this.getAuthHeaders());
+    return this.http.get<Brand>(`${this.apiUrl}/public/brands/${id}`);
   }
 
   // Admin APIs
