@@ -9,6 +9,7 @@ import vi from '@angular/common/locales/vi';
 import { provideNzIcons } from 'ng-zorro-antd/icon';
 import { provideNzConfig } from 'ng-zorro-antd/core/config';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
 
 import {
   CheckCircleOutline,
@@ -68,7 +69,17 @@ import {
   DashOutline,
   WarningOutline,
   WarningFill,
-  MinusOutline
+  MinusOutline,
+  BlockOutline,
+  BorderInnerOutline,
+  FormatPainterOutline,
+  DeploymentUnitOutline,
+  TagsOutline, 
+  EnterOutline,
+  PictureOutline,
+  TrademarkOutline,
+  PlusSquareOutline,
+  MinusSquareOutline
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -129,7 +140,17 @@ const icons = [
   DashOutline,
   WarningOutline,
   WarningFill,
-  MinusOutline
+  MinusOutline,
+  BlockOutline,
+  BorderInnerOutline,
+  FormatPainterOutline,
+  DeploymentUnitOutline,
+  TagsOutline,
+  EnterOutline,
+  PictureOutline,
+  TrademarkOutline,
+  PlusSquareOutline,
+  MinusSquareOutline
 ];
 
 registerLocaleData(vi);

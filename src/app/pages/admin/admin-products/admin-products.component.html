@@ -47,7 +47,7 @@
             </td>
             <td class="font-bold">{{ data.name }}</td>
             <td><nz-tag>{{ data.category?.name || data.category }}</nz-tag></td>
-            <td>{{ data.brand }}</td>
+            <td>{{ data.brand?.name || '-' }}</td>
             <td>
               <nz-tag [nzColor]="data.stock > 0 ? 'green' : 'red'">{{ data.stock }}</nz-tag>
             </td>

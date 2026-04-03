@@ -247,6 +247,22 @@
   background-color: var(--primary-color);
 }
 
+.category-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.sub-cat-count {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 4px;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
 .category-icon {
   font-size: 32px;
   color: var(--primary-color);
@@ -255,12 +271,6 @@
 
 .category-card:hover .category-icon {
   color: var(--bg-white);
-}
-
-.category-name {
-  font-weight: 500;
-  font-size: 16px;
-  color: var(--text-main);
 }
 
 .featured-section {

@@ -1,0 +1,119 @@
+<div class="admin-brands-container">
+    <div class="header-action">
+      <h2 class="title">Quản lý Thương hiệu</h2>
+      <button nz-button nzType="primary" (click)="showAddModal()" class="add-btn">
+        <nz-icon nzType="plus" /> Thêm thương hiệu mới
+      </button>
+    </div>
+  
+    <div class="table-card">
+      <nz-table #basicTable [nzData]="brands" [nzLoading]="loading">
+        <thead>
+          <tr>
+            <th nzWidth="80px">ID</th>
+            <th nzWidth="100px">Logo</th>
+            <th>Tên Thương hiệu</th>
+            <th>Mô tả</th>
+            <th nzWidth="120px" nzRight>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{ data.id }}</td>
+            <td>
+              <div class="logo-cell">
+                <img *ngIf="data.logoUrl" [src]="data.logoUrl" [alt]="data.name" />
+              </div>
+            </td>
+            <td><strong>{{ data.name }}</strong></td>
+            <td class="text-secondary">{{ data.description }}</td>
+            <td nzRight>
+              <div class="action-buttons">
+                <button nz-button nzType="text" (click)="showEditModal(data)" nz-tooltip nzTooltipTitle="Chỉnh sửa">
+                  <nz-icon nzType="edit" class="edit-icon" />
+                </button>
+                <button nz-button nzType="text" nzDanger (click)="deleteBrand(data.id!)" nz-tooltip nzTooltipTitle="Xóa">
+                  <nz-icon nzType="delete" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  
+    <!-- Modal Thêm/Sửa -->
+    <nz-modal
+      [(nzVisible)]="isModalVisible"
+      [nzTitle]="isEditMode ? 'Chỉnh sửa thương hiệu' : 'Tạo thương hiệu mới'"
+      (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()"
+      [nzOkText]="isEditMode ? 'Cập nhật' : 'Tạo mới'"
+      [nzCancelText]="'Hủy'"
+      [nzWidth]="600"
+    >
+      <div *nzModalContent>
+        <form nz-form [formGroup]="brandForm" nzLayout="vertical">
+          <nz-form-item>
+            <nz-form-label nzRequired>Tên thương hiệu</nz-form-label>
+            <nz-form-control nzErrorTip="Vui lòng nhập tên thương hiệu">
+              <input nz-input formControlName="name" placeholder="Ví dụ: Bosch, Hitachi..." />
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label>Mô tả ngắn</nz-form-label>
+            <nz-form-control>
+              <textarea nz-input formControlName="description" rows="2" placeholder="Thông tin thêm về hãng"></textarea>
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label>Logo thương hiệu</nz-form-label>
+            <nz-form-control>
+              <nz-radio-group [(ngModel)]="uploadMode" [ngModelOptions]="{standalone: true}" style="margin-bottom: 12px;">
+                <label nz-radio nzValue="url">Nhập URL</label>
+                <label nz-radio nzValue="upload">Tải ảnh lên</label>
+              </nz-radio-group>
+  
+              <div *ngIf="uploadMode === 'url'">
+                <input nz-input formControlName="logoUrl" placeholder="Ví dụ: https://example.com/logo.png" />
+                <div class="logo-preview-wrapper" *ngIf="brandForm.get('logoUrl')?.value">
+                  <img [src]="brandForm.get('logoUrl')?.value" class="logo-preview" />
+                </div>
+              </div>
+  
+              <div *ngIf="uploadMode === 'upload'" class="upload-area" (click)="fileInput.click()">
+                <nz-icon nzType="picture" class="upload-icon" />
+                <p>Click để chọn tệp logo từ máy tính</p>
+                <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none" accept="image/*" />
+              </div>
+  
+              <!-- Image Cropper Modal Layer (Internal to modal content) -->
+              <div *ngIf="uploadMode === 'upload' && showCropper" class="cropper-wrapper">
+                <image-cropper
+                  [imageChangedEvent]="imageChangedEvent"
+                  [maintainAspectRatio]="true"
+                  [aspectRatio]="1 / 1"
+                  format="png"
+                  (imageCropped)="imageCropped($event)"
+                  style="max-height: 300px;"
+                ></image-cropper>
+                
+                <div class="cropper-actions">
+                  <button nz-button (click)="cancelCrop()">Hủy</button>
+                  <button nz-button nzType="primary" (click)="confirmCrop()">Sắc nhận cắt ảnh</button>
+                </div>
+              </div>
+  
+              <!-- Preview of the cropped image -->
+              <div class="logo-preview-wrapper" *ngIf="uploadMode === 'upload' && previewLogoSrc">
+                <p class="text-secondary small">Xem trước logo (400×400px):</p>
+                <img [src]="previewLogoSrc" class="logo-preview" />
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </div>
+    </nz-modal>
+  </div>

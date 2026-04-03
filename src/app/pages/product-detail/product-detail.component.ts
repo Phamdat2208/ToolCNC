@@ -53,8 +53,23 @@ export class ProductDetailComponent implements OnInit {
     this.productService.getProductById(id).subscribe({
       next: (res) => {
         this.product = res;
-        // Map backend imageUrl to frontend array structure to keep template intact
-        this.product.images = this.product.imageUrl ? [this.product.imageUrl] : ['https://placehold.co/600x400?text=No+Image'];
+        
+        // Build the image gallery array
+        const gallery: any[] = [];
+        if (this.product.imageUrl) {
+          gallery.push(this.product.imageUrl.trim());
+        }
+        
+        if (this.product.images && Array.isArray(this.product.images)) {
+          this.product.images.forEach((img: any) => {
+            const url = (img && typeof img === 'object') ? img.url : img;
+            if (url && !gallery.includes(url.trim())) {
+              gallery.push(url.trim());
+            }
+          });
+        }
+        
+        this.product.images = gallery.length > 0 ? gallery : ['https://placehold.co/600x400?text=No+Image'];
         this.mainImage = this.product.images[0];
 
         // Parse specifications JSON

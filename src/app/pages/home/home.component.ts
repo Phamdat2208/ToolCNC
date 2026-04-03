@@ -11,11 +11,15 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { ProductService } from '../../services/product.service';
+import { CategoryService } from '../../services/category.service';
+import { BrandService, Brand } from '../../services/brand.service';
+import { Category } from '../../models/category.model';
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   imports: [
     CommonModule, 
     RouterLink, 
@@ -36,55 +40,77 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
 export class HomeComponent implements OnInit {
   private notification = inject(NzNotificationService);
   private productService = inject(ProductService);
+  private categoryService = inject(CategoryService);
+  private brandService = inject(BrandService);
 
   addToCart(product: any) {
     this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`);
   }
+  
+  categories: Category[] = [];
   banners = [
     {
-      title: 'Công nghệ phay CNC tiên tiến',
-      content: 'Cải thiện độ chính xác và năng suất vượt trội',
+      title: 'Hệ thống Dao cụ Cắt gọt Kỹ thuật cao',
+      content: 'Chuyên cung cấp các giải pháp gia công kim loại với độ chính xác tuyệt đối',
+      color: 'linear-gradient(135deg, #0f172a 0%, #334155 100%)',
+      image: 'assets/images/dung-cu-cat-got-banner.png'
+    },
+    {
+      title: 'Chip tiện Insert chính hãng - Giá Xưởng',
+      content: 'Giảm đến 20% cho đơn hàng số lượng lớn các dòng mã chip CNMG, WNMG, MGMN',
+      color: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+      image: 'assets/images/chip-dao-tien-cnc-banner.png'
+    },
+    {
+      title: 'Tư vấn giải pháp gia công CAM/CNC',
+      content: 'Tối ưu hóa quy trình sản xuất và tăng tuổi thọ dao cụ cùng chuyên gia',
       color: 'linear-gradient(135deg, #0ea5e9 0%, #0c4a6e 100%)',
-      image: '/assets/images/may-cnc-banner.png'
-    },
-    {
-      title: 'Dao cụ giảm giá sốc',
-      content: 'Giảm đến 30% cho đơn hàng dao phay thép gió',
-      color: 'linear-gradient(135deg, #64748b 0%, #0f172a 100%)',
-      image: '/assets/images/mui-khoan-banner.png'
-    },
-    {
-      title: 'Tư vấn kỹ thuật gia công',
-      content: 'Đội ngũ chuyên gia hỗ trợ kỹ thuật 24/7',
-      color: 'linear-gradient(135deg, #0ea5e9 0%, #64748b 100%)',
-      image: '/assets/images/chip-dao-tien-cnc-banner.png'
+      image: 'assets/images/phu-kien-cnc-banner.png'
     }
   ];
 
-  categories = [
-    { id: 1, name: 'Máy Phay CNC', icon: 'setting', link: '/products' },
-    { id: 2, name: 'Máy Tiện CNC', icon: 'tool', link: '/products' },
-    { id: 3, name: 'Dao Cụ Cắt Gọt', icon: 'scissor', link: '/products' },
-    { id: 4, name: 'Phụ Kiện Máy', icon: 'appstore', link: '/products' },
-    { id: 5, name: 'Dụng Cụ Đo', icon: 'dashboard', link: '/products' },
-    { id: 6, name: 'Vật Tư Tiêu Hao', icon: 'experiment', link: '/products' }
-  ];
+  ngOnInit() {
+    this.loadFeaturedProducts();
+    this.loadCategories();
+    this.loadBrands();
+  }
 
-  featuredBrands = [
-    { name: 'Makino', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/23/MAKINO-Logo.svg' },
-    { name: 'Mazak', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Mazak_logo.svg' },
-    { name: 'DMG Mori', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/da/Logo_DMG_MORI_black_png_%281%29.png' },
-    { name: 'Okuma', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/11/Okuma_Corporation_company_logo.svg' },
-    { name: 'SMTCL', logoUrl: 'https://www.smtcl-en.com/wp-content/uploads/2024/06/SMTCL%E9%80%8F%E6%98%8Emini.png' },
-    { name: 'Hitachi', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/76/Hitachi_Group_Logo.svg' }
-  ];
+  loadCategories() {
+    this.categoryService.getCategories().subscribe(res => {
+      this.categories = res.map((cat: Category) => ({
+        ...cat,
+        icon: this.getIconForCategory(cat.name)
+      }));
+    });
+  }
+
+  loadBrands() {
+    this.brandService.getBrands().subscribe({
+      next: (res) => {
+        this.featuredBrands = res;
+      },
+      error: (err) => console.error('Error loading brands', err)
+    });
+  }
+
+  getIconForCategory(name: string): string {
+    const iconMap: { [key: string]: string } = {
+      'Dao Phay': 'block',
+      'Chip Tiện': 'border-inner',
+      'Mũi Khoan': 'format-painter',
+      'Mũi Taro': 'deployment-unit',
+      'Phụ Kiện CNC': 'appstore'
+    };
+    for (const key in iconMap) {
+      if (name.includes(key)) return iconMap[key];
+    }
+    return 'appstore';
+  }
+
+  featuredBrands: Brand[] = [];
 
   featuredProducts: any[] = [];
   loading = true;
-
-  ngOnInit() {
-    this.loadFeaturedProducts();
-  }
 
   loadFeaturedProducts() {
     this.loading = true;

@@ -48,6 +48,14 @@ import { AuthService } from '../../services/auth.service';
             <nz-icon nzType="appstore" />
             <span>Quản lý sản phẩm</span>
           </li>
+          <li nz-menu-item nzMatchRouter routerLink="/admin/categories">
+            <nz-icon nzType="tags" />
+            <span>Quản lý danh mục</span>
+          </li>
+          <li nz-menu-item nzMatchRouter routerLink="/admin/brands">
+            <nz-icon nzType="trademark" />
+            <span>Quản lý thương hiệu</span>
+          </li>
           <li nz-menu-item nzMatchRouter routerLink="/admin/orders">
             <nz-icon nzType="shopping-cart" />
             <span>Quản lý đơn hàng</span>

@@ -45,13 +45,15 @@
         errorTip="Vui lòng nhập giá trị lớn hơn 0"
       ></app-custom-input>
 
-      <app-custom-input
-        formControlName="brand"
+      <app-custom-select
+        formControlName="brandId"
         label="Thương hiệu"
-        placeholder="Ví dụ: Mazak, Hitachi..."
+        [options]="brandOptions"
+        placeholder="Chọn thương hiệu hãng"
         [required]="true"
-        errorTip="Vui lòng nhập thương hiệu"
-      ></app-custom-input>
+        errorTip="Vui lòng chọn thương hiệu"
+        [showSearch]="true"
+      ></app-custom-select>
 
       <app-custom-input
         formControlName="stock"
@@ -71,7 +73,6 @@
         [required]="true"
         errorTip="Vui lòng chọn danh mục"
         [showSearch]="true"
-        (ngModelChange)="onCategoryChange($event)"
       ></app-custom-select>
 
       <app-custom-input
@@ -122,25 +123,24 @@
             />
           </div>
 
+          <!-- Hidden file input (shared by both main and gallery upload) -->
+          <input #fileInput type="file" accept="image/*" style="display:none" (change)="onFileSelected($event)" />
+
           <!-- Upload Mode -->
           <div *ngIf="uploadMode === 'upload'" class="upload-area">
-            <!-- Hidden file input -->
-            <input #fileInput type="file" accept="image/*" style="display:none" (change)="onFileSelected($event)" />
-
             <!-- Drop zone / Trigger -->
-            <div *ngIf="!originalImageSrc && !showCropper" class="upload-dropzone" (click)="triggerFileInput()">
+            <div *ngIf="!originalImageSrc && !showCropper" class="upload-dropzone" (click)="triggerFileInput('main')">
               <nz-icon nzType="inbox" class="upload-icon" />
               <p class="upload-text">Nhấp để chọn ảnh từ máy tính</p>
               <p class="upload-hint">Hỗ trợ JPG, PNG, WEBP</p>
             </div>
 
-            <!-- CROPPER SECTION -->
+            <!-- CROPPER SECTION (main image only) -->
             <div *ngIf="showCropper" class="cropper-section mt-16 p-16" style="border: 1px dashed var(--primary-color); border-radius: 8px;">
-               <p class="editor-label mb-8">Kéo thả khung cắt theo chuẩn 1:1 (Hình Vuông)</p>
+               <p class="editor-label mb-8">Kéo thả khung cắt theo ý muốn (Cắt tự do)</p>
                <image-cropper
                  [imageChangedEvent]="imageChangedEvent"
-                 [maintainAspectRatio]="true"
-                 [aspectRatio]="1 / 1"
+                 [maintainAspectRatio]="false"
                  output="base64"
                  format="jpeg"
                  (imageCropped)="imageCropped($event)"
@@ -158,7 +158,7 @@
                 <div class="preview-box">
                   <p class="editor-label">Xem trước ({{ resizeWidth }}×{{ resizeHeight }}px)</p>
                   <img *ngIf="previewImageSrc" [src]="previewImageSrc" class="preview-img" />
-                  <div *ngIf="isResizing" class="resizing-overlay">Đang xử lý...</div>
+                  <!-- <div *ngIf="isResizing" class="resizing-overlay">Đang xử lý...</div> -->
                 </div>
                 <div class="editor-controls">
                   <p class="editor-label">Size mẫu:</p>
@@ -198,13 +198,89 @@
         </nz-form-control>
       </nz-form-item>
 
+      <!-- GALLERY IMAGES SECTION -->
       <nz-form-item>
+        <nz-form-label>
+          Thư viện ảnh sản phẩm
+          <span style="font-weight: 400; color: #888; margin-left: 8px;">({{ galleryUrls.length }}/{{ MAX_GALLERY }} ảnh)</span>
+        </nz-form-label>
+        <nz-form-control>
+          <!-- Gallery Actions -->
+          <div class="gallery-add-row" *ngIf="galleryUrls.length < MAX_GALLERY && !galleryShowCropper">
+            <div class="flex-gap-12">
+              <!-- URL Input -->
+              <nz-input-group [nzSuffix]="addGalleryBtn" style="flex: 1;">
+                <input
+                  nz-input
+                  [(ngModel)]="newGalleryUrl"
+                  [ngModelOptions]="{standalone: true}"
+                  placeholder="Nhập URL ảnh bổ sung..."
+                  (keyup.enter)="addGalleryImage()"
+                />
+              </nz-input-group>
+              <ng-template #addGalleryBtn>
+                <button nz-button nzType="primary" nzSize="small" type="button" (click)="addGalleryImage()">
+                  <nz-icon nzType="plus" /> Thêm URL
+                </button>
+              </ng-template>
+
+              <!-- Upload Button -->
+              <button nz-button nzType="default" type="button" (click)="triggerFileInput('gallery')" [nzLoading]="isGalleryUploading">
+                <nz-icon nzType="upload" /> Tải ảnh từ máy
+              </button>
+            </div>
+          </div>
+
+          <!-- GALLERY CROPPER (separate from main image cropper) -->
+          <div *ngIf="galleryShowCropper" class="cropper-section mt-16 p-16" style="border: 1px dashed #52c41a; border-radius: 8px;">
+            <p class="editor-label mb-8">Cắt ảnh thư viện (sẽ tự động Resize 800×800)</p>
+            <image-cropper
+              [imageChangedEvent]="galleryChangedEvent"
+              [maintainAspectRatio]="true"
+              [aspectRatio]="1 / 1"
+              output="base64"
+              format="jpeg"
+              (imageCropped)="galleryCropped($event)"
+              style="max-height: 400px;"
+            ></image-cropper>
+            <div class="mt-16 flex-gap-12">
+              <button nz-button nzType="primary" type="button" (click)="confirmGalleryCrop()" [nzLoading]="isGalleryUploading">
+                <nz-icon nzType="check" /> Xác nhận & Thêm vào thư viện
+              </button>
+              <button nz-button type="button" nzDanger (click)="cancelGalleryCrop()">Hủy</button>
+            </div>
+          </div>
+          <div *ngIf="galleryUrls.length >= MAX_GALLERY" class="gallery-limit-hint">
+            <nz-icon nzType="info-circle" /> Đã đạt giới hạn tối đa {{ MAX_GALLERY }} ảnh
+          </div>
+
+          <!-- Gallery preview grid -->
+          <div class="gallery-grid" *ngIf="galleryUrls.length > 0">
+            <div *ngFor="let imgUrl of galleryUrls; let i = index" class="gallery-thumb-item">
+              <img [src]="imgUrl" [alt]="'Gallery ' + (i + 1)" class="gallery-thumb-img" />
+              <div class="gallery-thumb-overlay">
+                <button nz-button nzDanger nzSize="small" type="button" (click)="removeGalleryImage(i)" class="gallery-remove-btn">
+                  <nz-icon nzType="delete" />
+                </button>
+              </div>
+              <div class="gallery-thumb-index">{{ i + 1 }}</div>
+            </div>
+          </div>
+          <div *ngIf="galleryUrls.length === 0" class="gallery-empty-hint">
+            <nz-icon nzType="picture" /> Chưa có ảnh trong thư viện. Thêm URL ở trên để bắt đầu.
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+
         <nz-form-control>
           <div class="flex-gap-12">
             <button
               nz-button
               nzType="primary"
               nzSize="large"
+              type="submit"
               [nzLoading]="isSubmitting"
               class="w-200"
             >

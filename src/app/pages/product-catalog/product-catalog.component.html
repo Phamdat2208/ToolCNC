@@ -6,31 +6,46 @@
     <div nz-col nzXs="24" nzMd="6" class="filters-sidebar">
       <div class="filter-group">
         <h3>Danh mục sản phẩm</h3>
-        <ul nz-menu nzMode="inline" class="category-menu">
+        <ul class="category-tree-list">
           <!-- Option All -->
           <li
-            nz-menu-item
-            [nzSelected]="activeCategory === ''"
+            class="tree-node-item"
+            [class.active]="activeCategory === ''"
             (click)="selectCategory('')"
           >
-            <span class="cat-item-row">
+            <div class="node-content">
               <span class="cat-name">Tất cả sản phẩm</span>
               <span class="count-badge">{{ totalAllProducts }}</span>
-            </span>
+            </div>
           </li>
 
-          <li
-            nz-menu-item
-            *ngFor="let cat of categories"
-            [nzSelected]="cat.name === activeCategory"
-            (click)="selectCategory(cat.name)"
-          >
-            <span class="cat-item-row">
-              <span class="cat-name">{{ cat.name }}</span>
-              <span class="count-badge">{{ cat.productCount }}</span>
-            </span>
-          </li>
+          <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: categories, level: 0 }"></ng-container>
         </ul>
+
+        <ng-template #recursiveTree let-nodes let-level="level">
+          <li *ngFor="let node of nodes" class="tree-node-wrapper">
+            <div 
+              class="tree-node-item" 
+              [class.active]="node.name === activeCategory"
+              [style.padding-left.px]="level * 16 + 12"
+              (click)="selectCategory(node.name)"
+            >
+              <div class="node-content">
+                <span class="toggle-icon-wrapper" *ngIf="node.children && node.children.length > 0" (click)="toggleExpand($event, node.id)">
+                   <nz-icon [nzType]="isExpanded(node.id) ? 'minus-square' : 'plus-square'" nzTheme="outline"></nz-icon>
+                </span>
+                <span class="no-children-spacer" *ngIf="!node.children || node.children.length === 0"></span>
+                
+                <span class="cat-name">{{ node.name }}</span>
+                <span class="count-badge">{{ node.displayCount }}</span>
+              </div>
+            </div>
+            
+            <ul class="child-list" *ngIf="isExpanded(node.id) && node.children && node.children.length > 0">
+              <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: node.children, level: level + 1 }"></ng-container>
+            </ul>
+          </li>
+        </ng-template>
       </div>
 
       <div class="filter-group">
@@ -67,9 +82,9 @@
           <ng-container *ngFor="let brand of knownBrands">
             <label
               nz-checkbox
-              [nzChecked]="selectedBrands.has(brand)"
-              (nzCheckedChange)="toggleBrand(brand, $event)"
-              >{{ brand }}</label
+              [nzChecked]="selectedBrands.has(brand.name)"
+              (nzCheckedChange)="toggleBrand(brand.name, $event)"
+              >{{ brand.name }}</label
             ><br />
           </ng-container>
         </div>

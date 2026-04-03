@@ -1,0 +1,77 @@
+<div class="admin-categories-container">
+  <div class="header-action">
+    <h2 class="title">Quản lý Danh mục sản phẩm</h2>
+    <button nz-button nzType="primary" (click)="showAddModal()" class="add-btn">
+      <nz-icon nzType="plus" /> Thêm danh mục mới
+    </button>
+  </div>
+
+  <div class="table-card">
+    <nz-table #basicTable [nzData]="displayCategories" [nzLoading]="loading" [nzPageSize]="10">
+      <thead>
+        <tr>
+          <th nzWidth="80px">ID</th>
+          <th>Tên Danh mục</th>
+          <th nzWidth="150px">Số lượng SP</th>
+          <th nzWidth="120px" nzRight>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.id }}</td>
+          <td>
+            <div class="category-name-cell" [style.padding-left.px]="data.level * 24">
+              <nz-icon *ngIf="data.level > 0" nzType="enter" class="child-icon" />
+              <span [class.parent-cat]="data.level === 0">{{ data.name }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="product-count-badge" *ngIf="data.productCount != null">
+              {{ data.productCount }} sản phẩm
+            </span>
+          </td>
+          <td nzRight>
+            <div class="action-buttons">
+              <button nz-button nzType="text" (click)="showEditModal(data)" nz-tooltip nzTooltipTitle="Chỉnh sửa">
+                <nz-icon nzType="edit" class="edit-icon" />
+              </button>
+              <button nz-button nzType="text" nzDanger (click)="deleteCategory(data.id)" nz-tooltip nzTooltipTitle="Xóa">
+                <nz-icon nzType="delete" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+  <!-- Modal Thêm/Sửa -->
+  <nz-modal
+    [(nzVisible)]="isModalVisible"
+    [nzTitle]="isEditMode ? 'Chỉnh sửa danh mục' : 'Tạo danh mục mới'"
+    (nzOnCancel)="handleCancel()"
+    (nzOnOk)="handleOk()"
+    [nzOkText]="isEditMode ? 'Cập nhật' : 'Tạo mới'"
+    [nzCancelText]="'Hủy'"
+  >
+    <div *nzModalContent>
+      <form nz-form [formGroup]="categoryForm" nzLayout="vertical">
+        <nz-form-item>
+          <nz-form-label nzRequired>Tên danh mục</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập tên danh mục">
+            <input nz-input formControlName="name" placeholder="Ví dụ: Dao Phay (End Mill)" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Danh mục cha</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="parentId" nzAllowClear nzPlaceHolder="Chọn danh mục cha (để trống nếu là danh mục gốc)">
+              <nz-option *ngFor="let opt of parentOptions" [nzValue]="opt.id" [nzLabel]="opt.displayName"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>

@@ -15,6 +15,7 @@ import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-das
 import { AdminProductsComponent } from './pages/admin/admin-products/admin-products.component';
 import { AdminOrdersComponent } from './pages/admin/admin-orders/admin-orders.component';
 import { AdminUsersComponent } from './pages/admin/admin-users/admin-users.component';
+import { AdminCategoriesComponent } from './pages/admin/admin-categories/admin-categories.component';
 
 import { SupportComponent } from './pages/support/support.component';
 import { AdminLayoutComponent } from './layout/admin-layout/admin-layout.component';
@@ -50,6 +51,8 @@ export const routes: Routes = [
       { path: 'products', component: AdminProductsComponent },
       { path: 'products/new', component: ProductAddComponent },
       { path: 'products/:id/edit', component: ProductAddComponent },
+      { path: 'categories', component: AdminCategoriesComponent },
+      { path: 'brands', loadComponent: () => import('./pages/admin/admin-brands/admin-brands.component').then(m => m.AdminBrandsComponent) },
       { path: 'orders', component: AdminOrdersComponent },
       { path: 'users', component: AdminUsersComponent },
     ]

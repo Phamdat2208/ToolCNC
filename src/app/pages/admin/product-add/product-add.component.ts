@@ -18,6 +18,7 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ProductService } from '../../../services/product.service';
 import { CategoryService } from '../../../services/category.service';
+import { BrandService, Brand } from '../../../services/brand.service';
 import { AuthService } from '../../../services/auth.service';
 
 
@@ -41,20 +42,34 @@ export class ProductAddComponent implements OnInit {
   isEditMode: boolean = false;
   productId: number | null = null;
 
-  // --- Image upload state ---
+  // --- Image upload state (MAIN) ---
   uploadMode: 'url' | 'upload' = 'url';
   originalImageSrc: string | null = null;
   previewImageSrc: string | null = null;
   resizeWidth: number = 800;
   resizeHeight: number = 600;
   isResizing = false;
-  private _selectedFile: File | null = null;
-  private _resizedBlob: Blob | null = null;
+  private _mainSelectedFile: File | null = null;
+  private _mainResizedBlob: Blob | null = null;
   
-  // --- Cropper state ---
+  // --- Cropper state (MAIN) ---
   imageChangedEvent: Event | null = null;
   croppedImage: string = '';
   showCropper: boolean = false;
+
+  // --- Gallery ---
+  galleryUrls: string[] = [];
+  newGalleryUrl: string = '';
+  readonly MAX_GALLERY = 8;
+  isGalleryUploading = false;
+  private _gallerySelectedFile: File | null = null;
+  private _galleryResizedBlob: Blob | null = null;
+
+  // --- Gallery Cropper state ---
+  galleryChangedEvent: Event | null = null;
+  galleryCroppedImage: string = '';
+  galleryShowCropper: boolean = false;
+  galleryOriginalSrc: string | null = null;
 
   readonly presetSizes = [
     { label: 'Vuông 1:1 (800×800)', w: 800, h: 800 },
@@ -69,6 +84,7 @@ export class ProductAddComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
+  private brandService = inject(BrandService);
   private location = inject(Location);
   private http = inject(HttpClient);
   private authService = inject(AuthService);
@@ -76,11 +92,12 @@ export class ProductAddComponent implements OnInit {
   isSubmitting = false;
   categories: any[] = [];
   categoryOptions: SelectOption[] = [];
+  brandOptions: SelectOption[] = [];
 
   productForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     price: [0, [Validators.required, Validators.min(0)]],
-    brand: ['', [Validators.required]],
+    brandId: [null, [Validators.required]],
     categoryId: [null, [Validators.required]],
     stock: [10, [Validators.required, Validators.min(0)]],
     description: [''],
@@ -106,6 +123,7 @@ export class ProductAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
+    this.loadBrands();
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -120,7 +138,9 @@ export class ProductAddComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (list) => {
         this.categories = list;
-        this.categoryOptions = list.map((c: any) => ({ label: c.name, value: c.id }));
+        const options: SelectOption[] = [];
+        this.flattenCategories(list, 0, options);
+        this.categoryOptions = options;
       },
       error: (err) => {
         console.error('Error loading categories', err);
@@ -128,56 +148,187 @@ export class ProductAddComponent implements OnInit {
     });
   }
 
-  onCategoryChange(event: any) {
-    console.log(event);
+  loadBrands(): void {
+    this.brandService.getBrands().subscribe({
+      next: (list) => {
+        this.brandOptions = list.map(b => ({
+          label: b.name,
+          value: b.id!
+        }));
+      },
+      error: (err) => console.error('Error loading brands', err)
+    });
   }
 
-  triggerFileInput() {
-    this.fileInputRef?.nativeElement.click();
+  flattenCategories(data: any[], level: number, result: SelectOption[]) {
+    data.forEach(node => {
+      result.push({
+        label: `${'-- '.repeat(level)}${node.name}`,
+        value: node.id
+      });
+
+      if (node.children && node.children.length > 0) {
+        this.flattenCategories(node.children, level + 1, result);
+      }
+    });
+  }
+
+  triggerFileInput(target: 'main' | 'gallery' = 'main') {
+    // We can use a local flag to tell onFileSelected where to put the data
+    const input = this.fileInputRef?.nativeElement;
+    if (input) {
+      input.setAttribute('data-target', target);
+      input.click();
+    }
   }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
+    const target = input.getAttribute('data-target') || 'main';
     const file = input.files?.[0];
     if (!file) return;
+    
     if (!file.type.startsWith('image/')) {
       this.notification.error('Lỗi', 'Vui lòng chọn file hình ảnh (JPG, PNG, WEBP)');
       return;
     }
-    
-    this._selectedFile = file;
-    this.imageChangedEvent = event;
-    this.showCropper = true;
+
+    if (target === 'gallery') {
+      this._gallerySelectedFile = file;
+      this.galleryChangedEvent = event;
+      this.galleryShowCropper = true;
+    } else {
+      this._mainSelectedFile = file;
+      this.imageChangedEvent = event;
+      this.showCropper = true;
+    }
   }
 
+  // Called by the MAIN image cropper
   imageCropped(event: ImageCroppedEvent) {
     if (event.base64) {
       this.croppedImage = event.base64;
     } else if (event.objectUrl) {
-      // For ngx-image-cropper newer versions if base64 is null
-      this.croppedImage = event.objectUrl; 
+      this.croppedImage = event.objectUrl;
     }
   }
 
+  // Called by the GALLERY image cropper 
+  galleryCropped(event: ImageCroppedEvent) {
+    if (event.base64) {
+      this.galleryCroppedImage = event.base64;
+    } else if (event.objectUrl) {
+      this.galleryCroppedImage = event.objectUrl;
+    }
+  }
+
+  // Confirm crop for MAIN image
   confirmCrop() {
     this.showCropper = false;
-    this.originalImageSrc = this.croppedImage; // Lấy ảnh đã Crop làm ảnh gốc chuẩn bị Resize
-    
+    this.originalImageSrc = this.croppedImage;
+
     const img = new Image();
     img.onload = () => {
-      // Vì Crop là 1:1, ảnh sẽ là vuông, ta lấy min width/height với tùy chọn preset
-      // Ta để mặc định resize 800x800 cho chuẩn nét
-      this.resizeWidth = Math.min(img.naturalWidth, 800);
-      this.resizeHeight = Math.min(img.naturalHeight, 800);
+      this.resizeWidth = img.naturalWidth;
+      this.resizeHeight = img.naturalHeight;
       this.applyResize();
     };
     img.src = this.croppedImage;
   }
 
+  // Confirm crop for GALLERY image (auto resize 800x800 then upload)
+  confirmGalleryCrop() {
+    this.galleryShowCropper = false;
+    this.galleryOriginalSrc = this.galleryCroppedImage;
+
+    // Auto resize 800x800
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 800;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0, 800, 800);
+      canvas.toBlob((blob) => {
+        if (blob) {
+          this._galleryResizedBlob = blob;
+          this.uploadAndAddGallery();
+        }
+      }, 'image/jpeg', 0.85);
+    };
+    img.src = this.galleryCroppedImage;
+  }
+
+  cancelGalleryCrop() {
+    this.galleryShowCropper = false;
+    this.galleryChangedEvent = null;
+    this.galleryCroppedImage = '';
+    this.galleryOriginalSrc = null;
+    if (this.fileInputRef) {
+      this.fileInputRef.nativeElement.value = '';
+    }
+  }
+
+  // Internal helper for chaining resize and upload
+  private applyResizeInternal(callback?: () => void) {
+    if (!this.originalImageSrc) return;
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = this.resizeWidth;
+      canvas.height = this.resizeHeight;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0, this.resizeWidth, this.resizeHeight);
+      this.previewImageSrc = canvas.toDataURL('image/jpeg', 0.85);
+      canvas.toBlob((blob) => {
+        if (blob) {
+          this._mainResizedBlob = blob;
+          if (callback) callback();
+        }
+      }, 'image/jpeg', 0.85);
+    };
+    img.src = this.originalImageSrc;
+  }
+
+  uploadAndAddGallery() {
+    if (this.galleryUrls.length >= this.MAX_GALLERY) {
+      this.notification.warning('Giới hạn', `Đã đạt tối đa ${this.MAX_GALLERY} ảnh`);
+      return;
+    }
+
+    this.isGalleryUploading = true;
+    this.notification.info('Đang xử lý', 'Đang tải ảnh bổ sung lên hệ thống...');
+    
+    this.uploadResizedImage(this._galleryResizedBlob, this._gallerySelectedFile)
+      .then((url) => {
+        this.galleryUrls.push(url);
+        this.notification.success('Thành công', 'Đã thêm ảnh vào thư viện');
+        this.isGalleryUploading = false;
+        // Only clear gallery state
+        this.galleryShowCropper = false;
+        this.galleryChangedEvent = null;
+        this.galleryCroppedImage = '';
+        this.galleryOriginalSrc = null;
+        this._galleryResizedBlob = null;
+        this._gallerySelectedFile = null;
+        if (this.fileInputRef) this.fileInputRef.nativeElement.value = '';
+      })
+      .catch((err) => {
+        console.error(err);
+        this.notification.error('Lỗi', 'Không thể tải ảnh lên. Vui lòng thử lại.');
+        this.isGalleryUploading = false;
+      });
+  }
+
   cancelCrop() {
     this.showCropper = false;
     this.imageChangedEvent = null;
-    this.clearUploadedImage();
+    this.croppedImage = '';
+    this.originalImageSrc = null;
+    this.previewImageSrc = null;
+    this._mainResizedBlob = null;
+    this._mainSelectedFile = null;
+    if (this.fileInputRef) this.fileInputRef.nativeElement.value = '';
   }
 
   applyPreset(preset: { w: number; h: number }) {
@@ -187,33 +338,18 @@ export class ProductAddComponent implements OnInit {
   }
 
   applyResize() {
-    if (!this.originalImageSrc) return;
     this.isResizing = true;
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = this.resizeWidth;
-      canvas.height = this.resizeHeight;
-      const ctx = canvas.getContext('2d')!;
-      ctx.drawImage(img, 0, 0, this.resizeWidth, this.resizeHeight);
-      // Show preview only (not stored as Base64)
-      this.previewImageSrc = canvas.toDataURL('image/jpeg', 0.85);
-      // Store the canvas data as a blob for later upload
-      canvas.toBlob((blob) => {
-        if (blob) this._resizedBlob = blob;
-      }, 'image/jpeg', 0.85);
+    this.applyResizeInternal(() => {
       this.isResizing = false;
-    };
-    img.src = this.originalImageSrc;
+    });
   }
 
-  uploadResizedImage(): Promise<string> {
+  uploadResizedImage(blob: Blob | null, selectedFile: File | null): Promise<string> {
     return new Promise((resolve, reject) => {
-      const blob = this._resizedBlob;
       if (!blob) { reject('No image to upload'); return; }
 
       const formData = new FormData();
-      const filename = (this._selectedFile?.name || 'product') + '_resized.jpg';
+      const filename = (selectedFile?.name || 'product') + '_resized.jpg';
       formData.append('file', blob, filename);
 
       const token = this.authService.getToken();
@@ -234,9 +370,11 @@ export class ProductAddComponent implements OnInit {
     this.imageChangedEvent = null;
     this.croppedImage = '';
     this.showCropper = false;
-    this._selectedFile = null;
-    this._resizedBlob = null;
+    this._mainSelectedFile = null;
+    this._mainResizedBlob = null;
+    
     this.productForm.patchValue({ imageUrl: '' });
+    
     if (this.fileInputRef) {
       this.fileInputRef.nativeElement.value = '';
     }
@@ -252,12 +390,17 @@ export class ProductAddComponent implements OnInit {
         this.productForm.patchValue({
           name: product.name,
           price: product.price,
-          brand: product.brand,
+          brandId: product.brand?.id,
           categoryId: product.category?.id,
           stock: product.stock,
           description: product.description,
           imageUrl: product.imageUrl
         });
+
+        // Load existing gallery images
+        if (product.images && product.images.length > 0) {
+          this.galleryUrls = product.images.map((img: any) => img.url || img);
+        }
 
         // Handle specifications JSON
         this.specifications.clear();
@@ -287,8 +430,8 @@ export class ProductAddComponent implements OnInit {
         const formValue = this.productForm.value;
         const productData = { 
           ...formValue,
-          // Convert FormArray to JSON string for backend
-          specifications: JSON.stringify(formValue.specifications)
+          specifications: JSON.stringify(formValue.specifications),
+          imageGallery: this.galleryUrls
         };
         
         if (imageUrl) productData.imageUrl = imageUrl;
@@ -316,9 +459,9 @@ export class ProductAddComponent implements OnInit {
       };
 
       // If using upload mode and an image was selected, upload it first
-      if (this.uploadMode === 'upload' && this._resizedBlob) {
+      if (this.uploadMode === 'upload' && this._mainResizedBlob) {
         this.notification.info('Đang xử lý', 'Đang tải ảnh lên máy chủ...');
-        this.uploadResizedImage()
+        this.uploadResizedImage(this._mainResizedBlob, this._mainSelectedFile)
           .then((url) => doSubmit(url))
           .catch(() => {
             this.notification.error('Lỗi', 'Không thể tải ảnh lên. Vui lòng thử lại hoặc dùng URL.');
@@ -335,6 +478,21 @@ export class ProductAddComponent implements OnInit {
         }
       });
     }
+  }
+
+  addGalleryImage(): void {
+    const url = this.newGalleryUrl.trim();
+    if (!url) return;
+    if (this.galleryUrls.length >= this.MAX_GALLERY) {
+      this.notification.warning('Giới hạn', `Chỉ được thêm tối đa ${this.MAX_GALLERY} ảnh`);
+      return;
+    }
+    this.galleryUrls.push(url);
+    this.newGalleryUrl = '';
+  }
+
+  removeGalleryImage(index: number): void {
+    this.galleryUrls.splice(index, 1);
   }
 
   submitBulk(): void {

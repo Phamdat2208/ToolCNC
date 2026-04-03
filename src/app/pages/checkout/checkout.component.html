@@ -42,7 +42,7 @@
                     label="Họ và tên người nhận"
                     placeholder="VD: Nguyễn Văn A"
                     prefixIcon="user"
-                    [errorTip]="validateForm?.get('fullName')?.hasError('required') ? 'Vui lòng nhập họ và tên!' : 'Độ dài tối thiểu 3 ký tự!'"
+                    [errorTip]="validateForm.get('fullName')?.hasError('required') ? 'Vui lòng nhập họ và tên!' : 'Độ dài tối thiểu 3 ký tự!'"
                   ></app-custom-input>
                 </div>
                 <div nz-col [nzXs]="24" [nzMd]="12">
@@ -51,7 +51,7 @@
                     label="Số điện thoại"
                     placeholder="VD: 0912345678"
                     prefixIcon="phone"
-                    [errorTip]="validateForm?.get('phone')?.hasError('pattern') ? 'Định dạng không hợp lệ!' : 'Độ dài tối thiểu 10 ký tự!'"
+                    [errorTip]="validateForm.get('phone')?.hasError('pattern') ? 'Định dạng không hợp lệ!' : 'Độ dài tối thiểu 10 ký tự!'"
                   ></app-custom-input>
                 </div>
               </div>

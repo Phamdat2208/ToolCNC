@@ -36,8 +36,8 @@
           <div class="badge-item">
             <div class="badge-icon"><nz-icon nzType="safety-certificate" /></div>
             <div class="badge-text">
-              <h4>Chất lượng Nhật Bản</h4>
-              <p>100% Chính hãng tuyển chọn</p>
+              <h4>Hợp kim siêu cứng</h4>
+              <p>Nhập khẩu Đức, Nhật, Thụy Sỹ</p>
             </div>
           </div>
         </div>
@@ -45,8 +45,8 @@
           <div class="badge-item">
             <div class="badge-icon"><nz-icon nzType="customer-service" /></div>
             <div class="badge-text">
-              <h4>Kỹ thuật 24/7</h4>
-              <p>Lắp đặt, bảo trì tận công trình</p>
+              <h4>Giải pháp CAM/CNC</h4>
+              <p>Tư vấn tối ưu chế độ cắt</p>
             </div>
           </div>
         </div>
@@ -54,8 +54,8 @@
           <div class="badge-item">
             <div class="badge-icon"><nz-icon nzType="car" /></div>
             <div class="badge-text">
-              <h4>Vận chuyển Toàn quốc</h4>
-              <p>Hàng nặng, đóng gói chuyên nghiệp</p>
+              <h4>Giao hàng hỏa tốc</h4>
+              <p>Đáp ứng tiến độ sản xuất 24/7</p>
             </div>
           </div>
         </div>
@@ -63,8 +63,8 @@
           <div class="badge-item">
             <div class="badge-icon"><nz-icon nzType="dollar" /></div>
             <div class="badge-text">
-              <h4>Báo giá Xưởng</h4>
-              <p>Tối ưu chi phí cho sản xuất</p>
+              <h4>Giá gốc từ hãng</h4>
+              <p>Chiết khấu cao cho dự án</p>
             </div>
           </div>
         </div>
@@ -75,16 +75,16 @@
   <!-- Categories Section -->
   <div class="categories-section" appScrollReveal style="transition-delay: 0.2s">
     <h2 class="section-title">Danh mục sản phẩm</h2>
-    <div nz-row [nzGutter]="[16, 16]" class="categories-grid">
+    <div nz-row [nzGutter]="[16, 16]" nzJustify="center" class="categories-grid">
       <div nz-col nzXs="12" nzSm="8" nzMd="4" *ngFor="let cat of categories">
         <div
           class="category-card"
           [routerLink]="['/products']"
-          [queryParams]="{ category: cat.name }"
+          [queryParams]="{ categoryId: cat.id }"
         >
           <div class="category-icon-wrapper">
             <nz-icon
-              [nzType]="cat.icon"
+              [nzType]="cat.icon || 'appstore'"
               nzTheme="outline"
               class="category-icon"
             />
@@ -98,7 +98,7 @@
   <!-- Featured Brands Section -->
   <div class="brands-section" appScrollReveal style="transition-delay: 0.2s">
     <h2 class="section-title">Thương hiệu nổi bật</h2>
-    <div nz-row [nzGutter]="[16, 16]" class="brands-grid">
+    <div nz-row [nzGutter]="[16, 16]" nzJustify="center" class="brands-grid">
       <div nz-col nzXs="12" nzSm="8" nzMd="4" *ngFor="let brand of featuredBrands">
         <div
           class="brand-card"

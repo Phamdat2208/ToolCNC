@@ -63,7 +63,7 @@
                     <app-custom-input
                       formControlName="phone"
                       placeholder="VD: 0912345678"
-                      [errorTip]="profileForm?.get('phone')?.hasError('pattern') ? 'Số điện thoại không hợp lệ!' : ''"
+                      [errorTip]="profileForm.get('phone')?.hasError('pattern') ? 'Số điện thoại không hợp lệ!' : ''"
                     ></app-custom-input>
                   </div>
                 </ng-template>

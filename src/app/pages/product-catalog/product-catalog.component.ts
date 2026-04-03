@@ -17,6 +17,7 @@ import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
+import { BrandService, Brand } from '../../services/brand.service';
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
@@ -41,22 +42,24 @@ export class ProductCatalogComponent implements OnInit {
   priceRange: number[] = [0, 2000000000];
   readonly MAX_PRICE = 2000000000;
   selectedBrands: Set<string> = new Set();
-  // knownBrands = ['Makino', 'Mazak', 'DMG Mori', 'Okuma', 'SMTCL', 'Hitachi'];
-  knownBrands: string[] = [];
+  knownBrands: Brand[] = [];
 
   categories: any[] = [];
+  expandedIds: Set<number> = new Set();
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private notification = inject(NzNotificationService);
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
+  private brandService = inject(BrandService);
 
   searchKeyword = '';
   private initialized = false;
 
   ngOnInit() {
     this.loadCategories();
+    this.loadBrands();
     this.route.queryParams.subscribe(params => {
       // 1. Sync State from URL
       this.pageIndex = params['page'] ? Number(params['page']) : 1;
@@ -88,15 +91,51 @@ export class ProductCatalogComponent implements OnInit {
 
   loadCategories() {
     this.categoryService.getCategories().subscribe({
-      next: (list) => {
-        this.categories = list;
-        this.totalAllProducts = list.reduce((sum, cat) => sum + (cat.productCount || 0), 0);
+      next: (tree) => {
+        // We keep the tree structure for the collapsible UI
+        this.totalAllProducts = this.calculateCountsRecursively(tree);
+        this.categories = tree;
         
         if (this.searchKeyword && !this.activeCategory) {
           this.matchKeywordToCategory();
         }
       },
       error: (err) => console.error('Error fetching categories', err)
+    });
+  }
+
+  private calculateCountsRecursively(nodes: any[]): number {
+    let totalInCurrentLevel = 0;
+    nodes.forEach(node => {
+      let nodeTotal = node.productCount || 0;
+      if (node.children && node.children.length > 0) {
+        nodeTotal += this.calculateCountsRecursively(node.children);
+      }
+      node.displayCount = nodeTotal;
+      totalInCurrentLevel += nodeTotal; // MUST add the full node total (including its children)
+    });
+    return totalInCurrentLevel;
+  }
+
+  toggleExpand(event: Event, catId: number): void {
+    event.stopPropagation(); // Prevent selecting the category when just toggling
+    if (this.expandedIds.has(catId)) {
+      this.expandedIds.delete(catId);
+    } else {
+      this.expandedIds.add(catId);
+    }
+  }
+
+  isExpanded(catId: number): boolean {
+    return this.expandedIds.has(catId);
+  }
+
+  loadBrands() {
+    this.brandService.getBrands().subscribe({
+      next: (list) => {
+        this.knownBrands = list;
+      },
+      error: (err) => console.error('Error fetching brands', err)
     });
   }
 
@@ -122,15 +161,6 @@ export class ProductCatalogComponent implements OnInit {
         }));
         this.totalProducts = res.totalElements;
         this.loading = false;
-
-        // Extract brands from products
-        const brands = new Set<string>();
-        this.products.forEach(p => {
-          if (p.brand) {
-            brands.add(p.brand);
-          }
-        });
-        this.knownBrands = Array.from(brands);
       },
       error: (err) => {
         console.error('Error fetching products', err);
