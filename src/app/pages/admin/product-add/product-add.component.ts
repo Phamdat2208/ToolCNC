@@ -13,6 +13,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzTableModule } from 'ng-zorro-antd/table';
 import { FormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -30,7 +32,7 @@ import { UrlUtils } from '../../../shared/utils/url-utils';
 
 @Component({
   selector: 'app-product-add',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzFormModule, NzInputModule, NzButtonModule, NzInputNumberModule, NzTabsModule, NzSelectModule, NzRadioModule, NzDividerModule, NzIconModule, ImageCropperComponent, CustomInputComponent, CustomSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzFormModule, NzInputModule, NzButtonModule, NzInputNumberModule, NzTabsModule, NzSelectModule, NzRadioModule, NzDividerModule, NzIconModule, NzSwitchModule, NzTableModule, ImageCropperComponent, CustomInputComponent, CustomSelectComponent],
   templateUrl: './product-add.component.html',
   styleUrl: './product-add.component.css'
 })
@@ -98,17 +100,24 @@ export class ProductAddComponent implements OnInit {
 
   productForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
+    sku: [''],
     price: [0, [Validators.required, Validators.min(0)]],
     brandId: [null, [Validators.required]],
     categoryId: [null, [Validators.required]],
     stock: [10, [Validators.required, Validators.min(0)]],
     description: [''],
     imageUrl: [''],
-    specifications: this.fb.array([])
+    hasVariants: [false],
+    specifications: this.fb.array([]),
+    variants: this.fb.array([])
   });
 
   get specifications(): FormArray {
     return this.productForm.get('specifications') as FormArray;
+  }
+
+  get variants(): FormArray {
+    return this.productForm.get('variants') as FormArray;
   }
 
   getFullUrl(url: string | null | undefined): string {
@@ -125,6 +134,21 @@ export class ProductAddComponent implements OnInit {
 
   removeSpec(index: number): void {
     this.specifications.removeAt(index);
+  }
+
+  addVariant(data: any = null): void {
+    const variantGroup = this.fb.group({
+      id: [data?.id || null],
+      sku: [data?.sku || ''],
+      variantName: [data?.variantName || '', [Validators.required]],
+      price: [data?.price || this.productForm.get('price')?.value || 0, [Validators.required, Validators.min(0)]],
+      stock: [data?.stock || 0, [Validators.required, Validators.min(0)]]
+    });
+    this.variants.push(variantGroup);
+  }
+
+  removeVariant(index: number): void {
+    this.variants.removeAt(index);
   }
 
   ngOnInit(): void {
@@ -390,13 +414,21 @@ export class ProductAddComponent implements OnInit {
       next: (product) => {
         this.productForm.patchValue({
           name: product.name,
+          sku: product.sku,
           price: product.price,
           brandId: product.brand?.id,
           categoryId: product.category?.id,
           stock: product.stock,
           description: product.description,
-          imageUrl: product.imageUrl
+          imageUrl: product.imageUrl,
+          hasVariants: product.hasVariants || false
         });
+
+        // Load variants
+        this.variants.clear();
+        if (product.variants && product.variants.length > 0) {
+          product.variants.forEach((v: any) => this.addVariant(v));
+        }
 
         // Load existing gallery images
         if (product.images && product.images.length > 0) {

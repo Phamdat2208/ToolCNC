@@ -27,30 +27,31 @@
       </button>
 
       <!-- Yêu thích -->
-      <button
-        nz-button
-        [nzType]="
-          wishlistService.isWishlisted(product.id) ? 'primary' : 'default'
-        "
-        [nzDanger]="wishlistService.isWishlisted(product.id)"
-        nz-tooltip
-        [nzTooltipTitle]="
-          wishlistService.isWishlisted(product.id)
-            ? 'Xóa khỏi yêu thích'
-            : 'Thêm vào yêu thích'
-        "
-        (click)="$event.stopPropagation(); toggleWishlist(product)"
-        class="btn-wishlist"
-      >
-        <nz-icon
+        <button
+          nz-button
           [nzType]="
-            wishlistService.isWishlisted(product.id) ? 'heart' : 'heart'
+            wishlistService.isWishlisted(product.id) ? 'primary' : 'default'
           "
-          [nzTheme]="
-            wishlistService.isWishlisted(product.id) ? 'fill' : 'outline'
+          [nzDanger]="wishlistService.isWishlisted(product.id)"
+          nz-tooltip
+          [nzLoading]="isTogglingWishlist"
+          [nzTooltipTitle]="
+            wishlistService.isWishlisted(product.id)
+              ? 'Xóa khỏi yêu thích'
+              : 'Thêm vào yêu thích'
           "
-        />
-      </button>
+          (click)="$event.stopPropagation(); toggleWishlist(product)"
+          class="btn-wishlist"
+        >
+          <nz-icon
+            [nzType]="
+              wishlistService.isWishlisted(product.id) ? 'heart' : 'heart'
+            "
+            [nzTheme]="
+              wishlistService.isWishlisted(product.id) ? 'fill' : 'outline'
+            "
+          />
+        </button>
     </div>
   </div>
 </nz-card>
@@ -63,7 +64,16 @@
 </ng-template>
 
 <ng-template #priceTemplate>
-  <span class="product-price">{{
-    product.price | currency: "VND" : "symbol"
-  }}</span>
+  <div class="price-display-wrapper">
+    <ng-container *ngIf="product.hasVariants && product.minPrice !== product.maxPrice; else singlePrice">
+      <span class="product-price range-price">
+        {{ product.minPrice | currency: "VND" : "" }} - {{ product.maxPrice | currency: "VND" : "symbol" }}
+      </span>
+    </ng-container>
+    <ng-template #singlePrice>
+      <span class="product-price">{{
+        product.price | currency: "VND" : "symbol"
+      }}</span>
+    </ng-template>
+  </div>
 </ng-template>

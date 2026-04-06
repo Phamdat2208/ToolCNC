@@ -8,11 +8,14 @@ import { catchError, distinctUntilChanged } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 export interface CartItem {
-  id: number;
+  id: number; // This is the CartItem ID from backend
+  productId: number;
   name: string;
   price: number;
   quantity: number;
   img: string;
+  variantId?: number;
+  variantName?: string;
 }
 
 @Injectable({
@@ -59,11 +62,14 @@ export class CartService {
       if (backendItems) {
         // Chuyển đổi CartItem backend sang frontend shape
         const items: CartItem[] = backendItems.map(bItem => ({
-          id: bItem.product.id, // Frontend dùng product.id làm id cho dễ mapping
+          id: bItem.id, // Now it's the actual CartItem ID
+          productId: bItem.product.id,
           name: bItem.product.name,
-          price: bItem.product.price,
+          price: bItem.variant ? bItem.variant.price : bItem.product.price,
           quantity: bItem.quantity,
-          img: bItem.product.imageUrl || 'https://placehold.co/80x80?text=No+Image'
+          img: bItem.product.imageUrl || 'https://placehold.co/80x80?text=No+Image',
+          variantId: bItem.variant?.id,
+          variantName: bItem.variant?.variantName
         }));
         this.cartItems.set(items);
       }
@@ -83,6 +89,7 @@ export class CartService {
 
     const payload = {
       productId: product.id,
+      variantId: product.variantId || null,
       quantity: quantity
     };
 
@@ -102,26 +109,43 @@ export class CartService {
     });
   }
 
-  removeItem(id: number) { // id in frontend refers to product.id
-    if (!this.authService.isLoggedIn()) return;
+  removeItem(id: number): Observable<any> { // id is CartItem ID
+    if (!this.authService.isLoggedIn()) return of(null);
 
-    this.http.delete(`${this.apiUrl}/${id}`, this.getAuthHeaders()).subscribe({
-      next: () => this.loadCart(),
-      error: err => console.error('Lỗi xóa sản phẩm khỏi giỏ hàng', err)
+    return new Observable<any>(observer => {
+      this.http.delete(`${this.apiUrl}/${id}`, this.getAuthHeaders()).subscribe({
+        next: (res) => {
+          this.loadCart();
+          observer.next(res);
+          observer.complete();
+        },
+        error: err => {
+          console.error('Lỗi xóa sản phẩm khỏi giỏ hàng', err);
+          observer.error(err);
+        }
+      });
     });
   }
 
-  updateQuantity(id: number, quantity: number) {
-    if (!this.authService.isLoggedIn()) return;
+  updateQuantity(id: number, quantity: number): Observable<any> { // id is CartItem ID
+    if (!this.authService.isLoggedIn()) return of(null);
 
     const payload = {
-      productId: id,
       quantity: quantity
     };
 
-    this.http.put(`${this.apiUrl}/${id}`, payload, this.getAuthHeaders()).subscribe({
-      next: () => this.loadCart(), // Cập nhật lại UI sau khi lưu state thành công
-      error: err => console.error('Lỗi cập nhật số lượng', err)
+    return new Observable<any>(observer => {
+      this.http.put(`${this.apiUrl}/${id}`, payload, this.getAuthHeaders()).subscribe({
+        next: (res) => {
+          this.loadCart();
+          observer.next(res);
+          observer.complete();
+        },
+        error: err => {
+          console.error('Lỗi cập nhật số lượng', err);
+          observer.error(err);
+        }
+      });
     });
   }
 

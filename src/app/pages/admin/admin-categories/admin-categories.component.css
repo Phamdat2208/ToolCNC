@@ -40,24 +40,56 @@
 .category-name-cell {
   font-weight: 600;
   color: #1e293b;
-}
-
-.category-name-cell {
   display: flex;
   align-items: center;
   font-weight: 500;
+  transition: all 0.3s;
 }
 
-.child-icon {
+.expand-trigger {
+  cursor: pointer;
   margin-right: 8px;
-  color: #94a3b8;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+  color: #64748b;
+}
+
+.expand-trigger:hover {
+  background: #f1f5f9;
+  color: #2563eb;
+}
+
+.tree-icon {
+  font-size: 10px;
+}
+
+.sub-node-icon {
+  margin-right: 8px;
+  color: #cbd5e1;
+  display: inline-block;
+  font-size: 11px;
+}
+
+.sub-node-icon > .anticon {
   transform: rotate(90deg);
-  font-size: 12px;
+}
+
+.grandchild-icon {
+  color: #94a3b8;
 }
 
 .parent-cat {
   color: #0f172a;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.grandchild-cat {
+  font-style: italic;
+  color: #475569;
+  font-weight: 400;
 }
 
 .description-cell {

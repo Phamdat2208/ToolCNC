@@ -34,6 +34,7 @@ export class ProductCardComponent {
   }
 
   isAddingToCart = false;
+  isTogglingWishlist = false;
 
   addToCart(product: any) {
     this.isAddingToCart = true;
@@ -46,7 +47,9 @@ export class ProductCardComponent {
   }
 
   toggleWishlist(product: any) {
+    this.isTogglingWishlist = true;
     this.wishlistService.toggle(product).subscribe(added => {
+      this.isTogglingWishlist = false;
       if (added === null) return; // Chưa login, chỉ hiển thị modal yêu cầu đăng nhập
       if (added) {
         this.notification.success('Yêu thích', `Đã thêm ${product.name} vào danh sách yêu thích ♥`);

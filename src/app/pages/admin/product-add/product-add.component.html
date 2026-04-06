@@ -27,68 +27,131 @@
       (ngSubmit)="submitSingle()"
       nzLayout="vertical"
     >
-      <app-custom-input
-        formControlName="name"
-        label="Tên sản phẩm"
-        placeholder="Ví dụ: Máy phay đo lường CNC..."
-        [required]="true"
-        errorTip="Vui lòng nhập tên sản phẩm"
-      ></app-custom-input>
+      <div nz-row [nzGutter]="16">
+        <div nz-col [nzSpan]="24">
+          <app-custom-input
+            formControlName="name"
+            label="Tên sản phẩm"
+            placeholder="Ví dụ: Máy phay đo lường CNC..."
+            [required]="true"
+            errorTip="Vui lòng nhập tên sản phẩm"
+          ></app-custom-input>
+        </div>
+      </div>
 
-      <app-custom-input
-        formControlName="price"
-        label="Giá (VND)"
-        type="number"
-        [min]="0"
-        [step]="100000"
-        [required]="true"
-        errorTip="Vui lòng nhập giá trị lớn hơn 0"
-      ></app-custom-input>
+      <div nz-row [nzGutter]="16">
+        <div nz-col [nzSpan]="12">
+          <app-custom-select
+            formControlName="categoryId"
+            label="Danh mục"
+            placeholder="Chọn danh mục sản phẩm"
+            [options]="categoryOptions"
+            [required]="true"
+            errorTip="Vui lòng chọn danh mục"
+            [showSearch]="true"
+          ></app-custom-select>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <app-custom-select
+            formControlName="brandId"
+            label="Thương hiệu"
+            placeholder="Chọn thương hiệu hãng"
+            [options]="brandOptions"
+            [required]="true"
+            errorTip="Vui lòng chọn thương hiệu"
+            [showSearch]="true"
+          ></app-custom-select>
+        </div>
+      </div>
 
-      <app-custom-select
-        formControlName="brandId"
-        label="Thương hiệu"
-        [options]="brandOptions"
-        placeholder="Chọn thương hiệu hãng"
-        [required]="true"
-        errorTip="Vui lòng chọn thương hiệu"
-        [showSearch]="true"
-      ></app-custom-select>
+      <div class="variant-toggle-section mt-16">
+        <div class="toggle-header">
+          <h4 style="margin:0">Cấu hình giá và mã hàng</h4>
+          <div class="switch-control">
+            <label style="margin-right:8px">Có nhiều mẫu mã? </label>
+            <nz-switch formControlName="hasVariants"></nz-switch>
+          </div>
+        </div>
 
-      <app-custom-input
-        formControlName="stock"
-        label="Số lượng kho (Stock)"
-        type="number"
-        [min]="0"
-        [step]="1"
-        [required]="true"
-        errorTip="Vui lòng nhập giá trị lớn hơn hoặc bằng 0"
-      ></app-custom-input>
+        <!-- Single Product Info -->
+        <div *ngIf="!productForm.get('hasVariants')?.value" class="single-product-fields mt-16">
+          <div nz-row [nzGutter]="16">
+            <div nz-col [nzSpan]="8">
+              <app-custom-input
+                label="Mã SKU"
+                formControlName="sku"
+                placeholder="Tự động nếu để trống"
+              ></app-custom-input>
+            </div>
+            <div nz-col [nzSpan]="8">
+              <div class="ant-form-item-label"><label>Giá bán (VND)</label></div>
+              <nz-input-number
+                formControlName="price"
+                [nzMin]="0"
+                [nzStep]="1000"
+                style="width: 100%"
+                nzPlaceHolder="Ví dụ: 150000"
+              ></nz-input-number>
+            </div>
+            <div nz-col [nzSpan]="8">
+              <div class="ant-form-item-label"><label>Kho hàng</label></div>
+              <nz-input-number
+                formControlName="stock"
+                [nzMin]="0"
+                style="width: 100%"
+                nzPlaceHolder="10"
+              ></nz-input-number>
+            </div>
+          </div>
+        </div>
 
-      <app-custom-select
-        formControlName="categoryId"
-        label="Danh mục"
-        placeholder="Chọn danh mục sản phẩm"
-        [options]="categoryOptions"
-        [required]="true"
-        errorTip="Vui lòng chọn danh mục"
-        [showSearch]="true"
-      ></app-custom-select>
+        <!-- Variants Table -->
+        <div *ngIf="productForm.get('hasVariants')?.value" class="variants-section mt-16">
+          <nz-table #variantTable [nzData]="variants.controls" [nzFrontPagination]="false" nzSize="small">
+            <thead>
+              <tr>
+                <th nzWidth="30%">Tên biến thể (Size)</th>
+                <th nzWidth="25%">Mã SKU</th>
+                <th nzWidth="20%">Giá (VND)</th>
+                <th nzWidth="15%">Kho</th>
+                <th nzWidth="10%">Xóa</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="variants">
+              <tr *ngFor="let control of variants.controls; let i = index" [formGroupName]="i">
+                <td>
+                  <input nz-input formControlName="variantName" placeholder="6mm, 8mm..." />
+                </td>
+                <td>
+                  <input nz-input formControlName="sku" placeholder="Tự động" />
+                </td>
+                <td>
+                  <nz-input-number formControlName="price" [nzMin]="0" style="width: 100%"></nz-input-number>
+                </td>
+                <td>
+                  <nz-input-number formControlName="stock" [nzMin]="0" style="width: 100%"></nz-input-number>
+                </td>
+                <td style="text-align:center">
+                  <button nz-button nzType="text" nzDanger (click)="removeVariant(i)" type="button">
+                    <nz-icon nzType="delete"></nz-icon>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+          <button nz-button nzType="dashed" block (click)="addVariant()" class="mt-16" type="button">
+            <nz-icon nzType="plus"></nz-icon> Thêm biến thể mới
+          </button>
+        </div>
+      </div>
 
-      <app-custom-input
-        formControlName="description"
-        label="Mô tả chi tiết"
-        type="textarea"
-        [rows]="4"
-      ></app-custom-input>
-
-      <nz-form-item>
+      <nz-form-item class="mt-16">
         <nz-form-label>Thông số kỹ thuật</nz-form-label>
         <nz-form-control>
           <div formArrayName="specifications" class="spec-list">
-            <div *ngFor="let spec of specifications.controls; let i = index" [formGroupName]="i" class="spec-row mb-8">
-              <input nz-input formControlName="key" placeholder="Tên (VD: Trọng lượng)" />
-              <input nz-input formControlName="value" placeholder="Giá trị (VD: 1500kg)" />
+            <div *ngFor="let spec of specifications.controls; let i = index" [formGroupName]="i" class="spec-row mb-8" style="display:flex; gap:8px">
+              <input nz-input formControlName="key" placeholder="Tên (VD: Trọng lượng)" style="flex:1" />
+              <input nz-input formControlName="value" placeholder="Giá trị (VD: 1500kg)" style="flex:1" />
               <button nz-button nzType="text" nzDanger (click)="removeSpec(i)" type="button">
                 <nz-icon nzType="delete" />
               </button>
@@ -99,6 +162,16 @@
           </div>
         </nz-form-control>
       </nz-form-item>
+
+      <div class="mt-24 mb-24">
+        <label class="ant-form-item-label" style="font-weight: 500; font-size: 14px; display: block; margin-bottom: 8px;">Mô tả sản phẩm</label>
+        <textarea
+          nz-input
+          formControlName="description"
+          rows="6"
+          placeholder="Mô tả đặc điểm nổi bật của sản phẩm..."
+        ></textarea>
+      </div>
 
       <nz-form-item>
         <nz-form-label>Hình ảnh sản phẩm</nz-form-label>

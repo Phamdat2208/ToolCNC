@@ -53,39 +53,70 @@
               <nz-icon nzType="edit" /> Sửa thông tin
             </button>
           </div>
-          <div class="product-meta">
-            <span
-              >Mã SP: <b>{{ product.sku }}</b></span
-            >
-            |
-            <span
-              >Thương hiệu: <b>{{ product.brand?.name || 'Đang cập nhật' }}</b></span
-            >
-            |
-            <span
-              >Tình trạng:
-              <b class="in-stock">Còn {{ product.stock }} sản phẩm</b></span
-            >
+          <div class="product-header">
+            <div class="product-meta">
+              <span class="sku">Mã hàng: <strong>{{ displaySku }}</strong></span>
+              <nz-divider nzType="vertical"></nz-divider>
+              <span class="brand">Thương hiệu: <strong>{{ product.brand?.name || 'Đang cập nhật' }}</strong></span>
+            </div>
           </div>
 
-          <div class="price-box">
-            <span class="current-price">{{
-              product.price | currency: "VND" : "symbol"
-            }}</span>
-            <span class="old-price">{{
-              product.oldPrice | currency: "VND" : "symbol"
-            }}</span>
+          <div class="price-section">
+            <ng-container *ngIf="product.hasVariants && !selectedVariant && product.minPrice !== product.maxPrice; else singlePriceTemplate">
+              <span class="current-price">
+                {{ product.minPrice | number:'1.0-0' }}đ - {{ product.maxPrice | number:'1.0-0' }}đ
+              </span>
+            </ng-container>
+            <ng-template #singlePriceTemplate>
+              <span class="current-price">{{ displayPrice | number:'1.0-0' }}đ</span>
+            </ng-template>
+
+            <span class="old-price" *ngIf="product.oldPrice">{{ product.oldPrice | number:'1.0-0' }}đ</span>
+            <span class="discount-tag" *ngIf="product.oldPrice">
+              -{{ ((product.oldPrice - displayPrice) / product.oldPrice * 100) | number:'1.0-0' }}%
+            </span>
           </div>
 
           <nz-divider></nz-divider>
 
+          <!-- Variant Selection Section -->
+          <div class="variants-selection-container" *ngIf="product.hasVariants && product.variants?.length > 0">
+            <h4 class="selection-title">Mã sản phẩm:</h4>
+            <div class="variants-list">
+              <button 
+                *ngFor="let v of product.variants" 
+                nz-button 
+                [nzType]="selectedVariant?.id === v.id ? 'primary' : 'default'"
+                (click)="selectVariant(v)"
+                class="variant-chip"
+              >
+                {{ v.variantName }}
+              </button>
+            </div>
+            <nz-divider></nz-divider>
+          </div>
+
           <div class="action-box">
             <div class="quantity-selector">
-              <span>Số lượng:</span>
-              <app-quantity-input
-                [(quantity)]="quantity"
-                [maxStock]="product.stock"
-              ></app-quantity-input>
+              <div class="quantity-input-group">
+                <span>Số lượng:</span>
+                <app-quantity-input
+                  [(quantity)]="quantity"
+                  [maxStock]="product.stock"
+                ></app-quantity-input>
+              </div>
+
+              <div
+                class="wishlist-inline-action"
+                (click)="toggleWishlist(product)"
+                [class.is-wishlisted]="wishlistService.isWishlisted(product.id)"
+              >
+                <nz-icon
+                  [nzType]="isTogglingWishlist ? 'loading' : 'heart'"
+                  [nzTheme]="isTogglingWishlist ? 'outline' : (wishlistService.isWishlisted(product.id) ? 'fill' : 'outline')"
+                />
+                <span>Yêu thích sản phẩm</span>
+              </div>
             </div>
 
             <div class="buttons">

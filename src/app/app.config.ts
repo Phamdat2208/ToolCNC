@@ -79,7 +79,9 @@ import {
   PictureOutline,
   TrademarkOutline,
   PlusSquareOutline,
-  MinusSquareOutline
+  MinusSquareOutline,
+  SyncOutline,
+  LoadingOutline
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -150,7 +152,9 @@ const icons = [
   PictureOutline,
   TrademarkOutline,
   PlusSquareOutline,
-  MinusSquareOutline
+  MinusSquareOutline,
+  SyncOutline,
+  LoadingOutline
 ];
 
 registerLocaleData(vi);

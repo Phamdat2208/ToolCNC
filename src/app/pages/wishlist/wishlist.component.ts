@@ -21,6 +21,7 @@ export class WishlistComponent {
   private notification = inject(NzNotificationService);
 
   isAddingToCart: { [key: number]: boolean } = {};
+  isRemoving: { [key: number]: boolean } = {};
 
   addToCart(product: any) {
     this.isAddingToCart[product.id] = true;
@@ -33,6 +34,15 @@ export class WishlistComponent {
   }
 
   removeFromWishlist(productId: number) {
-    this.wishlistService.remove(productId);
+    this.isRemoving[productId] = true;
+    this.wishlistService.removeViaObservable(productId, false).subscribe({
+      next: () => {
+        this.isRemoving[productId] = false;
+        this.notification.info('Yêu thích', 'Đã xóa sản phẩm khỏi danh sách yêu thích');
+      },
+      error: () => {
+        this.isRemoving[productId] = false;
+      }
+    });
   }
 }

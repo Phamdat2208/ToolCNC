@@ -7,7 +7,7 @@
   </div>
 
   <div class="table-card">
-    <nz-table #basicTable [nzData]="displayCategories" [nzLoading]="loading" [nzPageSize]="10">
+    <nz-table #basicTable [nzData]="filteredCategories" [nzLoading]="loading" [nzPageSize]="10">
       <thead>
         <tr>
           <th nzWidth="80px">ID</th>
@@ -20,9 +20,24 @@
         <tr *ngFor="let data of basicTable.data">
           <td>{{ data.id }}</td>
           <td>
-            <div class="category-name-cell" [style.padding-left.px]="data.level * 24">
-              <nz-icon *ngIf="data.level > 0" nzType="enter" class="child-icon" />
-              <span [class.parent-cat]="data.level === 0">{{ data.name }}</span>
+            <div class="category-name-cell" [style.padding-left.px]="data.level * 28">
+              <!-- Expand/Collapse toggle for parents -->
+              <span 
+                *ngIf="data.children && data.children.length > 0"
+                class="expand-trigger"
+                (click)="data.expand = !data.expand"
+              >
+                <nz-icon [nzType]="data.expand ? 'down' : 'right'" class="tree-icon" />
+              </span>
+              
+              <!-- Indent icon for children without their own children -->
+              <span *ngIf="(!data.children || data.children.length === 0) && data.level > 0" class="sub-node-icon">
+                <nz-icon nzType="enter" [class.grandchild-icon]="data.level > 1" />
+              </span>
+
+              <span [class.parent-cat]="data.level === 0" [class.grandchild-cat]="data.level > 1">
+                {{ data.name }}
+              </span>
             </div>
           </td>
           <td>

@@ -79,23 +79,39 @@ export class AdminCategoriesComponent implements OnInit {
     this.flattenTree(this.categories, 0, this.parentOptions, true);
   }
 
-  flattenTree(data: Category[], level: number, result: any[], isForSelect = false) {
+  flattenTree(data: Category[], level: number, result: any[], isForSelect = false, parentId: number | null = null) {
     data.forEach(node => {
       // For select dropdown, skip the current category being edited and its children
       if (isForSelect && this.currentCategoryId && node.id === this.currentCategoryId) {
         return;
       }
 
-      result.push({
+      const flatNode = {
         ...node,
         level: level,
+        parentId: parentId,
+        expand: false, // Default to collapsed as requested
         displayName: isForSelect ? `${'-- '.repeat(level)}${node.name}` : node.name
-      });
+      };
+
+      result.push(flatNode);
 
       if (node.children && node.children.length > 0) {
-        this.flattenTree(node.children, level + 1, result, isForSelect);
+        this.flattenTree(node.children, level + 1, result, isForSelect, node.id!);
       }
     });
+  }
+
+  get filteredCategories(): any[] {
+    return this.displayCategories.filter(node => this.isRowVisible(node));
+  }
+
+  isRowVisible(data: any): boolean {
+    if (data.level === 0) return true;
+    const parent = this.displayCategories.find(c => c.id === data.parentId);
+    if (!parent) return false;
+    // For a row to be visible, its parent must be expanded and the parent itself must be visible
+    return parent.expand && this.isRowVisible(parent);
   }
 
   showAddModal() {

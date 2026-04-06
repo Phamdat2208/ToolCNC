@@ -13,19 +13,36 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
 import { AuthService } from '../../services/auth.service';
+import { WishlistService } from '../../services/wishlist.service';
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { QuantityInputComponent } from '../../shared/components/quantity-input/quantity-input.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { UrlUtils } from '../../shared/utils/url-utils';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [CommonModule, FormsModule, NzGridModule, NzButtonModule, NzIconModule, NzTabsModule, NzInputNumberModule, NzDividerModule, NzSpinModule, PageBreadcrumbComponent, QuantityInputComponent, LoadingComponent],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    NzGridModule, 
+    NzButtonModule, 
+    NzIconModule, 
+    NzTabsModule, 
+    NzInputNumberModule, 
+    NzDividerModule, 
+    NzSpinModule, 
+    PageBreadcrumbComponent, 
+    QuantityInputComponent, 
+    LoadingComponent,
+    NzToolTipModule
+  ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
 })
 export class ProductDetailComponent implements OnInit {
   cartService = inject(CartService);
+  wishlistService = inject(WishlistService);
   productService = inject(ProductService);
   authService = inject(AuthService);
   route = inject(ActivatedRoute);
@@ -36,7 +53,10 @@ export class ProductDetailComponent implements OnInit {
   mainImage: string = '';
   quantity = 1;
   isLoading = true;
+  isAddingToCart = false;
+  isTogglingWishlist = false;
   parsedSpecs: any[] = [];
+  selectedVariant: any = null;
 
   private notification = inject(NzNotificationService);
 
@@ -98,6 +118,13 @@ export class ProductDetailComponent implements OnInit {
         ];
 
         this.isLoading = false;
+
+        // Removed auto-select variant to show the price range initially (min - max)
+        /*
+        if (this.product.hasVariants && this.product.variants && this.product.variants.length > 0) {
+          this.selectVariant(this.product.variants[0]);
+        }
+        */
       },
       error: (err) => {
         this.notification.error('Lỗi', 'Không thể tải chi tiết sản phẩm');
@@ -110,15 +137,70 @@ export class ProductDetailComponent implements OnInit {
     this.mainImage = img;
   }
 
-  isAddingToCart = false;
+  selectVariant(variant: any) {
+    this.selectedVariant = variant;
+  }
+
+  get displayPrice(): number {
+    if (this.product?.hasVariants && this.selectedVariant) {
+      return this.selectedVariant.price;
+    }
+    return this.product?.price || 0;
+  }
+
+  get displaySku(): string {
+    if (this.product?.hasVariants && this.selectedVariant) {
+      return this.selectedVariant.sku;
+    }
+    return this.product?.sku || '';
+  }
+
+  get displayStock(): number {
+    if (this.product?.hasVariants && this.selectedVariant) {
+      return this.selectedVariant.stock;
+    }
+    return this.product?.stock || 0;
+  }
 
   addToCart() {
     if (!this.product) return;
+    if (this.product.hasVariants && !this.selectedVariant) {
+      this.notification.warning('Thông báo', 'Vui lòng chọn kích thước/mã hàng');
+      return;
+    }
+
     this.isAddingToCart = true;
-    this.cartService.addToCart(this.product, this.quantity, this.mainImage).subscribe(success => {
+    
+    // Create a modified product object with selected variant info for the cart service
+    const cartProduct = { ...this.product };
+    if (this.selectedVariant) {
+      cartProduct.price = this.selectedVariant.price;
+      cartProduct.variantId = this.selectedVariant.id;
+      cartProduct.variantName = this.selectedVariant.variantName;
+    }
+
+    this.cartService.addToCart(cartProduct, this.quantity, this.mainImage).subscribe(success => {
       this.isAddingToCart = false;
       if (success) {
-        this.notification.success('Thành công', `Đã thêm ${this.quantity} sản phẩm vào giỏ hàng`);
+        let msg = `Đã thêm ${this.quantity} sản phẩm vào giỏ hàng`;
+        if (this.selectedVariant) {
+          msg = `Đã thêm ${this.quantity} sản phẩm (${this.selectedVariant.variantName}) vào giỏ hàng`;
+        }
+        this.notification.success('Thành công', msg);
+      }
+    });
+  }
+
+  toggleWishlist(product: any) {
+    if (!product) return;
+    this.isTogglingWishlist = true;
+    this.wishlistService.toggle(product).subscribe((added: boolean | null) => {
+      this.isTogglingWishlist = false;
+      if (added === null) return;
+      if (added) {
+        this.notification.success('Yêu thích', `Đã thêm ${this.product.name} vào danh sách yêu thích ♥`);
+      } else {
+        this.notification.info('Yêu thích', `Đã xóa ${this.product.name} khỏi danh sách yêu thích`);
       }
     });
   }

@@ -20,7 +20,7 @@
           <tr>
             <th>Sản phẩm</th>
             <th nzWidth="130px">Đơn giá</th>
-            <th nzWidth="100px">Số lượng</th>
+            <th nzWidth="130px">Số lượng</th>
             <th nzWidth="130px">Thành tiền</th>
             <th nzWidth="80px">Thao tác</th>
           </tr>
@@ -29,10 +29,15 @@
           <tr *ngFor="let data of cartTable.data; trackBy: trackById">
             <td class="product-cell">
               <img [src]="data.img" alt="{{ data.name }}" class="cart-img" />
-              <span class="product-name">{{ data.name }}</span>
+              <div class="product-info">
+                <span class="product-name">{{ data.name }}</span>
+                <div class="variant-tag" *ngIf="data.variantName">
+                  <span class="label">Phân loại:</span> {{ data.variantName }}
+                </div>
+              </div>
             </td>
             <td>{{ data.price | currency: "VND" : "symbol" }}</td>
-            <td>
+            <td width="130px">
               <app-quantity-input
                 [quantity]="data.quantity"
                 (quantityChange)="updateQuantity(data.id, $event)"
@@ -43,8 +48,14 @@
               {{ data.price * data.quantity | currency: "VND" : "symbol" }}
             </td>
             <td>
-              <button nz-button nzDanger (click)="removeItem(data.id)">
-                <nz-icon nzType="delete" />
+              <button
+                nz-button
+                nzType="default"
+                nzDanger
+                (click)="removeItem(data.id)"
+                [nzLoading]="isRemoving[data.id]"
+              >
+                <nz-icon nzType="delete"/>
               </button>
             </td>
           </tr>
@@ -67,9 +78,17 @@
         <nz-divider></nz-divider>
         <div class="summary-row total-row">
           <span>Tổng cộng:</span>
-          <span class="final-total">{{
-            totalAmount | currency: "VND" : "symbol"
-          }}</span>
+          <div class="total-with-loading">
+            <span class="final-total">{{
+              totalAmount | currency: "VND" : "symbol"
+            }}</span>
+            <nz-icon
+              nzType="sync"
+              [nzSpin]="true"
+              *ngIf="isUpdatingTotal"
+              class="total-loading-icon"
+            />
+          </div>
         </div>
         <p class="tax-note">(Đã bao gồm VAT nếu có)</p>
 

@@ -13,16 +13,27 @@
       </a>
       <div class="item-info">
         <a [routerLink]="['/products', product.id]" class="item-name">{{ product.name }}</a>
-        <p class="item-brand">{{ product.brand }}</p>
+        <p class="item-brand">{{ product?.brand?.name }}</p>
         <p class="item-price">{{ product.price | currency:'VND':'symbol' }}</p>
       </div>
       <div class="item-actions">
-        <button nz-button nzType="primary" (click)="addToCart(product)" [disabled]="product.stock === 0" [nzLoading]="isAddingToCart[product.id]">
-          <nz-icon nzType="shopping-cart" *ngIf="!isAddingToCart[product.id]" /> Thêm vào giỏ
-        </button>
-        <button nz-button nzDanger (click)="removeFromWishlist(product.id)">
-          <nz-icon nzType="delete" />
-        </button>
+              <button
+                nz-button
+                nzType="primary"
+                (click)="addToCart(product)"
+                [nzLoading]="isAddingToCart[product.id]"
+              >
+                <nz-icon nzType="shopping-cart" /> Thêm vào giỏ
+              </button>
+              <button
+                nz-button
+                nzType="default"
+                nzDanger
+                (click)="removeFromWishlist(product.id)"
+                [nzLoading]="isRemoving[product.id]"
+              >
+                <nz-icon nzType="delete" /> Xóa
+              </button>
       </div>
     </div>
   </div>
