@@ -9,18 +9,19 @@ export class UrlUtils {
   static getFullUrl(url: string | null | undefined): string {
     if (!url) return '';
     
-    // Nếu URL chứa localhost hoặc 127.0.0.1, đây là lỗi từ server trả về đường dẫn tuyệt đối local.
-    // Chúng ta cần trích xuất phần đường dẫn tương đối (ví dụ: /uploads/...)
-    if (url.includes('localhost:8080') || url.includes('127.0.0.1:8080')) {
-      const parts = url.split('/uploads/');
-      if (parts.length > 1) {
-        url = '/uploads/' + parts[1];
+    // 1. Xử lý trường hợp URL bị gắn cứng localhost từ Backend (Lỗi lịch sử)
+    // Nếu URL chứa localhost hoặc 127.0.0.1, chúng ta sẽ "nắn" lại thành đường dẫn tương đối
+    if (url.includes('localhost:') || url.includes('127.0.0.1:')) {
+      const uploadsIndex = url.indexOf('/uploads/');
+      if (uploadsIndex !== -1) {
+        url = url.substring(uploadsIndex);
       }
     }
     
+    // 2. Nếu là URL tuyệt đối (Cloudinary, v.v.), trả về ngay
     if (url.startsWith('http')) return url;
     
-    // Đảm bảo không bị lặp dấu /
+    // 3. Nếu là URL tương đối, nối với apiUrl từ môi trường
     const baseUrl = environment.apiUrl.endsWith('/') ? environment.apiUrl.slice(0, -1) : environment.apiUrl;
     const relativeUrl = url.startsWith('/') ? url : '/' + url;
     

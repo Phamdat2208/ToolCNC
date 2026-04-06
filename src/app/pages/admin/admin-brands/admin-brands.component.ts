@@ -12,9 +12,10 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { HttpClient } from '@angular/common/http';
-import { BrandService, Brand } from '../../../services/brand.service';
 import { AuthService } from '../../../services/auth.service';
+import { CloudinaryService } from '../../../services/cloudinary.service';
 import { environment } from '../../../../environments/environment';
+import { Brand, BrandService } from '../../../services/brand.service';
 
 @Component({
   selector: 'app-admin-brands',
@@ -43,6 +44,7 @@ export class AdminBrandsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
   private authService = inject(AuthService);
+  private cloudinaryService = inject(CloudinaryService);
 
   brands: Brand[] = [];
   loading = true;
@@ -207,20 +209,15 @@ export class AdminBrandsComponent implements OnInit {
 
   uploadLogo(): Promise<string> {
     return new Promise((resolve, reject) => {
-      if (!this._resizedBlob) return reject();
+      if (!this._resizedBlob) return reject('Không có logo để tải lên');
       
-      const formData = new FormData();
-      const filename = (this._selectedFile?.name || 'brand_logo') + '_400.jpg';
-      formData.append('file', this._resizedBlob, filename);
-
-      const token = this.authService.getToken();
-      const headers: any = {};
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-
-      this.http.post<any>(`${environment.apiUrl}/api/v1/admin/upload/image`, formData, { headers })
+      this.cloudinaryService.uploadImage(this._resizedBlob)
         .subscribe({
-          next: (res) => resolve(environment.apiUrl + res.url),
-          error: (err) => reject(err)
+          next: (res) => resolve(res.secure_url),
+          error: (err) => {
+            console.error('Lỗi upload logo lên Cloudinary:', err);
+            reject(err);
+          }
         });
     });
   }

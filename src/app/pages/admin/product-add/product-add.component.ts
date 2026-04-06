@@ -16,11 +16,11 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { FormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../../services/auth.service';
 import { ProductService } from '../../../services/product.service';
 import { CategoryService } from '../../../services/category.service';
 import { BrandService, Brand } from '../../../services/brand.service';
-import { AuthService } from '../../../services/auth.service';
-
+import { CloudinaryService } from '../../../services/cloudinary.service';
 
 import { CustomInputComponent } from '../../../shared/components/custom-input/custom-input.component';
 import { CustomSelectComponent, SelectOption } from '../../../shared/components/custom-select/custom-select.component';
@@ -89,6 +89,7 @@ export class ProductAddComponent implements OnInit {
   private location = inject(Location);
   private http = inject(HttpClient);
   private authService = inject(AuthService);
+  private cloudinaryService = inject(CloudinaryService);
 
   isSubmitting = false;
   categories: any[] = [];
@@ -351,20 +352,15 @@ export class ProductAddComponent implements OnInit {
 
   uploadResizedImage(blob: Blob | null, selectedFile: File | null): Promise<string> {
     return new Promise((resolve, reject) => {
-      if (!blob) { reject('No image to upload'); return; }
+      if (!blob) { reject('Không có hình ảnh để tải lên'); return; }
 
-      const formData = new FormData();
-      const filename = (selectedFile?.name || 'product') + '_resized.jpg';
-      formData.append('file', blob, filename);
-
-      const token = this.authService.getToken();
-      const headers: any = {};
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-
-      this.http.post<any>(`${environment.apiUrl}/api/v1/admin/upload/image`, formData, { headers })
+      this.cloudinaryService.uploadImage(blob)
         .subscribe({
-          next: (res) => resolve(res.url),
-          error: (err) => reject(err)
+          next: (res) => resolve(res.secure_url),
+          error: (err) => {
+            console.error('Lỗi upload Cloudinary:', err);
+            reject(err);
+          }
         });
     });
   }
