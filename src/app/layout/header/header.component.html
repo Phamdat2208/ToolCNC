@@ -1,7 +1,9 @@
 <div class="header-container" [class.floating-header]="isScrolled">
   <div class="logo">
     <a routerLink="/"
-      ><span
+      >
+      <img src="Logo.ico" alt="Logo" class="logo-img" />
+      <span
         class="text-primary font-bold"
         style="font-size: var(--font-size-title)"
         >Tool</span
@@ -134,7 +136,7 @@
     </ng-container>
 
     <ng-template #loginBtn>
-      <button nz-button nzType="primary" nzShape="round" routerLink="/login">
+      <button nz-button nzType="primary" nzShape="round" routerLink="/login" class="login-btn-custom">
         Đăng nhập
       </button>
     </ng-template>

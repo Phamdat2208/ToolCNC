@@ -21,7 +21,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, transparent 100%);
+  background: linear-gradient(135deg, rgba(232, 96, 28, 0.1) 0%, transparent 100%);
   z-index: 1;
 }
 
@@ -114,13 +114,13 @@
 
 .payment-card:hover {
   border-color: var(--primary-color);
-  background: rgba(14, 165, 233, 0.02);
+  background: rgba(232, 96, 28, 0.02);
 }
 
 .payment-card.active {
   border-color: var(--primary-color);
   background: var(--primary-light);
-  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.12);
+  box-shadow: 0 8px 24px rgba(232, 96, 28, 0.12);
 }
 
 .card-radio {
@@ -375,7 +375,7 @@
 }
 
 .guarantee-box {
-  background: rgba(14, 165, 233, 0.05);
+  background: rgba(232, 96, 28, 0.05);
   border-radius: 12px;
   padding: 16px;
   display: flex;
@@ -468,7 +468,7 @@
 }
 
 .btn-primary-glow {
-  box-shadow: 0 8px 16px rgba(14, 165, 233, 0.3);
+  box-shadow: 0 8px 16px rgba(232, 96, 28, 0.3);
 }
 
 /* ─── Animations ─── */
