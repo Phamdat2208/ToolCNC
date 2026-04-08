@@ -53,7 +53,7 @@
         <nz-slider
           nzRange
           [nzMin]="0"
-          [nzMax]="2000000000"
+          [nzMax]="10000000"
           [nzStep]="1000000"
           [(ngModel)]="priceRange"
         ></nz-slider>
@@ -92,6 +92,9 @@
 
       <button nz-button nzType="primary" nzBlock (click)="applyFilters()">
         Lọc kết quả
+      </button>
+      <button nz-button nzBlock (click)="clearFilters()" class="mt-8">
+        Xóa bộ lọc
       </button>
     </div>
 
@@ -157,12 +160,14 @@
         </div>
 
         <div class="pagination-wrapper" *ngIf="totalProducts > 0">
-          <nz-pagination
-            [(nzPageIndex)]="pageIndex"
-            [nzTotal]="totalProducts"
-            [nzPageSize]="pageSize"
-            (nzPageIndexChange)="changePage($event)"
-          ></nz-pagination>
+          <app-pagination
+            [total]="totalProducts"
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions"
+            (pageIndexChange)="changePage($event)"
+            (pageSizeChange)="changePageSize($event)"
+          ></app-pagination>
         </div>
       </app-loading>
     </div>

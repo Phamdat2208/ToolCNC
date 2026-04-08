@@ -40,8 +40,6 @@ export class ProductAddComponent implements OnInit {
   @ViewChild('imageCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
-  addMode: 'single' | 'bulk' = 'single';
-  bulkJson: string = '';
   isEditMode: boolean = false;
   productId: number | null = null;
 
@@ -104,7 +102,7 @@ export class ProductAddComponent implements OnInit {
     price: [0, [Validators.required, Validators.min(0)]],
     brandId: [null, [Validators.required]],
     categoryId: [null, [Validators.required]],
-    stock: [10, [Validators.required, Validators.min(0)]],
+    totalStock: [10, [Validators.required, Validators.min(0)]],
     description: [''],
     imageUrl: [''],
     hasVariants: [false],
@@ -418,7 +416,7 @@ export class ProductAddComponent implements OnInit {
           price: product.price,
           brandId: product.brand?.id,
           categoryId: product.category?.id,
-          stock: product.stock,
+          totalStock: product.totalStock,
           description: product.description,
           imageUrl: product.imageUrl,
           hasVariants: product.hasVariants || false
@@ -458,8 +456,9 @@ export class ProductAddComponent implements OnInit {
   submitSingle(): void {
     if (this.productForm.valid) {
       this.isSubmitting = true;
+      const productName = this.productForm.get('name')?.value;
 
-      const doSubmit = (imageUrl?: string) => {
+      const finishSubmit = (imageUrl?: string) => {
         const formValue = this.productForm.value;
         const productData = { 
           ...formValue,
@@ -491,17 +490,36 @@ export class ProductAddComponent implements OnInit {
         });
       };
 
-      // If using upload mode and an image was selected, upload it first
-      if (this.uploadMode === 'upload' && this._mainResizedBlob) {
-        this.notification.info('Đang xử lý', 'Đang tải ảnh lên máy chủ...');
-        this.uploadResizedImage(this._mainResizedBlob, this._mainSelectedFile)
-          .then((url) => doSubmit(url))
-          .catch(() => {
-            this.notification.error('Lỗi', 'Không thể tải ảnh lên. Vui lòng thử lại hoặc dùng URL.');
-            this.isSubmitting = false;
-          });
+      const startFlow = () => {
+        // If using upload mode and an image was selected, upload it first
+        if (this.uploadMode === 'upload' && this._mainResizedBlob) {
+          this.notification.info('Đang xử lý', 'Đang tải ảnh lên máy chủ...');
+          this.uploadResizedImage(this._mainResizedBlob, this._mainSelectedFile)
+            .then((url) => finishSubmit(url))
+            .catch(() => {
+              this.notification.error('Lỗi', 'Không thể tải ảnh lên. Vui lòng thử lại hoặc dùng URL.');
+              this.isSubmitting = false;
+            });
+        } else {
+          finishSubmit();
+        }
+      };
+
+      // Duplicate check before Cloudinary (Apply for Create Mode)
+      if (!this.isEditMode) {
+        this.productService.checkDuplicates([productName]).subscribe({
+          next: (duplicates) => {
+            if (duplicates && duplicates.length > 0) {
+              this.notification.error('Trùng lặp', `Sản phẩm "${productName}" đã tồn tại trên hệ thống!`);
+              this.isSubmitting = false;
+            } else {
+              startFlow();
+            }
+          },
+          error: () => startFlow() // Fallback
+        });
       } else {
-        doSubmit();
+        startFlow();
       }
     } else {
       Object.values(this.productForm.controls).forEach(control => {
@@ -528,34 +546,4 @@ export class ProductAddComponent implements OnInit {
     this.galleryUrls.splice(index, 1);
   }
 
-  submitBulk(): void {
-    if (!this.bulkJson.trim()) {
-      this.notification.warning('Cảnh báo', 'Vui lòng nhập JSON hợp lệ');
-      return;
-    }
-
-    try {
-      const parsed = JSON.parse(this.bulkJson);
-      if (!Array.isArray(parsed)) {
-        throw new Error('Định dạng phải là một mảng Mảng JSON (Array)');
-      }
-
-      this.isSubmitting = true;
-      this.productService.createProductsBulk(parsed).subscribe({
-        next: (res) => {
-          this.isSubmitting = false;
-          this.notification.success('Thành công', `Đã thêm hàng loạt ${res.length} sản phẩm!`);
-          this.router.navigate(['/products']);
-        },
-        error: (err) => {
-          this.isSubmitting = false;
-          const msg = typeof err.error === 'string' ? err.error : 'Có lỗi xảy ra khi lưu trên server';
-          this.notification.error('Thất bại', msg);
-          console.error(err);
-        }
-      });
-    } catch (e: any) {
-      this.notification.error('Lỗi cú pháp', 'Nội dung JSON không hợp lệ: ' + e.message);
-    }
-  }
 }

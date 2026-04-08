@@ -1,0 +1,173 @@
+<div class="bulk-import-container">
+  <!-- Vùng nạp tệp luôn hiển thị -->
+  <div class="upload-section mb-24">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="24">
+        <nz-upload
+          nzType="drag"
+          [nzMultiple]="false"
+          [nzLimit]="1"
+          (nzChange)="handleFileChange($event)"
+          [nzBeforeUpload]="beforeUpload"
+          class="bulk-uploader"
+        >
+          <p class="ant-upload-drag-icon">
+            <nz-icon nzType="file-excel" />
+          </p>
+          <p class="ant-upload-text">1. Kéo thả tệp Excel vào đây</p>
+          <p class="ant-upload-hint">Định dạng hỗ trợ: .xlsx, .xls</p>
+        </nz-upload>
+        <div class="template-download mt-8">
+          <button nz-button nzType="link" (click)="downloadTemplate()">
+            <nz-icon nzType="download" /> Tải tệp Excel mẫu & Bảng tra cứu ID
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div nz-row [nzGutter]="24" class="mt-24" *ngIf="productsPreview.length > 0">
+      <div nz-col [nzSpan]="12">
+        <ng-container *ngTemplateOutlet="imageUploadTpl; context: { title: '2. Chọn danh sách Ảnh chính', keys: mainImageKeys, color: '#1890ff' }"></ng-container>
+      </div>
+      <div nz-col [nzSpan]="12">
+        <ng-container *ngTemplateOutlet="imageUploadTpl; context: { title: '3. Chọn danh sách Ảnh bổ sung', keys: galleryImageKeys, color: '#52c41a' }"></ng-container>
+      </div>
+    </div>
+
+    <!-- Cảnh báo nếu chọn nhầm file không có trong Excel -->
+    <div nz-row *ngIf="unmatchedImageKeys.length > 0" class="mt-16">
+      <div nz-col [nzSpan]="24">
+        <nz-alert nzType="warning" [nzMessage]="unmatchedTpl" nzShowIcon></nz-alert>
+        <ng-template #unmatchedTpl>
+          Có {{ unmatchedImageKeys.length }} tệp đã chọn không khớp với bất kỳ sản phẩm nào trong Excel. 
+          <a (click)="clearUnmatchedImages()">Xóa tất cả tệp thừa</a>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vùng xem trước dữ liệu Excel -->
+  <div class="preview-section" *ngIf="productsPreview.length > 0">
+    <nz-divider></nz-divider>
+    <div class="preview-header mb-16">
+      <div class="header-left">
+        <h3>Bảng xem trước dữ liệu ({{ productsPreview.length }} sản phẩm)</h3>
+        <nz-tag *ngIf="isSaving && uploadProgress > 0" nzColor="processing">
+          Tiến trình tải lên Cloudinary: {{ uploadProgress }}%
+        </nz-tag>
+      </div>
+      <div class="preview-actions">
+        <button nz-button (click)="clearPreview()" class="mr-8">Làm mới tất cả</button>
+        <button nz-button nzType="primary" [nzLoading]="isSaving" [disabled]="isImportInvalid" (click)="saveBulk()" [nz-tooltip]="isImportInvalid ? 'Vui lòng nạp đầy đủ ảnh chính và ảnh bổ sung để tiếp tục' : ''">
+            <nz-icon [nzType]="isSaving ? 'loading' : 'save'" /> 
+            {{ isSaving ? 'Đang nạp dữ liệu...' : 'Lưu vào hệ thống' }}
+        </button>
+      </div>
+    </div>
+
+    <nz-table #basicTable [nzData]="productsPreview" [nzPageSize]="5" [nzScroll]="{ x: '1200px' }">
+      <thead>
+        <tr>
+          <th nzWidth="180px">Tên sản phẩm</th>
+          <th nzWidth="100px">SKU</th>
+          <th nzWidth="100px">Giá</th>
+          <th nzWidth="150px">Trạng thái ảnh</th>
+          <th nzWidth="60px" nzAlign="center">Kho</th>
+          <th nzWidth="120px">Danh mục/Hãng</th>
+          <th>Biến thể</th>
+          <th nzWidth="60px" nzAlign="center">OK</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.name }}</td>
+          <td><code>{{ data.sku || '(Tự động)' }}</code></td>
+          <td>{{ data.price | currency:'VND':'symbol':'1.0-0' }}</td>
+          <td>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <!-- Chính -->
+              <ng-container [ngSwitch]="isImageMatched(data.imageUrl)">
+                <span *ngSwitchCase="'matched'" nz-tooltip nzTooltipTitle="Ảnh chính: Đã tìm thấy">
+                  <nz-tag nzColor="success" style="margin: 0; font-size: 11px;">
+                    <nz-icon nzType="check-circle" /> Chính: {{ data.imageUrl.startsWith('http') ? 'Web' : 'Khớp' }}
+                  </nz-tag>
+                </span>
+                <span *ngSwitchCase="'missing'" nz-tooltip nzTooltipTitle="Ảnh chính: Thiếu tệp">
+                  <nz-tag nzColor="warning" style="margin: 0; font-size: 11px;">
+                    <nz-icon nzType="warning" /> Chính: Thiếu
+                  </nz-tag>
+                </span>
+              </ng-container>
+
+              <!-- Bổ sung -->
+              @if (data.imageGallery && data.imageGallery.length > 0) {
+                @let status = getGalleryStatus(data.imageGallery);
+                <span nz-tooltip [nzTooltipTitle]="'Khớp ' + status.matched + '/' + status.total + ' ảnh bổ sung'">
+                  <nz-tag [nzColor]="status.matched === status.total ? 'processing' : 'warning'" style="margin: 0; font-size: 11px;">
+                    <nz-icon [nzType]="status.matched === status.total ? 'check-circle' : 'exclamation-circle'" />
+                    Bổ sung: {{ status.matched }}/{{ status.total }}
+                  </nz-tag>
+                </span>
+              }
+            </div>
+          </td>
+          <td nzAlign="center"><strong>{{ (data.totalStock || 0) }}</strong></td>
+          <td>
+            <div style="font-size: 11px; line-height: 1.4;">
+              <div class="text-muted">DM: {{ data.categoryId }}</div>
+              <div class="text-muted">Hãng: {{ data.brandId }}</div>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="data.hasVariants" class="variant-preview">
+              <nz-tag *ngFor="let v of data.variants" nzColor="blue" style="font-size: 11px; margin-bottom: 2px;">
+                {{ v.variantName }} ({{ v.price | currency:'VND':'':'1.0-0' }}đ / K:{{ v.stock }})
+              </nz-tag>
+            </div>
+            <span *ngIf="!data.hasVariants" class="text-muted">-</span>
+          </td>
+          <td nzAlign="center">
+            <nz-icon nzType="check-circle" nzTheme="fill" style="color: #52c41a; font-size: 16px;" />
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+
+<!-- Template dùng chung cho việc chọn và xem trước ảnh -->
+<ng-template #imageUploadTpl let-title="title" let-keys="keys" let-color="color">
+  <div class="image-upload-box" [style.border-color]="color">
+    <nz-upload
+      [nzAccept]="'image/*'"
+      [nzMultiple]="true"
+      [nzBeforeUpload]="beforeUploadImages"
+      [nzShowUploadList]="false"
+    >
+      <button nz-button nzBlock [style.height]="'100px'" [style.border-color]="color" style="border-style: dashed; background: transparent;">
+        <nz-icon nzType="plus" [style.color]="color" />
+        <div style="margin-top: 8px" [style.color]="color"><strong>{{ title }}</strong></div>
+      </button>
+    </nz-upload>
+
+    <!-- Khu vực xem trước ảnh đã chọn (theo danh sách keys truyền vào) -->
+    <div class="image-preview-container mt-16" *ngIf="keys && keys.length > 0">
+      <div class="preview-title mb-8">
+        <strong>Danh sách ảnh ({{ keys.length }})</strong>
+      </div>
+      <div class="image-preview-grid">
+        <div class="preview-item" *ngFor="let key of keys">
+          <img [src]="selectedImages.get(key)?.url" [alt]="key" />
+          <div class="file-name" [nz-tooltip]="key">{{ key }}</div>
+          <button class="remove-btn" (click)="removeImage(key)">
+            <nz-icon nzType="close" />
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="no-images-hint mt-16" *ngIf="!keys || keys.length === 0">
+      <nz-empty nzNotFoundContent="Chưa chọn ảnh nào khớp"></nz-empty>
+    </div>
+  </div>
+</ng-template>

@@ -102,6 +102,12 @@ export class ProductDetailComponent implements OnInit {
             const specs = JSON.parse(this.product.specifications);
             if (Array.isArray(specs)) {
               this.parsedSpecs = specs.filter(s => s.key && s.value);
+            } else if (typeof specs === 'object' && specs !== null) {
+              // Chuyển đổi { "Key": "Value" } sang [ {key, value} ]
+              this.parsedSpecs = Object.entries(specs).map(([key, value]) => ({
+                key: key,
+                value: String(value)
+              }));
             }
           } catch (e) {
             console.error('Error parsing specs', e);
@@ -159,7 +165,7 @@ export class ProductDetailComponent implements OnInit {
     if (this.product?.hasVariants && this.selectedVariant) {
       return this.selectedVariant.stock;
     }
-    return this.product?.stock || 0;
+    return this.product?.totalStock || 0;
   }
 
   addToCart() {

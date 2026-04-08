@@ -7,3 +7,12 @@
     }
     .page-header h2 { margin: 0; font-weight: 600; }
     .search-bar { margin-bottom: 20px; max-width: 400px; }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.mr-8 {
+  margin-right: 8px;
+}

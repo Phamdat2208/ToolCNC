@@ -274,6 +274,9 @@
                       <img [src]="item.img" alt="product" />
                       <div class="item-info">
                         <div class="item-name">{{ item.name }}</div>
+                        <div class="item-variant text-secondary" *ngIf="item.variantName">
+                          Phân loại: {{ item.variantName }}
+                        </div>
                         <div class="item-qty">x{{ item.quantity }}</div>
                       </div>
                       <div class="item-price">
@@ -321,7 +324,7 @@
             nzType="primary"
             (click)="nextStep()"
             [nzLoading]="isSubmitting"
-            class="btn-nav btn-primary-glow"
+            class="btn-nav"
           >
             {{
               currentStep === 1 && !isTransfer
@@ -351,6 +354,9 @@
               </div>
               <div class="item-info">
                 <div class="item-name">{{ item.name }}</div>
+                <div class="item-variant text-secondary" *ngIf="item.variantName" style="font-size: 11px;">
+                  {{ item.variantName }}
+                </div>
                 <div class="item-price">
                   {{ item.price | currency: "VND" : "symbol" }}
                 </div>

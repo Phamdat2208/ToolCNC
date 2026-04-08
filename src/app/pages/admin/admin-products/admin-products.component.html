@@ -1,10 +1,28 @@
     <div class="admin-products-container">
       <div class="page-header">
         <h2>Quản lý sản phẩm</h2>
-        <button nz-button nzType="primary" routerLink="/admin/products/new">
-          <nz-icon nzType="plus" /> Thêm sản phẩm mới
-        </button>
+        <div class="header-actions">
+          <button nz-button nzType="default" (click)="showImportModal()" class="mr-8" nz-tooltip nzTooltipTitle="Thêm sản phẩm hàng loạt từ Excel">
+            <nz-icon nzType="file-excel" /> Nhập hàng loạt
+          </button>
+          <button nz-button nzType="primary" routerLink="/admin/products/new">
+            <nz-icon nzType="plus" /> Thêm sản phẩm mới
+          </button>
+        </div>
       </div>
+
+      <!-- Bulk Import Modal -->
+      <nz-modal
+        [(nzVisible)]="isImportModalVisible"
+        nzTitle="Nhập sản phẩm hàng loạt từ Excel"
+        (nzOnCancel)="isImportModalVisible = false"
+        [nzFooter]="null"
+        nzWidth="1000px"
+      >
+        <ng-container *nzModalContent>
+          <app-admin-bulk-import (onComplete)="handleImportComplete()"></app-admin-bulk-import>
+        </ng-container>
+      </nz-modal>
 
       <div class="search-bar">
         <nz-input-group [nzPrefix]="prefixIconSearch">
@@ -21,7 +39,7 @@
         [nzPageIndex]="page"
         [nzPageSize]="size"
         [nzFrontPagination]="false"
-        (nzPageIndexChange)="onPageIndexChange($event)"
+        [nzShowPagination]="false"
         [nzScroll]="{ x: '1000px' }"
       >
         <thead>
@@ -41,17 +59,22 @@
             <td>{{ data.id }}</td>
             <td>
               <div class="img-wrapper-relative" style="width: 50px; height: 50px; border-radius: 4px;">
-                <img [src]="data.imageUrl || 'https://placehold.co/50x50'" [alt]="data.name" [class.img-out-of-stock]="data.stock === 0" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />
-                <div class="out-of-stock-banner" *ngIf="data.stock === 0" style="font-size: 6px; padding: 1px 4px; border: 1px solid white;">HẾT</div>
+                <img [src]="data.imageUrl || 'https://placehold.co/50x50'" [alt]="data.name" [class.img-out-of-stock]="data.totalStock === 0" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />
+                <div class="out-of-stock-banner" *ngIf="data.totalStock === 0" style="font-size: 6px; padding: 1px 4px; border: 1px solid white;">HẾT</div>
               </div>
             </td>
             <td class="font-bold">{{ data.name }}</td>
-            <td><nz-tag>{{ data.category?.name || data.category }}</nz-tag></td>
-            <td>{{ data.brand?.name || '-' }}</td>
+            <td><nz-tag>{{ data.categoryName || '-' }}</nz-tag></td>
+            <td>{{ data.brandName || '-' }}</td>
             <td>
-              <nz-tag [nzColor]="data.stock > 0 ? 'green' : 'red'">{{ data.stock }}</nz-tag>
+              <nz-tag [nzColor]="data.totalStock > 0 ? 'green' : 'red'">{{ data.totalStock }}</nz-tag>
             </td>
-            <td class="text-danger font-bold">{{ data.price | currency:'VND':'symbol':'1.0-0' }}</td>
+            <ng-container *ngIf="data.hasVariants && data.minPrice !== data.maxPrice; else singlePrice">
+              <td class="text-danger font-bold">{{ data.minPrice | currency: "VND" : "" }} - {{ data.maxPrice | currency: "VND" : "symbol" }}</td>
+            </ng-container>
+            <ng-template #singlePrice>
+              <td class="text-danger font-bold">{{ data.price | currency:'VND':'symbol':'1.0-0' }}</td>
+            </ng-template>
             <td>
               <button nz-button nzType="text" [routerLink]="['/admin/products', data.id, 'edit']" class="text-primary" nz-tooltip nzTooltipTitle="Sửa">
                 <nz-icon nzType="edit" />
@@ -63,4 +86,15 @@
           </tr>
         </tbody>
       </nz-table>
+
+      <div class="pagination-container mt-16" *ngIf="total > 0">
+        <app-pagination
+          [total]="total"
+          [pageIndex]="page"
+          [pageSize]="size"
+          [pageSizeOptions]="[10, 20, 50, 100]"
+          (pageIndexChange)="onPageIndexChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        ></app-pagination>
+      </div>
     </div>

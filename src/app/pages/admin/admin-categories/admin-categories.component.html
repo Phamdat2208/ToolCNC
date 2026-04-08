@@ -7,7 +7,10 @@
   </div>
 
   <div class="table-card">
-    <nz-table #basicTable [nzData]="filteredCategories" [nzLoading]="loading" [nzPageSize]="10">
+    <nz-table #basicTable [nzData]="filteredCategories" 
+      [nzLoading]="loading" 
+      [nzFrontPagination]="false" 
+      [nzShowPagination]="false">
       <thead>
         <tr>
           <th nzWidth="80px">ID</th>

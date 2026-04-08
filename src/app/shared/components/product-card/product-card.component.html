@@ -20,7 +20,7 @@
         nzTooltipTitle="Thêm vào giỏ hàng"
         (click)="$event.stopPropagation(); addToCart(product)"
         class="btn-cart"
-        [disabled]="product.stock === 0"
+        [disabled]="product.totalStock === 0"
         [nzLoading]="isAddingToCart"
       >
         <nz-icon nzType="shopping-cart" *ngIf="!isAddingToCart" />
@@ -58,8 +58,8 @@
 
 <ng-template #coverTemplate>
   <div class="product-cover img-wrapper-relative" style="width: 100%;">
-    <img [alt]="product.name" [src]="imageUrl" [class.img-out-of-stock]="product.stock === 0" />
-    <div class="out-of-stock-banner" *ngIf="product.stock === 0">Hết Hàng</div>
+    <img [alt]="product.name" [src]="imageUrl" [class.img-out-of-stock]="product.totalStock === 0" />
+    <div class="out-of-stock-banner" *ngIf="product.totalStock === 0">Hết Hàng</div>
   </div>
 </ng-template>
 

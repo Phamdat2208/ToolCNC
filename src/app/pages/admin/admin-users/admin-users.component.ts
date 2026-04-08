@@ -6,11 +6,12 @@ import { HttpClient } from '@angular/common/http';
 import { UserService } from '../../../services/user.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, NzTableModule, NzTagModule, NzAvatarModule],
+  imports: [CommonModule, NzTableModule, NzTagModule, NzAvatarModule, PaginationComponent],
   templateUrl: './admin-users.component.html',
   styleUrl: './admin-users.component.css'
 })
@@ -19,6 +20,8 @@ export class AdminUsersComponent implements OnInit {
   private message = inject(NzMessageService);
   users: any[] = [];
   loading = true;
+  page = 1;
+  size = 10;
 
   ngOnInit() {
     this.loadUsers();
@@ -37,5 +40,15 @@ export class AdminUsersComponent implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  onPageChange(index: number) {
+    this.page = index;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onPageSizeChange(size: number) {
+    this.size = size;
+    this.page = 1;
   }
 }

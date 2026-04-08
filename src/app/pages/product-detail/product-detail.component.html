@@ -12,12 +12,12 @@
             <img
               [src]="mainImage"
               alt="Hình ảnh sản phẩm"
-              [class.img-out-of-stock]="product.stock === 0"
+              [class.img-out-of-stock]="displayStock === 0"
               style="width: 100%; border-radius: 8px"
             />
             <div
               class="out-of-stock-banner"
-              *ngIf="product.stock === 0"
+              *ngIf="displayStock === 0"
               style="
                 font-size: 24px;
                 padding: 12px 40px;
@@ -58,6 +58,8 @@
               <span class="sku">Mã hàng: <strong>{{ displaySku }}</strong></span>
               <nz-divider nzType="vertical"></nz-divider>
               <span class="brand">Thương hiệu: <strong>{{ product.brand?.name || 'Đang cập nhật' }}</strong></span>
+              <nz-divider nzType="vertical"></nz-divider>
+              <span class="brand">Số lượng: <strong>{{ displayStock }}</strong></span>
             </div>
           </div>
 
@@ -102,7 +104,7 @@
                 <span>Số lượng:</span>
                 <app-quantity-input
                   [(quantity)]="quantity"
-                  [maxStock]="product.stock"
+                  [maxStock]="displayStock"
                 ></app-quantity-input>
               </div>
 
@@ -126,7 +128,7 @@
                 nzSize="large"
                 class="btn-add-cart"
                 (click)="addToCart()"
-                [disabled]="product.stock === 0"
+                [disabled]="displayStock === 0"
                 [nzLoading]="isAddingToCart"
               >
                 <nz-icon nzType="shopping-cart" *ngIf="!isAddingToCart" /> THÊM

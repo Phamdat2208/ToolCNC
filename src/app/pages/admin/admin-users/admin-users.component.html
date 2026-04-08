@@ -1,7 +1,14 @@
     <div class="admin-users-container">
       <h2 class="page-title">Quản lý người dùng</h2>
       
-      <nz-table #usersTable [nzData]="users" [nzLoading]="loading" [nzScroll]="{ x: '800px' }">
+      <nz-table 
+    #usersTable 
+    [nzData]="users.slice((page - 1) * size, page * size)" 
+    [nzLoading]="loading" 
+    [nzScroll]="{ x: '800px' }"
+    [nzFrontPagination]="false"
+    [nzShowPagination]="false"
+  >
         <thead>
           <tr>
             <th>Người dùng</th>
@@ -32,4 +39,15 @@
           </tr>
         </tbody>
       </nz-table>
+
+      <div class="pagination-container mt-16" *ngIf="users.length > 0">
+        <app-pagination
+          [total]="users.length"
+          [pageIndex]="page"
+          [pageSize]="size"
+          [pageSizeOptions]="[10, 20, 50, 100]"
+          (pageIndexChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        ></app-pagination>
+      </div>
     </div>

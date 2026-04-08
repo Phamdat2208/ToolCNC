@@ -1,14 +1,22 @@
 <div class="admin-orders-container">
   <h2 class="page-title">Quản lý đơn hàng</h2>
 
-  <nz-table #ordersTable [nzData]="orders" [nzLoading]="loading" [nzScroll]="{ x: '1000px' }">
+  <nz-table 
+    #ordersTable 
+    [nzData]="orders.slice((page - 1) * size, page * size)" 
+    [nzLoading]="loading" 
+    [nzScroll]="{ x: '1000px' }"
+    [nzFrontPagination]="false"
+    [nzShowPagination]="false"
+    class="text-center-table"
+  >
     <thead>
       <tr>
         <th>Mã đơn hàng</th>
         <th>Khách hàng</th>
         <th>Ngày đặt</th>
         <th>Tổng tiền</th>
-        <th>Số lượng</th>
+        <th nzWidth="100px">Số lượng</th>
         <th>Trạng thái</th>
         <th nzWidth="200px">Thao tác</th>
       </tr>
@@ -45,6 +53,17 @@
       </tr>
     </tbody>
   </nz-table>
+
+  <div class="pagination-container mt-16" *ngIf="orders.length > 0">
+    <app-pagination
+      [total]="orders.length"
+      [pageIndex]="page"
+      [pageSize]="size"
+      [pageSizeOptions]="[10, 20, 50, 100]"
+      (pageIndexChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    ></app-pagination>
+  </div>
 
   <!-- Modal Chi tiết Đơn hàng -->
   <nz-modal
@@ -89,6 +108,12 @@
             <img [src]="item.imageUrl || 'https://placehold.co/80x80?text=No+Image'" alt="product image" class="product-img" />
             <div class="flex-1">
               <h4 style="margin: 0; font-size: 15px; font-weight: 600;">{{ item.productName }}</h4>
+              <div class="d-flex align-items-center flex-wrap mt-4" style="gap: 8px 12px;">
+                <nz-tag *ngIf="item.sku" [nzColor]="'blue'" style="font-size: 11px; margin: 0; line-height: 20px;">{{ item.sku }}</nz-tag>
+                <span *ngIf="item.variantName" class="text-secondary" style="font-size: 12px;">
+                  P.loại: <strong>{{ item.variantName }}</strong>
+                </span>
+              </div>
               <p class="mt-4 text-secondary text-sm" style="margin: 0;">Đơn giá: {{ item.unitPrice | currency:'VND':'symbol':'1.0-0' }} x {{ item.quantity }}</p>
             </div>
             <div class="text-lg" style="color: #333; font-weight: 600;">

@@ -16,6 +16,7 @@
 }
 
 .filters-sidebar {
+  max-height: fit-content;
   background: var(--bg-white);
   padding: 24px;
   border-radius: 8px;

@@ -22,10 +22,11 @@ import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { UrlUtils } from '../../shared/utils/url-utils';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-product-catalog',
-  imports: [CommonModule, FormsModule, NzGridModule, NzMenuModule, NzCheckboxModule, NzSliderModule, NzInputModule, NzCardModule, NzButtonModule, NzIconModule, NzPaginationModule, NzDropDownModule, NzSpinModule, NzEmptyModule, ProductCardComponent, PageBreadcrumbComponent, LoadingComponent],
+  imports: [CommonModule, FormsModule, NzGridModule, NzMenuModule, NzCheckboxModule, NzSliderModule, NzInputModule, NzCardModule, NzButtonModule, NzIconModule, NzPaginationModule, NzDropDownModule, NzSpinModule, NzEmptyModule, ProductCardComponent, PageBreadcrumbComponent, LoadingComponent, PaginationComponent],
   templateUrl: './product-catalog.component.html',
   styleUrl: './product-catalog.component.css'
 })
@@ -39,9 +40,10 @@ export class ProductCatalogComponent implements OnInit {
   totalAllProducts = 0;
   pageSize = 12;
   pageIndex = 1;
+  pageSizeOptions = [12, 24, 48, 96];
 
-  priceRange: number[] = [0, 2000000000];
-  readonly MAX_PRICE = 2000000000;
+  priceRange: number[] = [0, 10000000];
+  readonly MAX_PRICE = 10000000;
   selectedBrands: Set<string> = new Set();
   knownBrands: Brand[] = [];
 
@@ -217,6 +219,13 @@ export class ProductCatalogComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  changePageSize(size: number) {
+    this.pageSize = size;
+    this.pageIndex = 1; // Reset to first page when size changes
+    this.syncStateToUrl();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   changeSort(sort: string) {
     this.currentSort = sort;
     this.syncStateToUrl(true);
@@ -225,6 +234,16 @@ export class ProductCatalogComponent implements OnInit {
   selectCategory(catName: string) {
     this.activeCategory = catName;
     this.syncStateToUrl(true);
+  }
+
+  clearFilters() {
+    this.priceRange = [0, this.MAX_PRICE];
+    this.selectedBrands.clear();
+    this.searchKeyword = '';
+    this.activeCategory = '';
+    this.currentSort = 'Mới nhất';
+    this.syncStateToUrl(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   breadcrumbItems = [

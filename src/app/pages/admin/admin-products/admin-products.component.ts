@@ -7,10 +7,13 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { ProductService } from '../../../services/product.service';
 import { FormsModule } from '@angular/forms';
 import { UrlUtils } from '../../../shared/utils/url-utils';
+import { AdminBulkImportComponent } from './bulk-import/admin-bulk-import.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-admin-products',
@@ -23,7 +26,11 @@ import { UrlUtils } from '../../../shared/utils/url-utils';
     NzIconModule, 
     NzInputModule, 
     NzTagModule,
-    FormsModule
+    NzModalModule,
+    NzToolTipModule,
+    FormsModule,
+    AdminBulkImportComponent,
+    PaginationComponent
   ],
   templateUrl: './admin-products.component.html',
   styleUrl: './admin-products.component.css'
@@ -39,9 +46,19 @@ export class AdminProductsComponent implements OnInit {
   page = 1;
   size = 10;
   searchKeyword = '';
+  isImportModalVisible = false;
 
   ngOnInit() {
     this.loadProducts();
+  }
+
+  showImportModal() {
+    this.isImportModalVisible = true;
+  }
+
+  handleImportComplete() {
+    this.isImportModalVisible = false;
+    this.loadProducts(true);
   }
 
   loadProducts(reset: boolean = false) {
@@ -65,6 +82,12 @@ export class AdminProductsComponent implements OnInit {
 
   onPageIndexChange(index: number) {
     this.page = index;
+    this.loadProducts();
+  }
+
+  onPageSizeChange(size: number) {
+    this.size = size;
+    this.page = 1;
     this.loadProducts();
   }
 

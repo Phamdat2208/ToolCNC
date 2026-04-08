@@ -12,6 +12,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { OrderService } from '../../../services/order.service';
 import { FormsModule } from '@angular/forms';
 import { CustomInputComponent } from '../../../shared/components/custom-input/custom-input.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-admin-orders',
@@ -27,7 +28,8 @@ import { CustomInputComponent } from '../../../shared/components/custom-input/cu
     NzModalModule,
     NzDividerModule,
     NzIconModule,
-    CustomInputComponent
+    CustomInputComponent,
+    PaginationComponent
   ],
   templateUrl: './admin-orders.component.html',
   styleUrl: './admin-orders.component.css'
@@ -38,6 +40,8 @@ export class AdminOrdersComponent implements OnInit {
 
   orders: any[] = [];
   loading = true;
+  page = 1;
+  size = 10;
 
   isVisibleOrderModal = false;
   selectedOrder: any = null;
@@ -128,6 +132,7 @@ export class AdminOrdersComponent implements OnInit {
   }
 
   viewOrderDetails(order: any) {
+    console.log(order);
     this.selectedOrder = order;
     this.isVisibleOrderModal = true;
   }
@@ -135,5 +140,15 @@ export class AdminOrdersComponent implements OnInit {
   closeOrderModal() {
     this.isVisibleOrderModal = false;
     setTimeout(() => this.selectedOrder = null, 300);
+  }
+
+  onPageChange(index: number) {
+    this.page = index;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onPageSizeChange(size: number) {
+    this.size = size;
+    this.page = 1;
   }
 }

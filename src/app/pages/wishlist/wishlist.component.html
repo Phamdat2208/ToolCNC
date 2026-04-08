@@ -8,8 +8,8 @@
   <div class="wishlist-grid" *ngIf="wishlistService.items().length > 0">
     <div class="wishlist-item" *ngFor="let product of wishlistService.items()">
       <a [routerLink]="['/products', product.id]" class="item-image-wrap img-wrapper-relative" style="display: flex; border-radius: 8px;">
-        <img [src]="product.img || product.imageUrl || 'https://placehold.co/200x200?text=No+Image'" [alt]="product.name" [class.img-out-of-stock]="product.stock === 0" />
-        <div class="out-of-stock-banner" *ngIf="product.stock === 0" style="font-size: 10px; padding: 2px 8px;">Hết Hàng</div>
+        <img [src]="product.img || product.imageUrl || 'https://placehold.co/200x200?text=No+Image'" [alt]="product.name" [class.img-out-of-stock]="product.totalStock === 0" />
+        <div class="out-of-stock-banner" *ngIf="product.totalStock === 0" style="font-size: 10px; padding: 2px 8px;">Hết Hàng</div>
       </a>
       <div class="item-info">
         <a [routerLink]="['/products', product.id]" class="item-name">{{ product.name }}</a>

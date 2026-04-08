@@ -1,0 +1,89 @@
+<div class="quick-select-container">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-box">
+    <nz-spin nzSimple nzSize="large" nzTip="Đang tải dữ liệu kỹ thuật..."></nz-spin>
+  </div>
+
+  <!-- Content state -->
+  <div *ngIf="!isLoading && product" class="content-box animate-up">
+    <div class="product-header">
+      <div class="header-main-row">
+        <h3 class="product-name">{{ product.name }}</h3>
+        <button nz-button nzType="link" (click)="viewFullDetails()" class="view-more-btn">
+          Xem đầy đủ chi tiết <nz-icon nzType="right" />
+        </button>
+      </div>
+      <div class="product-meta">
+        <span class="base-sku"><nz-icon nzType="barcode" /> {{ product.sku }}</span>
+        <span class="category-tag">{{ product.categoryName }}</span>
+      </div>
+    </div>
+
+    <div class="variant-info-table">
+      <nz-table #basicTable [nzData]="product.variants" [nzSize]="'middle'" [nzScroll]="{ y: '300px' }" [nzFrontPagination]="false" [nzShowPagination]="false">
+        <thead>
+          <tr>
+            <th nzWidth="60px">Chọn</th>
+            <th>Mã hàng / Quy cách</th>
+            <th nzWidth="120px">Đơn giá</th>
+            <th nzWidth="140px">Số lượng</th>
+            <th nzWidth="100px">Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data" 
+              [class.row-selected]="data.checked"
+              class="clickable-row">
+            <td>
+              <label nz-checkbox [(ngModel)]="data.checked"></label>
+            </td>
+            <td (click)="data.checked = !data.checked">
+              <div class="v-name">{{ data.variantName }}</div>
+              <div class="v-sku text-secondary">{{ data.sku }}</div>
+            </td>
+            <td>
+              <span class="v-price">{{ data.price | currency:'VND':'symbol':'1.0-0' }}</span>
+            </td>
+            <td>
+              <nz-input-number 
+                [(ngModel)]="data.selectedQuantity" 
+                [nzMin]="1" 
+                [nzStep]="1" 
+                (click)="$event.stopPropagation()"
+                class="qty-input-table">
+              </nz-input-number>
+            </td>
+            <td>
+              <span class="v-subtotal">{{ (data.price * data.selectedQuantity) | currency:'VND':'symbol':'1.0-0' }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+
+    <!-- Selection Footer Summary -->
+    <div class="footer-actions">
+      <div class="summary-bar" *ngIf="totalSelectedCount > 0">
+        <div class="summary-item">
+          <span class="label">Đang chọn:</span>
+          <span class="value">{{ totalSelectedCount }} mã hàng</span>
+        </div>
+        <div class="summary-item total">
+          <span class="label">Tổng cộng:</span>
+          <span class="value">{{ totalPrice | currency:'VND':'symbol':'1.0-0' }}</span>
+        </div>
+      </div>
+      
+      <button nz-button 
+              nzType="primary" 
+              nzBlock 
+              class="submit-btn" 
+              [disabled]="totalSelectedCount === 0"
+              [nzLoading]="isAddingToCart"
+              (click)="addToCart()">
+        <nz-icon nzType="shopping-cart" /> 
+        Tiến hành thêm {{ totalSelectedCount > 0 ? totalSelectedCount : '' }} sản phẩm vào giỏ
+      </button>
+    </div>
+  </div>
+</div>

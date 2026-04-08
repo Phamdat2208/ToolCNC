@@ -61,29 +61,37 @@ export class SupportComponent implements OnInit {
   trackingError: string = '';
 
   categories = [
-    { icon: 'tool', title: 'Hỗ trợ kỹ thuật', desc: 'Hướng dẫn vận hành máy, bảo trì và xử lý lỗi kỹ thuật.' },
-    { icon: 'shopping-cart', title: 'Đơn hàng & Giao hàng', desc: 'Theo dõi đơn hàng, chính sách vận chuyển và đổi trả.' },
-    { icon: 'safety-certificate', title: 'Chính sách bảo hành', desc: 'Quy trình kích hoạt và yêu cầu bảo hành chính hãng.' },
-    { icon: 'user', title: 'Tài khoản & Thanh toán', desc: 'Quản lý thông tin cá nhân và các phương thức thanh toán.' }
+    { icon: 'tool', title: 'Dao phay Ngón', desc: 'Kỹ thuật chọn số lưỡi cắt, lớp phủ (TiAlN, DLC) và chế độ cắt tối ưu.' },
+    { icon: 'code-sandbox', title: 'Chip tiện & Cán dao', desc: 'Tra cứu mã chip (CNMG, DNMG...), hình học chip và cách bẻ phoi.' },
+    { icon: 'setting', title: 'Phụ kiện & Đồ gá', desc: 'Hướng dẫn sử dụng đầu kẹp BT, bầu kẹp ER, ê tô và thiết bị đo.' },
+    { icon: 'reconciliation', title: 'Kỹ thuật Gia công', desc: 'Công thức tính toán Vc, Fz, Ap/Ae cho vật liệu thép, nhôm, inox.' }
   ];
 
   faqs: FAQ[] = [
     {
-      question: 'Làm thế nào để bảo trì máy CNC định kỳ?',
-      answer: 'Bảo trì máy CNC cần thực hiện hàng ngày (vệ sinh phoi, kiểm tra mức dầu) và hàng tháng (kiểm tra độ rơ, bôi trơn hệ thống truyền động). Chúng tôi có tài liệu hướng dẫn chi tiết đính kèm cho từng model máy.',
+      question: 'Làm thế nào để chọn đúng số lưỡi cắt cho dao phay?',
+      answer: 'Dao 2-3 lưỡi thường dùng cho phay rãnh vì không gian thoát phoi rộng. Dao 4-6 lưỡi dùng cho phay mặt hoặc phay biên để đạt được độ bóng bề mặt cao và tốc độ tiến dao nhanh hơn.',
       active: true
     },
     {
-      question: 'Chính sách đổi trả sản phẩm như thế nào?',
-      answer: 'Bạn có thể đổi trả sản phẩm trong vòng 7 ngày nếu do lỗi của nhà sản xuất. Sản phẩm phải còn nguyên tem mác và chưa qua sử dụng đối với các loại dao cụ.'
+      question: 'Ý nghĩa của mã chip tiện CNMG 120408 là gì?',
+      answer: 'C: Hình thoi 80 độ; N: Góc sau 0 độ; M: Dung sai; G: Kiểu kẹp; 12: Chiều dài cạnh cắt; 04: Độ dày chip; 08: Bán kính mũi dao (R0.8mm). Đây là loại chip phổ biến cho tiện thô và bán tinh.',
+      active: false
     },
     {
-      question: 'Làm sao để theo dõi đơn hàng của tôi?',
-      answer: 'Sau khi đặt hàng thành công, bạn sẽ nhận mã đơn hàng (TCNC-XXXXXXXX). Nhập mã này vào ô tra cứu trong phần "Theo dõi đơn hàng" ở trang Hỗ trợ để xem trạng thái tức thì.'
+      question: 'Khi nào nên sử dụng bầu kẹp nhiệt (Shrink-fit)?',
+      answer: 'Bầu kẹp nhiệt nên dùng khi gia công tốc độ cao (High-speed machining) và yêu cầu độ đồng tâm (run-out) cực thấp (<0.003mm). Nó giúp tăng tuổi thọ dao lên 15-20% so với bầu kẹp ER thông thường.',
+      active: false
     },
     {
-      question: 'ToolCNC có cung cấp dịch vụ lắp đặt tận nơi không?',
-      answer: 'Có, đối với các dòng máy CNC lớn, chúng tôi có đội ngũ kỹ thuật lắp đặt và hướng dẫn vận hành trực tiếp tại nhà xưởng của bạn trên toàn quốc.'
+      question: 'Giải pháp xử lý khi dao phay bị mòn nhanh khi gia công Inox?',
+      answer: 'Inox có tính truyền nhiệt kém, nên sử dụng dao có lớp phủ chịu nhiệt cao (AlTiN/TiAlN). Giảm vận tốc cắt (Vc) và tăng lượng tưới nguội trực tiếp vào vùng cắt để tránh hiện tượng lẹo dao.',
+      active: false
+    },
+    {
+      question: 'Làm sao để tính tốc độ vòng quay trục chính (n)?',
+      answer: 'Công thức: n = (Vc * 1000) / (π * D). Trong đó Vc là vận tốc cắt (m/phút) khuyến cáo của nhà sản xuất và D là đường kính của dao (mm).',
+      active: false
     }
   ];
 

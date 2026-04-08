@@ -73,6 +73,12 @@
             <img [src]="item.imageUrl || 'https://placehold.co/80x80?text=No+Image'" alt="product image" class="product-img" />
             <div class="flex-1">
               <h4 style="margin: 0; font-size: 15px; font-weight: 600;">{{ item.productName }}</h4>
+              <div class="d-flex align-items-center flex-wrap mt-4" style="gap: 8px 12px;">
+                <nz-tag *ngIf="item.sku" [nzColor]="'blue'" style="font-size: 11px; margin: 0; line-height: 20px;">{{ item.sku }}</nz-tag>
+                <span *ngIf="item.variantName" class="text-secondary" style="font-size: 12px;">
+                  P.loại: <strong>{{ item.variantName }}</strong>
+                </span>
+              </div>
               <p class="mt-4 text-secondary text-sm" style="margin: 0;">Đơn giá: {{ item.unitPrice | currency:'VND':'symbol':'1.0-0' }} x {{ item.quantity }}</p>
             </div>
             <div class="text-lg" style="color: #333; font-weight: 600;">

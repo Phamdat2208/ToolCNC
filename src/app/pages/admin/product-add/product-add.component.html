@@ -1,24 +1,9 @@
 <div class="product-add-container">
   <h2>{{ isEditMode ? "Sửa Sản Phẩm" : "Thêm Sản Phẩm Mới" }}</h2>
 
-  <!-- Màn hình Sửa: Hiển thị ngay Form đơn -->
-  <div class="form-wrapper" *ngIf="isEditMode">
+  <div class="form-wrapper pt-16">
     <ng-container *ngTemplateOutlet="singleForm"></ng-container>
   </div>
-
-  <!-- Màn hình Thêm Mới: Hiển thị dạng Tabs -->
-  <nz-tabset *ngIf="!isEditMode" [nzAnimated]="false">
-    <nz-tab nzTitle="Thêm Đơn Lẻ">
-      <div class="form-wrapper pt-16">
-        <ng-container *ngTemplateOutlet="singleForm"></ng-container>
-      </div>
-    </nz-tab>
-    <nz-tab nzTitle="Thêm Hàng Loạt (JSON)">
-      <div class="form-wrapper pt-16">
-        <ng-container *ngTemplateOutlet="bulkForm"></ng-container>
-      </div>
-    </nz-tab>
-  </nz-tabset>
 
   <ng-template #singleForm>
     <form
@@ -96,7 +81,7 @@
             <div nz-col [nzSpan]="8">
               <div class="ant-form-item-label"><label>Kho hàng</label></div>
               <nz-input-number
-                formControlName="stock"
+                formControlName="totalStock"
                 [nzMin]="0"
                 style="width: 100%"
                 nzPlaceHolder="10"
@@ -377,47 +362,4 @@
     </form>
   </ng-template>
 
-  <ng-template #bulkForm>
-    <div class="bulk-section">
-      <p class="mb-16">
-        Vui lòng dán danh sách chứa mảng (Array) các đối tượng JSON của sản
-        phẩm. Mỗi đối tượng cần có `name`, `price`, `brand`.
-      </p>
-      <textarea
-        nz-input
-        [(ngModel)]="bulkJson"
-        rows="18"
-        placeholder='[
-  { 
-    "name": "Sản phẩm 1",
-    "price": 500000,
-    "brand": "Makita",
-    "description": "...",
-    "imageUrl": "...",
-    "categoryId": 1
-  },
-  { 
-    "name": "Sản phẩm 2",
-    "price": 1200000,
-    "brand": "Bosch",
-    "description": "...",
-    "imageUrl": "...",
-    "categoryId": 1
-  }
-]'
-        class="font-mono"
-      ></textarea>
-
-      <button
-        nz-button
-        nzType="primary"
-        nzSize="large"
-        [nzLoading]="isSubmitting"
-        class="mt-24"
-        (click)="submitBulk()"
-      >
-        Thực thi nhập JSON
-      </button>
-    </div>
-  </ng-template>
 </div>

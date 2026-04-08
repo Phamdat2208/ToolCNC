@@ -115,7 +115,12 @@ export class CartService {
     return new Observable<any>(observer => {
       this.http.delete(`${this.apiUrl}/${id}`, this.getAuthHeaders()).subscribe({
         next: (res) => {
+          // Update local state IMMEDIATELY after success response
+          this.cartItems.update(items => items.filter(item => item.id !== id));
+          
+          // Then sync with server if needed
           this.loadCart();
+          
           observer.next(res);
           observer.complete();
         },

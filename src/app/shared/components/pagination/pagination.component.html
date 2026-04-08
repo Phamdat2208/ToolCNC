@@ -1,0 +1,71 @@
+<div class="pagination-container">
+  <div class="pagination-info" *ngIf="total > 0">
+    <ul class="pagination-list">
+      <!-- Nút Trước -->
+      <li class="pagination-item">
+        <button 
+          nz-button 
+          nzType="text" 
+          [disabled]="pageIndex === 1" 
+          (click)="onPrev()"
+          class="nav-btn"
+        >
+          <nz-icon nzType="left" />
+        </button>
+      </li>
+
+      <!-- Danh sách số trang -->
+      <li 
+        class="pagination-item" 
+        *ngFor="let page of pages" 
+        [class.active]="page === pageIndex"
+        [class.ellipsis]="page === '...'"
+      >
+        <button 
+          *ngIf="page !== '...'; else dots"
+          nz-button 
+          [nzType]="page === pageIndex ? 'primary' : 'text'" 
+          (click)="onPageClick(page)"
+          class="page-btn"
+        >
+          {{ page }}
+        </button>
+        <ng-template #dots>
+          <span class="dots">...</span>
+        </ng-template>
+      </li>
+
+      <!-- Nút Tiếp -->
+      <li class="pagination-item">
+        <button 
+          nz-button 
+          nzType="text" 
+          [disabled]="pageIndex === totalPages" 
+          (click)="onNext()"
+          class="nav-btn"
+        >
+          <nz-icon nzType="right" />
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="pagination-controls">
+    <!-- Chọn số bản ghi/trang -->
+    <div class="page-size-changer">
+      <span class="label">Hiển thị:</span>
+      <nz-select 
+        [(ngModel)]="pageSize" 
+        (ngModelChange)="onPageSizeChange($event)" 
+        class="size-select"
+        nzSize="small"
+      >
+        <nz-option 
+          *ngFor="let option of pageSizeOptions" 
+          [nzValue]="option" 
+          [nzLabel]="option"
+        ></nz-option>
+      </nz-select>
+    </div>
+  </div>
+</div>

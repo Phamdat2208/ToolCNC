@@ -81,7 +81,12 @@ import {
   PlusSquareOutline,
   MinusSquareOutline,
   SyncOutline,
-  LoadingOutline
+  LoadingOutline,
+  FileExcelOutline,
+  DownloadOutline,
+  SaveOutline,
+  CodeSandboxOutline,
+  ReconciliationOutline
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -154,7 +159,13 @@ const icons = [
   PlusSquareOutline,
   MinusSquareOutline,
   SyncOutline,
-  LoadingOutline
+  LoadingOutline,
+  FileExcelOutline,
+  DownloadOutline,
+  SaveOutline,
+  CheckCircleOutline,
+  CodeSandboxOutline,
+  ReconciliationOutline
 ];
 
 registerLocaleData(vi);

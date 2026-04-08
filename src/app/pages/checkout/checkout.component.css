@@ -114,13 +114,11 @@
 
 .payment-card:hover {
   border-color: var(--primary-color);
-  background: rgba(232, 96, 28, 0.02);
 }
 
 .payment-card.active {
   border-color: var(--primary-color);
   background: var(--primary-light);
-  box-shadow: 0 8px 24px rgba(232, 96, 28, 0.12);
 }
 
 .card-radio {
@@ -375,7 +373,6 @@
 }
 
 .guarantee-box {
-  background: rgba(232, 96, 28, 0.05);
   border-radius: 12px;
   padding: 16px;
   display: flex;
@@ -465,10 +462,6 @@
   padding: 0 32px;
   border-radius: 12px;
   font-weight: 700;
-}
-
-.btn-primary-glow {
-  box-shadow: 0 8px 16px rgba(232, 96, 28, 0.3);
 }
 
 /* ─── Animations ─── */

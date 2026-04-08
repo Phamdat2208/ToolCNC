@@ -1,6 +1,6 @@
 import { Component, inject, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router, RouterLinkActive } from '@angular/router';
+import { RouterLink, Router, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -12,7 +12,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { WishlistService } from '../../services/wishlist.service';
@@ -43,6 +43,22 @@ export class HeaderComponent {
   private search$ = new Subject<string>();
 
   constructor() {
+    // Sync search bar with URL keyword and clear results on navigation
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      const urlTree = this.router.parseUrl(this.router.url);
+      const keyword = urlTree.queryParams['keyword'];
+      
+      this.searchKeyword = keyword !== undefined ? keyword.trim() : '';
+      this.searchResults = [];
+      this.isSearching = false;
+      this.showDropdown = false;
+      
+      // Force reset the search stream to cancel any pending debounce
+      this.search$.next('');
+    });
+
     this.search$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -66,7 +82,8 @@ export class HeaderComponent {
           this.searchResults = [];
         }
         this.isSearching = false;
-        this.showDropdown = true;
+        // Chỉ hiện dropdown nếu vẫn còn từ khóa (tránh việc hiện lại sau khi đã clear/navigate)
+        this.showDropdown = !!this.searchKeyword.trim();
       },
       error: () => {
         this.searchResults = [];
@@ -88,14 +105,18 @@ export class HeaderComponent {
 
   onSearchEnter() {
     if (this.searchKeyword.trim()) {
+      const keyword = this.searchKeyword.trim();
       this.showDropdown = false;
-      this.router.navigate(['/products'], { queryParams: { keyword: this.searchKeyword.trim() } });
+      this.isSearching = false; // Stop spinner
+      this.searchResults = [];
+      this.router.navigate(['/products'], { queryParams: { keyword: keyword } });
       this.searchKeyword = '';
     }
   }
 
   goToProduct(product: any) {
     this.showDropdown = false;
+    this.isSearching = false; // Stop spinner
     this.searchKeyword = '';
     this.searchResults = [];
     this.router.navigate(['/products', product.id]);

@@ -21,10 +21,18 @@ export class UrlUtils {
     // 2. Nếu là URL tuyệt đối (Cloudinary, v.v.), trả về ngay
     if (url.startsWith('http')) return url;
     
-    // 3. Nếu là URL tương đối, nối với apiUrl từ môi trường
-    const baseUrl = environment.apiUrl.endsWith('/') ? environment.apiUrl.slice(0, -1) : environment.apiUrl;
-    const relativeUrl = url.startsWith('/') ? url : '/' + url;
+    // 3. Xử lý đường dẫn tương đối
+    // Nếu là tên file trần (không bắt đầu bằng /), giả định nó nằm trong /uploads/products/
+    let processedUrl = url;
+    if (!url.startsWith('/') && !url.includes(':')) {
+      processedUrl = '/uploads/products/' + url;
+    } else if (url.startsWith('/') && !url.startsWith('/uploads/')) {
+       processedUrl = '/uploads/products' + (url.startsWith('/') ? url : '/' + url);
+    } else if (!url.startsWith('/')) {
+       processedUrl = '/' + url;
+    }
     
-    return baseUrl + relativeUrl;
+    const baseUrl = environment.apiUrl.endsWith('/') ? environment.apiUrl.slice(0, -1) : environment.apiUrl;
+    return baseUrl + processedUrl;
   }
 }

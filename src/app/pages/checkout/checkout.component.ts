@@ -212,7 +212,8 @@ export class CheckoutComponent implements OnInit {
       address: formVal.address,
       paymentMethod: this.paymentMethod,
       items: this.cartService.cartItems().map(item => ({
-        productId: item.id,
+        productId: item.productId,
+        variantId: item.variantId || null,
         quantity: item.quantity,
         unitPrice: item.price
       }))
