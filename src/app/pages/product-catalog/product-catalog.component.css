@@ -1,26 +1,67 @@
-.catalog-container {
-  padding: 24px 48px;
+.catalog-page-wrapper {
+  background: #f8fafc; /* Màu nền tông xám trắng siêu nhạt cho toàn trang */
+  min-height: 100vh;
+  padding-bottom: 64px;
+}
+
+/* === HERO BANNER DẠNG SOLID === */
+.catalog-hero-banner {
+  background: linear-gradient(110deg, #0f172a 0%, #1e293b 60%, #ea580c 100%);
+  padding: 64px 48px;
+  color: white;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border-radius: 12px;
+}
+
+.catalog-hero-content {
   max-width: 1400px;
   margin: 0 auto;
 }
 
-.breadcrumb {
-  margin-bottom: 24px;
-  color: var(--text-secondary);
-}
-.breadcrumb a {
-  color: var(--text-secondary);
-}
-.breadcrumb a:hover {
-  color: var(--primary-color);
+.hero-title {
+  color: white;
+  font-size: 38px;
+  font-weight: 800;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
 }
 
+.hero-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-weight: 400;
+}
+
+/* Đổi màu chữ Breadcrumb dính trên nền tối */
+::ng-deep .catalog-hero-banner .ant-breadcrumb a,
+::ng-deep .catalog-hero-banner .ant-breadcrumb span {
+  color: rgba(255, 255, 255, 0.6) !important;
+  transition: color 0.3s ease;
+}
+::ng-deep .catalog-hero-banner .ant-breadcrumb a:hover {
+  color: white !important;
+}
+::ng-deep .catalog-hero-banner .ant-breadcrumb-separator {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* === MAIN CONTAINER === */
+.catalog-container {
+  padding: 0 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* === SIDEBAR (BỘ LỌC) [DARK THEME] === */
 .filters-sidebar {
   max-height: fit-content;
-  background: var(--bg-white);
+  background: #0f172a; /* Nền xanh than đậm (Dark Slate) chuẩn máy móc */
   padding: 24px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
 .filter-group {
@@ -29,10 +70,13 @@
 
 .filter-group h3 {
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
   margin-bottom: 16px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Viền mờ */
+  padding-bottom: 12px;
+  color: #f8fafc; /* Chữ trắng sáng */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .category-tree-list, .child-list {
@@ -44,21 +88,24 @@
 .tree-node-item {
   display: flex;
   align-items: center;
-  padding: 8px 12px;
+  padding: 10px 12px;
   cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s;
-  margin-bottom: 2px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.65); /* Chữ hơi mờ cho list item */
 }
 
 .tree-node-item:hover {
-  background-color: var(--bg-gray);
+  background-color: rgba(255, 255, 255, 0.05); /* Hover nền sáng mờ */
+  color: #fff;
 }
 
+/* Trạng thái danh mục đang chọn (Dark Theme) */
 .tree-node-item.active {
-  background-color: #e6f7ff;
+  background-color: rgba(249, 115, 22, 0.15); /* Nền cam trong suốt */
   color: var(--primary-color);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .node-content {
@@ -70,17 +117,17 @@
 .toggle-icon-wrapper {
   margin-right: 8px;
   font-size: 14px;
-  color: var(--text-secondary);
   display: flex;
   align-items: center;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .toggle-icon-wrapper:hover {
-  color: var(--primary-color);
+  color: white;
 }
 
 .no-children-spacer {
-  width: 22px; /* icon width + margin */
+  width: 22px; 
   display: inline-block;
 }
 
@@ -92,22 +139,37 @@
 }
 
 .count-badge {
-  background: var(--bg-gray);
-  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 11px;
+  font-weight: 600;
   flex-shrink: 0;
   margin-left: 8px;
+  transition: all 0.3s ease;
 }
 
 .tree-node-item.active .count-badge {
-  background: white;
+  background: var(--primary-color);
+  color: white;
 }
 
-.child-cat {
-  color: var(--text-secondary);
-  font-size: 0.95em;
+/* === NG-ZORRO SLIDER ĐỔI SANG MÀU CAM TỪ XANH === */
+::ng-deep .ant-slider-track {
+  background-color: var(--primary-color) !important;
+}
+::ng-deep .ant-slider-handle {
+  border-color: var(--primary-color) !important;
+}
+::ng-deep .ant-slider:hover .ant-slider-track {
+  background-color: var(--primary-color) !important;
+}
+::ng-deep .ant-slider:hover .ant-slider-handle {
+  border-color: var(--primary-color) !important;
+}
+::ng-deep .ant-slider-rail {
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .price-inputs {
@@ -115,50 +177,124 @@
   align-items: center;
   gap: 8px;
   margin-top: 16px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+::ng-deep .price-inputs .ant-input {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+::ng-deep .price-inputs .ant-input:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2) !important;
 }
 
 .brand-filters label {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+::ng-deep .brand-filters .ant-checkbox-wrapper {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+::ng-deep .brand-filters .ant-checkbox-wrapper:hover {
+  color: white !important;
+}
+::ng-deep .brand-filters .ant-checkbox-inner {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+::ng-deep .brand-filters .ant-checkbox:hover .ant-checkbox-inner {
+  border-color: var(--primary-color) !important;
+}
+::ng-deep .brand-filters .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+::ng-deep .brand-filters .ant-checkbox-checked::after {
+  border-color: var(--primary-color) !important;
 }
 
+/* === NÚT BAM BỘ LỌC (CÙNG TÔNG NÚT TRANG CHỦ) === */
+.filters-sidebar .ant-btn-primary {
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 600;
+  background: var(--primary-color) !important;
+  border: none;
+  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.3);
+  transition: all 0.3s ease;
+}
+.filters-sidebar .ant-btn-primary:hover {
+  background: linear-gradient(90deg, #f59e0b 0%, #ea580c 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(234, 88, 12, 0.4);
+}
+.filters-sidebar .ant-btn-default {
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.filters-sidebar .ant-btn-default:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+
+/* === CATALOG HEADER BAR === */
 .catalog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  background: var(--bg-white);
+  background: white;
   padding: 16px 24px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.02);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
 
 .catalog-header h2 {
   margin: 0;
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 700;
+  color: var(--text-main);
 }
 
-.product-price {
-  color: var(--danger-color);
-  font-size: 18px;
-  font-weight: bold;
+.catalog-sort {
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
-.card-actions {
-  margin-top: 16px;
+.catalog-sort .ant-btn {
+  font-weight: 600;
+  color: var(--primary-color) !important;
 }
 
+/* === ĐỒNG BỘ PAGINATION SANG MÀU CAM === */
 .pagination-wrapper {
   margin-top: 48px;
   display: flex;
   justify-content: center;
 }
+::ng-deep .ant-pagination-item-active {
+  border-color: var(--primary-color) !important;
+  background: var(--primary-color) !important;
+}
+::ng-deep .ant-pagination-item-active a {
+  color: white !important;
+}
 
+/* === TRẠNG THÁI TRỐNG === */
 .empty-state-container {
   padding: 80px 0;
   text-align: center;
-  background: var(--bg-white);
+  background: transparent;
   border-radius: 12px;
-  border: 2px dashed var(--border-color);
+  border: 2px dashed rgba(0,0,0,0.1);
   margin-top: 24px;
 }

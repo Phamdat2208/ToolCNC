@@ -20,7 +20,7 @@
         <input
           type="text"
           nz-input
-          placeholder="Tìm kiếm dao phay, chip tiện, mũi khoan..."
+          placeholder="Tìm kiếm sản phẩm..."
           [(ngModel)]="searchKeyword"
           (input)="onSearchInput()"
           (keyup.enter)="onSearchEnter()"
@@ -136,7 +136,8 @@
     </ng-container>
 
     <ng-template #loginBtn>
-      <button nz-button nzType="primary" nzShape="round" routerLink="/login" class="login-btn-custom">
+      <button nz-button nzType="default" nzShape="round" routerLink="/login" class="login-btn-custom">
+        <nz-icon nzType="user" />
         Đăng nhập
       </button>
     </ng-template>

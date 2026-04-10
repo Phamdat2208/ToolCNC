@@ -59,18 +59,74 @@
   position: relative;
 }
 
+/* Search Dropdown - Industrial Style */
 .search-dropdown {
   position: absolute;
-  top: calc(100% + 6px);
+  top: 100%;
   left: 0;
   right: 0;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
-  max-height: 400px;
-  overflow-y: auto;
-  z-index: 2000;
-  border: 1px solid #f0f0f0;
+  background: white;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f1f5f9;
+  border-top: none;
+  z-index: 1000;
+  overflow: hidden;
+  margin-top: -10px;
+  padding-top: 10px;
+}
+
+/* User Dropdown Premium */
+::ng-deep .ant-dropdown-menu {
+  border-radius: 16px !important;
+  padding: 8px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #f1f5f9 !important;
+}
+
+::ng-deep .ant-dropdown-menu-item {
+  border-radius: 8px !important;
+  padding: 10px 16px !important;
+  font-weight: 600 !important;
+}
+
+::ng-deep .ant-dropdown-menu-item:hover {
+  background-color: #f8fafc !important;
+  color: var(--primary-color) !important;
+}
+
+/* Mobile Drawer Overrides */
+::ng-deep .ant-drawer-content-wrapper {
+  box-shadow: 20px 0 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+::ng-deep .ant-drawer-mask {
+  backdrop-filter: blur(4px) !important;
+}
+
+::ng-deep .ant-drawer-header {
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 24px !important;
+}
+
+::ng-deep .ant-drawer-title {
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #1e293b !important;
+}
+
+.login-btn-custom {
+  font-weight: 700 !important;
+  height: 40px !important;
+  padding: 0 24px !important;
+  border-color: #e2e8f0 !important;
+  color: #475569 !important;
+}
+
+.login-btn-custom:hover {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
 }
 
 .search-item {
@@ -308,7 +364,6 @@
 ::ng-deep .ant-dropdown-menu-item:hover {
   background-color: var(--primary-light) !important;
   color: var(--primary-color) !important;
-  padding-left: 20px !important;
 }
 
 ::ng-deep .ant-dropdown-menu-item:hover .anticon {
@@ -329,4 +384,62 @@
 ::ng-deep .ant-dropdown-menu-item-divider {
   margin: 8px 6px !important;
   background-color: var(--border-color) !important;
+}
+
+/* Ghi đè màu Xanh mặc định của NG-ZORRO sang nền Cam Brand */
+::ng-deep .nav-list.ant-menu-horizontal > .ant-menu-item-selected,
+::ng-deep .nav-list.ant-menu-horizontal > .ant-menu-item-selected::after {
+  color: var(--primary-color) !important;
+  border-bottom-color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+::ng-deep .nav-list.ant-menu-horizontal > .ant-menu-item:hover,
+::ng-deep .nav-list.ant-menu-horizontal > .ant-menu-item:hover::after {
+  color: var(--primary-color) !important;
+  border-bottom-color: var(--primary-color) !important;
+}
+
+.user-dropdown {
+  color: var(--text-main);
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.user-dropdown:hover,
+.user-dropdown:active {
+  color: var(--primary-color) !important;
+}
+
+.user-dropdown nz-icon {
+  color: var(--primary-color);
+}
+
+.ant-btn.login-btn-custom {
+  background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%) !important;
+  color: white !important;
+  border: none !important;
+  height: 40px;
+  padding: 0 24px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.ant-btn.login-btn-custom:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: linear-gradient(135deg, #ea580c 0%, #f59e0b 100%) !important;
+  box-shadow: 0 6px 20px rgba(234, 88, 12, 0.4);
+  color: white !important;
+}
+
+.ant-btn.login-btn-custom nz-icon {
+  font-size: 16px;
 }

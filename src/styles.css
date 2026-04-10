@@ -1,19 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  /* Brand Colors - Industrial High-Tech Palette */
-  --primary-color: #0ea5e9; /* Electric Cyan */
-  --primary-hover: #38bdf8;
-  --primary-light: #e0f2fe;
+  /* Brand Colors - Industrial Orange/Tech Palette */
+  --primary-color: #f97316; /* Vibrant Orange */
+  --primary-hover: #ea580c;
+  --primary-light: #fff7ed;
   --danger-color: #ef4444; 
   --success-color: #10b981;
   --warning-color: #f59e0b;
 
-  /* Neutrals - Slate Palette */
-  --text-main: #1e293b;
-  --text-secondary: #64748b;
+  /* Neutrals - Slate & Tech Palette */
+  --text-main: #0f172a; /* Deep Black/Slate */
+  --text-secondary: #475569;
   --text-light: #94a3b8;
-  --bg-gray: #f1f5f9;
+  --bg-gray: #f8fafc;
   --bg-white: #ffffff;
   --border-color: #e2e8f0;
 
@@ -172,6 +172,100 @@ body {
 .ant-card {
   border-radius: 12px !important;
   overflow: hidden;
+}
+
+/* === TRIỆT TIÊU MÀU XANH CỦA INPUT (GLOBAL) === */
+.ant-input:hover,
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
+  border-color: var(--text-secondary) !important;
+}
+
+/* --- Global Premium Overrides (Modals & Notifications) --- */
+.ant-modal-content {
+  border-radius: 20px !important;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1) !important;
+}
+
+.ant-modal-header {
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 20px 24px !important;
+}
+
+.ant-modal-title {
+  font-weight: 700 !important;
+  color: #1e293b !important;
+}
+
+.ant-modal-mask {
+  backdrop-filter: blur(8px) !important;
+  background-color: rgba(15, 23, 42, 0.45) !important;
+}
+
+.ant-notification-notice {
+  border-radius: 16px !important;
+  padding: 16px 20px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
+  border: 1px solid #f1f5f9 !important;
+}
+
+.ant-notification-notice-message {
+  font-weight: 700 !important;
+}
+
+.ant-notification-notice-icon-success {
+  color: var(--primary-color) !important;
+}
+
+.ant-notification-notice-icon-info {
+  color: #3b82f6 !important;
+}
+
+/* Adjusting Steps colors globally - TRIỆT TIÊU MÀU XANH TUYỆT ĐỐI */
+.ant-steps-item-icon, 
+.ant-steps-item-tail,
+.ant-steps-item-tail::after,
+.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after,
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon .ant-steps-icon {
+  color: #fff !important;
+}
+
+/* Đảm bảo đường nối luôn cam */
+.ant-steps-item-tail::after {
+  background-color: var(--primary-color) !important;
+  background-image: none !important;
+}
+
+.ant-steps-item-title::after {
+  background-color: var(--primary-color) !important;
+}
+
+/* Fix cho cả Input group có prefix/suffix */
+.ant-input-affix-wrapper-focused .ant-input {
+  box-shadow: none !important;
+}
+
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper-focused,
+.ant-input-affix-wrapper:focus {
+  border-color: var(--text-secondary) !important;
+  box-shadow: 0 0 0 2px rgba(71, 85, 105, 0.1) !important; /* Xám Slate mờ */
+}
+
+/* Fix cho cả Input group có prefix/suffix */
+.ant-input-affix-wrapper-focused .ant-input {
+  box-shadow: none !important;
 }
 
 /* Custom Notification */

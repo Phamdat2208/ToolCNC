@@ -1,79 +1,51 @@
-<nz-card
-  nzHoverable
-  [nzCover]="coverTemplate"
-  [routerLink]="['/products', product.id]"
-  class="hover-glow"
-  appScrollReveal
->
-  <nz-card-meta
-    [nzTitle]="product.name"
-    [nzDescription]="priceTemplate"
-  ></nz-card-meta>
-  <div class="card-actions">
-    <div class="action-row">
-      <!-- Thêm vào giỏ hàng -->
+<div class="modern-product-card" [routerLink]="['/products', product.id]" appScrollReveal>
+  <!-- Image Box -->
+  <div class="product-img-box img-wrapper-relative">
+    <img [alt]="product.name" [src]="imageUrl" [class.img-out-of-stock]="product.totalStock === 0" loading="lazy" />
+    <div class="out-of-stock-banner" *ngIf="product.totalStock === 0">Hết Hàng</div>
+    
+    <!-- Hover Actions Overlay -->
+    <div class="card-overlay-actions">
+      <!-- Heart Button -->
+      <button nz-button nzShape="circle" class="btn-overlay-wishlist"
+              [class.wishlisted]="wishlistService.isWishlisted(product.id)"
+              (click)="$event.stopPropagation(); toggleWishlist(product)"
+              nz-tooltip [nzTooltipTitle]="wishlistService.isWishlisted(product.id) ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'">
+         <nz-icon [nzType]="'heart'" [nzTheme]="wishlistService.isWishlisted(product.id) ? 'fill' : 'outline'" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Box -->
+  <div class="product-info-box">
+    <h3 class="product-title" [title]="product.name">{{ product.name }}</h3>
+    
+    <div class="product-price-row">
+      <div class="price-display-wrapper">
+        <ng-container *ngIf="product.hasVariants && product.minPrice !== product.maxPrice; else singlePrice">
+          <span class="product-price range-price">
+            {{ product.minPrice | currency: "VND" : "" }} - {{ product.maxPrice | currency: "VND" : "symbol" }}
+          </span>
+        </ng-container>
+        <ng-template #singlePrice>
+          <span class="product-price">{{ product.price | currency: "VND" : "symbol" }}</span>
+        </ng-template>
+      </div>
+      
+      <!-- Cart Button Bottom Right -->
       <button
         nz-button
         nzType="primary"
-        nzBlock
+        nzShape="circle"
+        class="btn-cart-modern"
         nz-tooltip
         nzTooltipTitle="Thêm vào giỏ hàng"
-        (click)="$event.stopPropagation(); addToCart(product)"
-        class="btn-cart"
         [disabled]="product.totalStock === 0"
         [nzLoading]="isAddingToCart"
+        (click)="$event.stopPropagation(); addToCart(product)"
       >
         <nz-icon nzType="shopping-cart" *ngIf="!isAddingToCart" />
       </button>
-
-      <!-- Yêu thích -->
-        <button
-          nz-button
-          [nzType]="
-            wishlistService.isWishlisted(product.id) ? 'primary' : 'default'
-          "
-          [nzDanger]="wishlistService.isWishlisted(product.id)"
-          nz-tooltip
-          [nzLoading]="isTogglingWishlist"
-          [nzTooltipTitle]="
-            wishlistService.isWishlisted(product.id)
-              ? 'Xóa khỏi yêu thích'
-              : 'Thêm vào yêu thích'
-          "
-          (click)="$event.stopPropagation(); toggleWishlist(product)"
-          class="btn-wishlist"
-        >
-          <nz-icon
-            [nzType]="
-              wishlistService.isWishlisted(product.id) ? 'heart' : 'heart'
-            "
-            [nzTheme]="
-              wishlistService.isWishlisted(product.id) ? 'fill' : 'outline'
-            "
-          />
-        </button>
     </div>
   </div>
-</nz-card>
-
-<ng-template #coverTemplate>
-  <div class="product-cover img-wrapper-relative" style="width: 100%;">
-    <img [alt]="product.name" [src]="imageUrl" [class.img-out-of-stock]="product.totalStock === 0" />
-    <div class="out-of-stock-banner" *ngIf="product.totalStock === 0">Hết Hàng</div>
-  </div>
-</ng-template>
-
-<ng-template #priceTemplate>
-  <div class="price-display-wrapper">
-    <ng-container *ngIf="product.hasVariants && product.minPrice !== product.maxPrice; else singlePrice">
-      <span class="product-price range-price">
-        {{ product.minPrice | currency: "VND" : "" }} - {{ product.maxPrice | currency: "VND" : "symbol" }}
-      </span>
-    </ng-container>
-    <ng-template #singlePrice>
-      <span class="product-price">{{
-        product.price | currency: "VND" : "symbol"
-      }}</span>
-    </ng-template>
-  </div>
-</ng-template>
+</div>

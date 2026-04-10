@@ -51,14 +51,14 @@
 }
 
 .page-btn:hover:not([disabled]) {
-  background-color: #f5f5f5 !important;
-  color: #1890ff !important;
+  background-color: #f1f5f9 !important;
+  color: #334155 !important;
 }
 
 .active .page-btn {
-  background-color: #1890ff !important;
+  background-color: #475569 !important; /* Xám Slate chuẩn công nghiệp */
   color: #fff !important;
-  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.35);
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.35); /* Bóng đổ xám */
 }
 
 .dots {
@@ -106,4 +106,24 @@
     width: 100%;
     justify-content: center;
   }
+}
+
+/* === GHI ĐÈ NZ-SELECT (PAGE SIZE) SANG MÀU XÁM === */
+::ng-deep .size-select.ant-select:not(.ant-select-disabled):hover .ant-select-selector,
+::ng-deep .size-select.ant-select-focused .ant-select-selector,
+::ng-deep .size-select.ant-select-open .ant-select-selector,
+::ng-deep .size-select.ant-select-focused:not(.ant-select-disabled) .ant-select-selector {
+  border-color: #475569 !important;
+  box-shadow: 0 0 0 2px rgba(71, 85, 105, 0.2) !important;
+  outline: none !important;
+}
+
+/* List item khi được hover và focus */
+::ng-deep .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: #f1f5f9 !important;
+  color: #334155 !important;
+  font-weight: 600;
+}
+::ng-deep .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background-color: #f8fafc !important;
 }

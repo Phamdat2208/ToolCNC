@@ -14,23 +14,25 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
+import { LoadingComponent } from "../../shared/components/loading/loading.component";
 
 @Component({
   selector: 'app-order-management',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    NzTableModule, 
-    NzTagModule, 
-    NzSpinModule, 
-    NzModalModule, 
-    NzButtonModule, 
-    NzDividerModule, 
-    NzSelectModule, 
+    CommonModule,
+    FormsModule,
+    NzTableModule,
+    NzTagModule,
+    NzSpinModule,
+    NzModalModule,
+    NzButtonModule,
+    NzDividerModule,
+    NzSelectModule,
     NzIconModule,
-    CustomInputComponent
-  ],
+    CustomInputComponent,
+    LoadingComponent
+],
   templateUrl: './order-management.component.html',
   styleUrl: './order-management.component.css'
 })

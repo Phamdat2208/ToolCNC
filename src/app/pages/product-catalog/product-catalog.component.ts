@@ -191,7 +191,7 @@ export class ProductCatalogComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
-      queryParamsHandling: 'merge'
+      // Loại bỏ merge để dọn sạch hoàn toàn các params cũ khi lọc
     });
   }
 

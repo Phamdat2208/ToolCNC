@@ -1,39 +1,82 @@
-<div class="wishlist-container">
-  <h2><nz-icon nzType="heart" nzTheme="fill" class="text-danger" /> Sản phẩm yêu thích</h2>
+<div class="wishlist-page-wrapper">
+  <div class="container-standard">
+    <div class="wishlist-header-row">
+      <h2 class="wishlist-main-title">
+        <nz-icon nzType="heart" nzTheme="fill" class="heart-icon-premium" />
+        Sản phẩm đang quan tâm
+      </h2>
+      <button nz-button nzType="default" class="btn-back-to-shop" routerLink="/products">
+        <nz-icon nzType="arrow-left" /> Tiếp tục xem hàng
+      </button>
+    </div>
 
-  <nz-empty *ngIf="wishlistService.items().length === 0"
-    nzNotFoundContent="Bạn chưa có sản phẩm yêu thích nào"
-  ></nz-empty>
-
-  <div class="wishlist-grid" *ngIf="wishlistService.items().length > 0">
-    <div class="wishlist-item" *ngFor="let product of wishlistService.items()">
-      <a [routerLink]="['/products', product.id]" class="item-image-wrap img-wrapper-relative" style="display: flex; border-radius: 8px;">
-        <img [src]="product.img || product.imageUrl || 'https://placehold.co/200x200?text=No+Image'" [alt]="product.name" [class.img-out-of-stock]="product.totalStock === 0" />
-        <div class="out-of-stock-banner" *ngIf="product.totalStock === 0" style="font-size: 10px; padding: 2px 8px;">Hết Hàng</div>
-      </a>
-      <div class="item-info">
-        <a [routerLink]="['/products', product.id]" class="item-name">{{ product.name }}</a>
-        <p class="item-brand">{{ product?.brand?.name }}</p>
-        <p class="item-price">{{ product.price | currency:'VND':'symbol' }}</p>
+    <!-- Empty State -->
+    <div *ngIf="wishlistService.items().length === 0" class="wishlist-empty-state animate-up">
+      <div class="empty-icon-circle">
+        <nz-icon nzType="heart" nzTheme="outline" />
       </div>
-      <div class="item-actions">
-              <button
-                nz-button
-                nzType="primary"
-                (click)="addToCart(product)"
+      <h2>Danh sách còn trống</h2>
+      <p>Lưu lại những dụng cụ bạn cần để dễ dàng theo dõi giá và đặt hàng sau.</p>
+      <button nz-button nzType="primary" routerLink="/products" class="btn-go-catalog">
+        KHÁM PHÁ SẢN PHẨM <nz-icon nzType="search" />
+      </button>
+    </div>
+
+    <!-- Premium Wishlist Row-based List -->
+    <div class="premium-wishlist-list" *ngIf="wishlistService.items().length > 0">
+      <div 
+        class="wishlist-premium-row animate-up" 
+        *ngFor="let product of wishlistService.items()"
+        [style.animation-delay]="'0.' + product.id + 's'"
+      >
+        <div class="row-inner">
+          <a [routerLink]="['/products', product.id]" class="product-visual">
+            <img 
+              [src]="product.img || product.imageUrl || 'https://placehold.co/300x300?text=ToolCNC'" 
+              [alt]="product.name" 
+              [class.img-dimmed]="product.totalStock === 0"
+            />
+            <div class="stock-badge-overlay" *ngIf="product.totalStock === 0">Hết hàng</div>
+          </a>
+
+          <div class="product-info-segment">
+            <div class="brand-tag">{{ product?.brand?.name || 'Chính hãng' }}</div>
+            <a [routerLink]="['/products', product.id]" class="product-name-link">{{ product.name }}</a>
+            <div class="product-code" *ngIf="product.code">Mã SP: <strong>{{ product.code }}</strong></div>
+          </div>
+
+          <div class="product-action-segment">
+            <div class="price-box">
+              <span class="currency">đ</span>
+              <span class="value">{{ product.price | number:'1.0-0' }}</span>
+            </div>
+            
+            <div class="action-buttons">
+              <button 
+                nz-button 
+                class="btn-quick-add-cart"
                 [nzLoading]="isAddingToCart[product.id]"
+                (click)="addToCart(product)"
               >
-                <nz-icon nzType="shopping-cart" /> Thêm vào giỏ
+                <nz-icon nzType="shopping-cart" /> 
+                <span class="btn-text">Thêm vào giỏ</span>
               </button>
-              <button
-                nz-button
-                nzType="default"
-                nzDanger
-                (click)="removeFromWishlist(product.id)"
+              
+              <button 
+                nz-button 
+                nzType="text" 
+                nzDanger 
+                class="btn-remove-wishlist"
                 [nzLoading]="isRemoving[product.id]"
+                (click)="removeFromWishlist(product.id)"
+                nz-tooltip
+                nzTooltipTitle="Xóa khỏi danh sách"
               >
-                <nz-icon nzType="delete" /> Xóa
+                <nz-icon nzType="delete" />
               </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

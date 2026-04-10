@@ -1,7 +1,15 @@
-<div class="catalog-container">
-  <app-page-breadcrumb [items]="breadcrumbItems"></app-page-breadcrumb>
+<div class="catalog-page-wrapper">
+  <!-- Hero Banner Dạng Ngầu -->
+  <div class="catalog-hero-banner">
+    <div class="catalog-hero-content">
+      <app-page-breadcrumb [items]="breadcrumbItems"></app-page-breadcrumb>
+      <h1 class="hero-title">Sản Phẩm Dao Cụ & Trang Thiết Bị</h1>
+      <p class="hero-subtitle">Mang đến sức mạnh và độ chính xác tuyệt đối cho hệ thống máy gia công CNC của bạn.</p>
+    </div>
+  </div>
 
-  <div nz-row nzGutter="24">
+  <div class="catalog-container">
+    <div nz-row nzGutter="40">
     <!-- Sidebar / Filters -->
     <div nz-col nzXs="24" nzMd="6" class="filters-sidebar">
       <div class="filter-group">
@@ -90,10 +98,11 @@
         </div>
       </div>
 
-      <button nz-button nzType="primary" nzBlock (click)="applyFilters()">
+      <button nz-button nzType="primary" nzBlock (click)="applyFilters()" class="btn-apply-filters">
         Lọc kết quả
       </button>
-      <button nz-button nzBlock (click)="clearFilters()" class="mt-8">
+      <button nz-button nzBlock (click)="clearFilters()" class="mt-8 btn-clear-filters">
+        <nz-icon nzType="reload" />
         Xóa bộ lọc
       </button>
     </div>
@@ -104,7 +113,7 @@
         <h2>
           <ng-container *ngIf="searchKeyword"
             >Kết quả cho "<em>{{ searchKeyword }}</em
-            >"</ng-container
+          >"</ng-container
           >
           <ng-container *ngIf="!searchKeyword">Tất cả sản phẩm</ng-container>
         </h2>
@@ -172,4 +181,5 @@
       </app-loading>
     </div>
   </div>
+</div>
 </div>

@@ -4,75 +4,142 @@
   align-items: center;
   min-height: 100vh;
   width: 100%;
-  background: #f0f2f5;
+  background-color: #f8fafc;
   padding: 40px 20px;
   position: relative;
 }
 
+/* Nút quay lại tròn, nổi bật */
 .back-button {
   position: absolute;
-  top: 8px;
-  left: 16px;
-  width: 40px;
-  height: 40px;
+  top: 24px;
+  left: 24px;
+  width: 44px;
+  height: 44px;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  z-index: 10;
 }
 
+.back-button:hover {
+  transform: translateX(-4px);
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.15);
+}
+
+/* Khối đăng ký chính (Độ rộng lớn hơn một chút để cân đối) */
 .register-box {
   width: 100%;
-  max-width: 400px;
-  background: #fff;
-  padding: 32px 32px 24px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 500px;
+  background: #ffffff;
+  padding: 40px 40px 32px;
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
+/* Dải trang trí trên cùng */
+.register-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #f59e0b 0%, #ea580c 100%);
+}
+
+.register-box:hover {
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+}
+
+/* Branding trong Form */
+.brand-logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.auth-logo {
+  height: 42px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.brand-text {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+/* Header Text */
 .register-header {
   text-align: center;
   margin-bottom: 24px;
 }
 
 .register-header h2 {
-  margin-bottom: 8px;
-  color: #52c41a; /* Using green color to differentiate from login */
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 4px;
 }
 
 .register-header p {
-  color: #8c8c8c;
-  margin-bottom: 0;
+  color: #64748b;
+  font-size: 14px;
 }
 
+/* Form Styling */
 .register-form {
-  max-width: 300px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .register-form-margin {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
+/* Nút tạo tài khoản Gradient */
 .register-form-button {
   width: 100%;
-  height: 40px;
+  height: 50px;
   font-size: 16px;
-  border-radius: 4px;
-  margin-top: 8px;
+  font-weight: 700;
+  border-radius: 12px;
+  margin-top: 12px;
+  background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%) !important;
+  border: none !important;
+  color: white !important;
+  box-shadow: 0 8px 20px rgba(234, 88, 12, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
+.register-form-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(234, 88, 12, 0.4);
+  filter: brightness(1.05);
+}
+
+/* Footer link */
 .register-footer {
   text-align: center;
-  margin-top: 16px;
-  color: #595959;
+  margin-top: 24px;
+  color: #64748b;
+  font-size: 14px;
 }
 
-.password-toggle {
-  cursor: pointer;
-  color: #bfbfbf;
-}
-.password-toggle:hover {
-  color: #1890ff;
+.register-footer a {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: underline;
 }
