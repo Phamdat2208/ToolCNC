@@ -1,142 +1,138 @@
 <div class="header-container" [class.floating-header]="isScrolled">
+  <!-- Logo -->
   <div class="logo">
-    <a routerLink="/"
-      >
+    <a routerLink="/">
       <img src="Logo.ico" alt="Logo" class="logo-img" />
-      <span
-        class="text-primary font-bold"
-        style="font-size: var(--font-size-title)"
-        >Tool</span
-      ><span
-        class="text-danger font-bold"
-        style="font-size: var(--font-size-title)"
-        >CNC</span
-      ></a
-    >
+      <div class="logo-text">
+        <span class="logo-tool">Tool</span><span class="logo-cnc">CNC</span>
+      </div>
+    </a>
   </div>
+
+  <!-- Nav Menu (Desktop) -->
+  <nav class="nav-menu">
+    <a class="nav-link" routerLink="/" routerLinkActive="nav-link-active" [routerLinkActiveOptions]="{exact: true}">
+      Trang chủ
+    </a>
+    <a class="nav-link" routerLink="/products" routerLinkActive="nav-link-active">
+      Sản phẩm
+    </a>
+    <a class="nav-link" routerLink="/support" routerLinkActive="nav-link-active">
+      Hỗ trợ
+    </a>
+  </nav>
+
+  <!-- Search Bar -->
   <div class="search-bar">
     <div class="search-wrapper">
-      <nz-input-group [nzSuffix]="suffixIconSearch">
+      <div class="search-input-container">
+        <span class="search-icon-left">
+          <nz-icon nzType="search" *ngIf="!isSearching" />
+          <nz-spin *ngIf="isSearching" nzSimple [nzSize]="'small'"></nz-spin>
+        </span>
         <input
+          class="search-input"
           type="text"
-          nz-input
-          placeholder="Tìm kiếm sản phẩm..."
+          placeholder="Tìm dao phay, chip tiện, mũi khoan..."
           [(ngModel)]="searchKeyword"
           (input)="onSearchInput()"
           (keyup.enter)="onSearchEnter()"
           (focus)="showDropdown = searchResults.length > 0 || isSearching"
           autocomplete="off"
         />
-      </nz-input-group>
-      <ng-template #suffixIconSearch>
-        <nz-icon
-          *ngIf="!isSearching"
-          nzType="search"
-          (click)="onSearchEnter()"
-          style="cursor: pointer"
-        />
-        <nz-spin *ngIf="isSearching" nzSimple [nzSize]="'small'"></nz-spin>
-      </ng-template>
+      </div>
 
-      <!-- Dropdown kết quả tìm kiếm -->
+      <!-- Search Dropdown -->
       <div class="search-dropdown" *ngIf="showDropdown">
-        <div *ngIf="isSearching" class="search-loading">Đang tìm kiếm...</div>
+        <div *ngIf="isSearching" class="search-loading">
+          <nz-icon nzType="loading" nzSpin /> Đang tìm kiếm...
+        </div>
         <ng-container *ngIf="!isSearching">
           <div
             *ngFor="let product of searchResults"
             class="search-item"
             (click)="goToProduct(product)"
           >
-            <img
-              [src]="product.img"
-              [alt]="product.name"
-              class="search-item-img"
-            />
+            <img [src]="product.img" [alt]="product.name" class="search-item-img" />
             <div class="search-item-info">
-              <div class="search-item-name" [title]="product.name">
-                {{ product.name }}
-              </div>
-              <div class="search-item-price">
-                {{ product.price | currency: "VND" : "symbol" }}
-              </div>
+              <div class="search-item-name" [title]="product.name">{{ product.name }}</div>
+              <div class="search-item-price">{{ product.price | currency: "VND" : "symbol" }}</div>
             </div>
+            <nz-icon nzType="arrow-right" class="search-item-arrow" />
           </div>
-          <div
-            *ngIf="searchResults.length === 0 && searchKeyword.trim()"
-            class="search-empty"
-          >
-            Không tìm thấy sản phẩm nào
+          <div *ngIf="searchResults.length === 0 && searchKeyword.trim()" class="search-empty">
+            <nz-icon nzType="inbox" style="font-size: 24px; opacity: 0.4" />
+            <span>Không tìm thấy sản phẩm phù hợp</span>
           </div>
-          <div
-            *ngIf="searchResults.length > 0"
-            class="search-view-all"
-            (click)="onSearchEnter()"
-          >
-            Xem tất cả kết quả cho "<strong>{{ searchKeyword }}</strong
-            >"
+          <div *ngIf="searchResults.length > 0" class="search-view-all" (click)="onSearchEnter()">
+            Xem tất cả kết quả cho "<strong>{{ searchKeyword }}</strong>"
+            <nz-icon nzType="arrow-right" />
           </div>
         </ng-container>
       </div>
     </div>
   </div>
-  <div class="nav-menu">
-    <ul
-      nz-menu
-      nzMode="horizontal"
-      class="no-border nav-list"
-    >
-      <li nz-menu-item routerLink="/" routerLinkActive="ant-menu-item-selected" [routerLinkActiveOptions]="{exact: true}">Trang chủ</li>
-      <li nz-menu-item routerLink="/products" routerLinkActive="ant-menu-item-selected">Sản phẩm</li>
-      <li nz-menu-item routerLink="/support" routerLinkActive="ant-menu-item-selected">Hỗ trợ</li>
-    </ul>
-  </div>
+
+  <!-- Header Actions -->
   <div class="header-actions">
-    <button nz-button nzType="text" class="cart-btn" (click)="goToCart()">
-      <nz-badge [nzCount]="cartCount">
-        <nz-icon nzType="shopping-cart" style="font-size: 20px" />
-      </nz-badge>
+    <!-- Wishlist Button -->
+    <button class="action-pill wishlist-pill" (click)="gotoWishList()" title="Yêu thích">
+      <nz-icon nzType="heart" class="pill-icon" />
+      <span class="pill-count" *ngIf="wishlistCount > 0">{{ wishlistCount > 99 ? '99+' : wishlistCount }}</span>
     </button>
 
-    <button nz-button nzType="text" class="cart-btn" (click)="gotoWishList()">
-      <nz-badge [nzCount]="wishlistCount">
-        <nz-icon nzType="heart" style="font-size: 20px" />
-      </nz-badge>
+    <!-- Cart Button -->
+    <button class="action-pill cart-pill" (click)="goToCart()" title="Giỏ hàng">
+      <nz-icon nzType="shopping-cart" class="pill-icon" />
+      <span class="pill-count cart-count" *ngIf="cartCount > 0">{{ cartCount > 99 ? '99+' : cartCount }}</span>
     </button>
 
-    <ng-container
-      *ngIf="authService.currentUser$ | async as user; else loginBtn"
-    >
+    <!-- User Dropdown when logged in -->
+    <ng-container *ngIf="authService.currentUser$ | async as user; else loginBtn">
       <a
         nz-dropdown
         [nzDropdownMenu]="userMenu"
         nzPlacement="bottomRight"
-        class="user-dropdown"
+        class="user-avatar-btn"
       >
-        <nz-icon nzType="user" /> {{ user.username }} <nz-icon nzType="down" />
+        <div class="user-avatar-circle">{{ user.username.charAt(0).toUpperCase() }}</div>
+        <span class="user-name-text">{{ user.username }}</span>
+        <nz-icon nzType="caret-down" class="user-caret" />
       </a>
       <nz-dropdown-menu #userMenu="nzDropdownMenu">
-        <ul nz-menu>
-          <li nz-menu-item *ngIf="authService.isAdmin()" routerLink="/admin" class="admin-menu-item">
-            <nz-icon nzType="dashboard" class="text-primary" /> 
-            <span class="text-primary font-bold">Trang quản trị</span>
-          </li>
-          <li nz-menu-divider *ngIf="authService.isAdmin()"></li>
-          <li nz-menu-item routerLink="/profile">
-            <nz-icon nzType="profile" /> Hồ sơ cá nhân
-          </li>
-          <li nz-menu-item routerLink="/orders">
-            <nz-icon nzType="history" /> Đơn hàng của tôi
-          </li>
-          <li nz-menu-divider></li>
-          <li nz-menu-item (click)="logout()" nzDanger>
-            <nz-icon nzType="logout" /> Đăng xuất
-          </li>
-        </ul>
+        <div class="dark-dropdown-menu">
+          <div class="dropdown-user-header">
+            <div class="dropdown-avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+            <div>
+              <div class="dropdown-username">{{ user.username }}</div>
+              <div class="dropdown-role" *ngIf="authService.isAdmin()">Quản trị viên</div>
+              <div class="dropdown-role" *ngIf="!authService.isAdmin()">Khách hàng</div>
+            </div>
+          </div>
+          <div class="dropdown-divider"></div>
+          <ul nz-menu class="dropdown-nav-list">
+            <li nz-menu-item *ngIf="authService.isAdmin()" routerLink="/admin" class="dropdown-nav-item admin-item">
+              <nz-icon nzType="dashboard" /> Trang quản trị
+            </li>
+            <li nz-menu-divider *ngIf="authService.isAdmin()"></li>
+            <li nz-menu-item routerLink="/profile" class="dropdown-nav-item">
+              <nz-icon nzType="user" /> Hồ sơ cá nhân
+            </li>
+            <li nz-menu-item routerLink="/orders" class="dropdown-nav-item">
+              <nz-icon nzType="history" /> Đơn hàng của tôi
+            </li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item (click)="logout()" class="dropdown-nav-item danger-item">
+              <nz-icon nzType="logout" /> Đăng xuất
+            </li>
+          </ul>
+        </div>
       </nz-dropdown-menu>
     </ng-container>
 
+    <!-- Login Button when not logged in -->
     <ng-template #loginBtn>
-      <button nz-button nzType="default" nzShape="round" routerLink="/login" class="login-btn-custom">
+      <button class="login-btn" routerLink="/login">
         <nz-icon nzType="user" />
         Đăng nhập
       </button>
@@ -144,13 +140,8 @@
   </div>
 
   <!-- Mobile Menu Button -->
-  <button
-    nz-button
-    nzType="text"
-    class="mobile-menu-btn"
-    (click)="openDrawer()"
-  >
-    <nz-icon nzType="menu" style="font-size: 20px" />
+  <button nz-button nzType="text" class="mobile-menu-btn" (click)="openDrawer()">
+    <nz-icon nzType="menu-fold" />
   </button>
 </div>
 
@@ -158,17 +149,58 @@
 <nz-drawer
   [nzVisible]="isDrawerVisible"
   nzPlacement="left"
-  nzTitle="Menu"
+  [nzWidth]="280"
   (nzOnClose)="closeDrawer()"
+  [nzClosable]="true"
 >
   <ng-container *nzDrawerContent>
-    <ul nz-menu nzMode="inline" class="mobile-nav-list">
-      <li nz-menu-item routerLink="/" (click)="closeDrawer()">Trang chủ</li>
-      <li nz-menu-item routerLink="/products" (click)="closeDrawer()">
-        Sản phẩm
-      </li>
-      <li nz-menu-item (click)="closeDrawer()">Khuyến mãi</li>
-      <li nz-menu-item routerLink="/support" (click)="closeDrawer()" routerLinkActive="ant-menu-item-selected">Hỗ trợ</li>
-    </ul>
+    <div class="mobile-drawer-content">
+      <div class="mobile-drawer-logo">
+        <span class="logo-tool">Tool</span><span class="logo-cnc">CNC</span>
+      </div>
+      <div class="mobile-search">
+        <div class="search-input-container">
+          <span class="search-icon-left"><nz-icon nzType="search" /></span>
+          <input
+            class="search-input"
+            type="text"
+            placeholder="Tìm kiếm..."
+            [(ngModel)]="searchKeyword"
+            (keyup.enter)="onSearchEnter(); closeDrawer()"
+          />
+        </div>
+      </div>
+      <nav class="mobile-nav">
+        <a class="mobile-nav-link" routerLink="/" (click)="closeDrawer()">
+          <nz-icon nzType="home" /> Trang chủ
+        </a>
+        <a class="mobile-nav-link" routerLink="/products" (click)="closeDrawer()">
+          <nz-icon nzType="appstore" /> Sản phẩm
+        </a>
+        <a class="mobile-nav-link" routerLink="/support" (click)="closeDrawer()">
+          <nz-icon nzType="customer-service" /> Hỗ trợ
+        </a>
+      </nav>
+      <div class="mobile-divider"></div>
+      <ng-container *ngIf="authService.currentUser$ | async as user; else mobileLoginBtn">
+        <a class="mobile-nav-link" routerLink="/profile" (click)="closeDrawer()">
+          <nz-icon nzType="user" /> Hồ sơ cá nhân
+        </a>
+        <a class="mobile-nav-link" routerLink="/orders" (click)="closeDrawer()">
+          <nz-icon nzType="history" /> Đơn hàng của tôi
+        </a>
+        <a *ngIf="authService.isAdmin()" class="mobile-nav-link admin-mobile" routerLink="/admin" (click)="closeDrawer()">
+          <nz-icon nzType="dashboard" /> Trang quản trị
+        </a>
+        <button class="mobile-logout-btn" (click)="logout(); closeDrawer()">
+          <nz-icon nzType="logout" /> Đăng xuất
+        </button>
+      </ng-container>
+      <ng-template #mobileLoginBtn>
+        <button class="mobile-login-btn" routerLink="/login" (click)="closeDrawer()">
+          <nz-icon nzType="user" /> Đăng nhập
+        </button>
+      </ng-template>
+    </div>
   </ng-container>
 </nz-drawer>

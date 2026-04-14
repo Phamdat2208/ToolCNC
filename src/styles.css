@@ -360,21 +360,6 @@ body {
   animation: pulseGlow 1.5s infinite;
 }
 
-/* Floating Header Utility */
-.floating-header {
-  top: 10px !important;
-  width: calc(100% - 40px) !important;
-  max-width: 1400px;
-  left: 20px !important;
-  right: 20px !important;
-  transform: none !important;
-  border-radius: 12px !important;
-  background: var(--bg-white) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12) !important;
-  border: 1px solid rgba(0, 0, 0, 0.05) !important;
-  padding: 8px var(--space-lg);
-}
-
 
 
 /* Back to Top & Speed Dial Global Styling - Perfectly Aligned */
