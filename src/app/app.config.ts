@@ -1,7 +1,8 @@
 import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { maskingInterceptor } from './shared/interceptors/masking.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideNzI18n, vi_VN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
@@ -174,7 +175,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([maskingInterceptor])),
     provideAnimationsAsync(),
     provideNzI18n(vi_VN),
     provideNzIcons(icons),
