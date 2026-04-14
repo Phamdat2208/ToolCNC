@@ -15,6 +15,7 @@ import { CartService } from '../../../services/cart.service';
 import { UrlUtils } from '../../utils/url-utils';
 import { QuantityInputComponent } from '../quantity-input/quantity-input.component';
 import { FormsModule } from '@angular/forms';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'app-quick-select-modal',
@@ -27,7 +28,8 @@ import { FormsModule } from '@angular/forms';
     NzIconModule, 
     NzSpinModule,
     NzCheckboxModule,
-    NzInputNumberModule
+    NzInputNumberModule,
+    LoadingComponent
   ],
   templateUrl: './quick-select-modal.component.html',
   styleUrl: './quick-select-modal.component.css'

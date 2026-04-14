@@ -13,24 +13,26 @@ import { OrderService } from '../../../services/order.service';
 import { FormsModule } from '@angular/forms';
 import { CustomInputComponent } from '../../../shared/components/custom-input/custom-input.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { LoadingComponent } from "../../../shared/components/loading/loading.component";
 
 @Component({
   selector: 'app-admin-orders',
   standalone: true,
   imports: [
-    CommonModule, 
-    NzTableModule, 
-    NzTagModule, 
-    NzButtonModule, 
-    NzSelectModule, 
+    CommonModule,
+    NzTableModule,
+    NzTagModule,
+    NzButtonModule,
+    NzSelectModule,
     FormsModule,
     NzToolTipModule,
     NzModalModule,
     NzDividerModule,
     NzIconModule,
     CustomInputComponent,
-    PaginationComponent
-  ],
+    PaginationComponent,
+    LoadingComponent
+],
   templateUrl: './admin-orders.component.html',
   styleUrl: './admin-orders.component.css'
 })
@@ -71,12 +73,12 @@ export class AdminOrdersComponent implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    switch (status) {
-      case 'PENDING': return 'warning';
-      case 'SHIPPING': return 'processing';
-      case 'COMPLETED': return 'success';
-      case 'CANCELLED': return 'error';
-      default: return 'default';
+    switch (status?.toUpperCase()) {
+      case 'PENDING': return '#f59e0b';   // Amber 500
+      case 'SHIPPING': return '#0ea5e9';  // Cyan 500
+      case 'COMPLETED': return '#10b981'; // Emerald 500
+      case 'CANCELLED': return '#ef4444'; // Red 500
+      default: return '#94a3b8';          // Slate 400
     }
   }
 
@@ -132,7 +134,6 @@ export class AdminOrdersComponent implements OnInit {
   }
 
   viewOrderDetails(order: any) {
-    console.log(order);
     this.selectedOrder = order;
     this.isVisibleOrderModal = true;
   }

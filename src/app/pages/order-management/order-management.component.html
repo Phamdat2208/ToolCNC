@@ -1,52 +1,124 @@
-<div class="orders-container">
-  <h2>
-    <nz-icon nzType="history" />
-    Đơn hàng của tôi
-  </h2>
+<div class="orders-page">
 
-  <div class="orders-content" *ngIf="!isLoadingOrders; else loadingTemplate">
-    <nz-table #orderTable [nzData]="orders" [nzPageSize]="10" class="text-center-table" [nzScroll]="{ x: '1000px' }">
-      <thead>
-        <tr>
-          <th>Mã Đơn Hàng</th>
-          <th>Ngày Đặt</th>
-          <th>Tổng Tiền</th>
-          <th>Số Lượng</th>
-          <th>Trạng Thái</th>
-          <th>Thao Tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let order of orderTable.data">
-          <td><strong>{{ order.trackingNumber }}</strong></td>
-          <td>{{ order.dateCreated | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>{{ order.totalPrice | currency:'VND':'symbol' }}</td>
-          <td>{{ order.totalQuantity }}</td>
-          <td>
-            <nz-tag [nzColor]="getStatusColor(order.status)">{{ getStatusLabel(order.status) }}</nz-tag>
-          </td>
-          <td>
-            <button nz-button nzType="link" (click)="viewOrderDetails(order)">Xem chi tiết</button>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
-    <div *ngIf="orders.length === 0" class="empty-orders">
-      <nz-icon nzType="inbox" nzTheme="outline" style="font-size: 40px; color: var(--text-secondary);" />
-      <p>Hệ thống chưa có đơn hàng nào.</p>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-icon">
+        <nz-icon nzType="history" />
+      </div>
+      <div>
+        <h1 class="page-title">Đơn hàng của tôi</h1>
+        <p class="page-subtitle">Theo dõi và quản lý lịch sử mua hàng</p>
+      </div>
     </div>
+    <a routerLink="/products" class="btn-shop-more">
+      <nz-icon nzType="shopping" /> Mua thêm
+    </a>
   </div>
 
-  <ng-template #loadingTemplate>
-    <div class="loading-state">
-      <nz-spin nzSimple nzSize="large"></nz-spin>
-    </div>
-  </ng-template>
+  <!-- Content -->
+  <div class="orders-card">
+    <app-loading [isLoading]="isLoadingOrders">
 
-  <!-- Modal Chi tiết Đơn hàng -->
+      <!-- Empty State -->
+      <div *ngIf="orders.length === 0 && !isLoadingOrders" class="empty-state">
+        <div class="empty-icon">
+          <nz-icon nzType="inbox" />
+        </div>
+        <h3>Chưa có đơn hàng nào</h3>
+        <p>Bạn chưa thực hiện đơn hàng nào. Hãy khám phá sản phẩm ngay!</p>
+        <a routerLink="/products" class="btn-explore">
+          <nz-icon nzType="appstore" /> Khám phá sản phẩm
+        </a>
+      </div>
+
+      <!-- Orders Table -->
+      <ng-container *ngIf="orders.length > 0">
+        <!-- Desktop Table -->
+        <div class="table-wrapper">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Mã đơn hàng</th>
+                <th>Ngày đặt</th>
+                <th>Tổng tiền</th>
+                <th>Số lượng</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of orders" class="order-row">
+                <td>
+                  <span class="tracking-number">{{ order.trackingNumber }}</span>
+                </td>
+                <td class="date-cell">
+                  <nz-icon nzType="calendar" />
+                  {{ order.dateCreated | date:'dd/MM/yyyy' }}
+                  <span class="time-sub">{{ order.dateCreated | date:'HH:mm' }}</span>
+                </td>
+                <td class="price-cell">{{ order.totalPrice | currency:'VND':'symbol' }}</td>
+                <td class="qty-cell">
+                  <span class="qty-badge">{{ order.totalQuantity }}</span>
+                </td>
+                <td>
+                  <span class="status-pill" [ngClass]="'status-' + order.status.toLowerCase()">
+                    {{ getStatusLabel(order.status) }}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn-detail" (click)="viewOrderDetails(order)">
+                    <nz-icon nzType="eye" /> Xem chi tiết
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="order-cards-mobile">
+          <div *ngFor="let order of orders" class="order-card-mobile" (click)="viewOrderDetails(order)">
+            <div class="ocm-header">
+              <span class="tracking-number">#{{ order.trackingNumber }}</span>
+              <span class="status-pill" [ngClass]="'status-' + order.status.toLowerCase()">
+                {{ getStatusLabel(order.status) }}
+              </span>
+            </div>
+            <div class="ocm-body">
+              <div class="ocm-row">
+                <span class="ocm-label">Ngày đặt</span>
+                <span>{{ order.dateCreated | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+              <div class="ocm-row">
+                <span class="ocm-label">Tổng tiền</span>
+                <span class="price-cell">{{ order.totalPrice | currency:'VND':'symbol' }}</span>
+              </div>
+              <div class="ocm-row">
+                <span class="ocm-label">Số lượng</span>
+                <span class="qty-badge">{{ order.totalQuantity }}</span>
+              </div>
+            </div>
+            <div class="ocm-footer">
+              <span class="ocm-cta">Xem chi tiết <nz-icon nzType="arrow-right" /></span>
+            </div>
+          </div>
+        </div>
+
+      </ng-container>
+    </app-loading>
+
+    <!-- <ng-template #loadingTpl>
+      <app-loading></app-loading>
+    </ng-template> -->
+  </div>
+
+  <!-- ===== MODALS ===== -->
+
+  <!-- Modal: Chi tiết đơn hàng -->
   <nz-modal
     [(nzVisible)]="isVisibleOrderModal"
-    [nzTitle]="'Chi tiết mã đơn hàng: ' + selectedOrder?.trackingNumber"
+    [nzTitle]="'Chi tiết đơn hàng ' + selectedOrder?.trackingNumber"
     (nzOnCancel)="closeOrderModal()"
     [nzFooter]="modalFooter"
     nzWidth="700px"
@@ -54,10 +126,12 @@
     <ng-container *nzModalContent>
       <div *ngIf="selectedOrder">
         <div class="modal-header-custom mb-16">
-          <h3>Thông tin đơn hàng <span class="text-primary">#{{ selectedOrder.trackingNumber }}</span></h3>
+          <h3>Thông tin đơn hàng <span class="text-primary">{{ selectedOrder.trackingNumber }}</span></h3>
           <div class="flex-between align-center">
             <span class="text-secondary"><nz-icon nzType="calendar" /> {{ selectedOrder.dateCreated | date:'dd/MM/yyyy HH:mm' }}</span>
-            <nz-tag [nzColor]="getStatusColor(selectedOrder.status)" style="border-radius: 12px; padding: 2px 12px;">{{ getStatusLabel(selectedOrder.status) }}</nz-tag>
+            <span class="status-pill" [ngClass]="'status-' + selectedOrder.status.toLowerCase()">
+              {{ getStatusLabel(selectedOrder.status) }}
+            </span>
           </div>
         </div>
 
@@ -65,23 +139,21 @@
           <strong class="text-danger"><nz-icon nzType="info-circle" /> Lý do hủy:</strong>
           <span style="margin-left: 8px;">{{ selectedOrder.cancelReason }}</span>
         </div>
-        
-        <nz-divider nzText="Danh sách sản phẩm" nzOrientation="left" class="divider-custom"></nz-divider>
+
+        <nz-divider nzText="Danh sách sản phẩm" nzOrientation="left"></nz-divider>
 
         <div class="product-list-wrapper">
           <div *ngFor="let item of selectedOrder.items" class="product-item">
-            <img [src]="item.imageUrl || 'https://placehold.co/80x80?text=No+Image'" alt="product image" class="product-img" />
+            <img [src]="item.imageUrl || 'https://placehold.co/80x80?text=?'" alt="product image" class="product-img" />
             <div class="flex-1">
               <h4 style="margin: 0; font-size: 15px; font-weight: 600;">{{ item.productName }}</h4>
-              <div class="d-flex align-items-center flex-wrap mt-4" style="gap: 8px 12px;">
-                <nz-tag *ngIf="item.sku" [nzColor]="'blue'" style="font-size: 11px; margin: 0; line-height: 20px;">{{ item.sku }}</nz-tag>
-                <span *ngIf="item.variantName" class="text-secondary" style="font-size: 12px;">
-                  P.loại: <strong>{{ item.variantName }}</strong>
-                </span>
+              <div style="display:flex; gap:8px; margin-top:4px; flex-wrap:wrap;">
+                <nz-tag *ngIf="item.sku" [nzColor]="'blue'" style="font-size: 11px; margin: 0;">{{ item.sku }}</nz-tag>
+                <span *ngIf="item.variantName" class="text-secondary" style="font-size: 12px;">P.loại: <strong>{{ item.variantName }}</strong></span>
               </div>
-              <p class="mt-4 text-secondary text-sm" style="margin: 0;">Đơn giá: {{ item.unitPrice | currency:'VND':'symbol':'1.0-0' }} x {{ item.quantity }}</p>
+              <p class="text-secondary text-sm" style="margin: 4px 0 0;">Đơn giá: {{ item.unitPrice | currency:'VND':'symbol':'1.0-0' }} × {{ item.quantity }}</p>
             </div>
-            <div class="text-lg" style="color: #333; font-weight: 600;">
+            <div style="font-weight: 700; color: #0ea5e9; white-space: nowrap;">
               {{ item.unitPrice * item.quantity | currency:'VND':'symbol':'1.0-0' }}
             </div>
           </div>
@@ -94,13 +166,13 @@
       </div>
     </ng-container>
     <ng-template #modalFooter>
-      <div class="flex-between">
-        <div style="text-align: left;">
-          <button 
+      <div class="flex-between button-order-action">
+        <div>
+          <button
              *ngIf="selectedOrder?.status === 'PENDING'"
-             nz-button nzType="default" nzDanger 
+             nz-button nzType="default" nzDanger
              (click)="openCancelModal()">
-            <nz-icon nzType="close-circle" /> Hủy đặt đơn hàng
+            <nz-icon nzType="close-circle" /> Hủy đơn hàng
           </button>
         </div>
         <button nz-button nzType="primary" (click)="closeOrderModal()">Đóng</button>
@@ -108,7 +180,7 @@
     </ng-template>
   </nz-modal>
 
-  <!-- Modal Nhập lý do Hủy đơn -->
+  <!-- Modal: Hủy đơn -->
   <nz-modal
     [(nzVisible)]="isVisibleCancelModal"
     nzTitle="Xác nhận Hủy Đơn Hàng"
@@ -121,16 +193,17 @@
   >
     <ng-container *nzModalContent>
       <div class="text-center mb-24">
-        <nz-icon nzType="warning" nzTheme="fill" class="text-warning" style="font-size: 48px; color: #faad14;" />
+        <nz-icon nzType="warning" nzTheme="fill" style="font-size: 52px; color: #f59e0b;" />
       </div>
       <p class="cancel-modal-desc text-center mb-24">
-        Bạn có chắc chắn muốn hủy đơn hàng <strong class="text-primary">#{{ selectedOrder?.trackingNumber }}</strong> không?<br>
-        Dữ liệu kho sẽ tự động được hoàn trả, và không thể hoàn tác.
+        Bạn có chắc chắn muốn hủy đơn hàng <strong class="text-primary">#{{ selectedOrder?.trackingNumber }}</strong>?<br>
+        Dữ liệu kho sẽ tự động được hoàn trả và không thể hoàn tác.
       </p>
-      <div class="p-16" style="background: #f9f9f9; border-radius: 8px; border: 1px solid #f0f0f0;">
+      <div style="background: #f8fafc; border-radius: 12px; padding: 16px; border: 1px solid #f1f5f9;">
         <label class="cancel-reason-label">Lý do hủy đơn <span class="text-danger">*</span></label>
         <app-custom-input [type]="'textarea'" [placeholder]="'Ví dụ: Thay đổi ý định, Nhầm địa chỉ...'" [(ngModel)]="cancelReasonText" [rows]="4"></app-custom-input>
       </div>
     </ng-container>
   </nz-modal>
+
 </div>

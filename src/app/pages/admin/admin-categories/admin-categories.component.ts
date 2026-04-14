@@ -12,6 +12,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { CategoryService } from '../../../services/category.service';
 import { Category } from '../../../models/category.model';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-admin-categories',
@@ -27,7 +28,8 @@ import { Category } from '../../../models/category.model';
     NzModalModule,
     NzToolTipModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LoadingComponent
   ],
   templateUrl: './admin-categories.component.html',
   styleUrl: './admin-categories.component.css'
@@ -62,6 +64,7 @@ export class AdminCategoriesComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (res) => {
         this.categories = res;
+        this.calculateTotalProductCount(this.categories);
         this.processCategories();
         this.loading = false;
       },
@@ -70,6 +73,19 @@ export class AdminCategoriesComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  calculateTotalProductCount(list: Category[]): number {
+    let listTotal = 0;
+    list.forEach(cat => {
+      let currentTotal = cat.productCount || 0;
+      if (cat.children && cat.children.length > 0) {
+        currentTotal += this.calculateTotalProductCount(cat.children);
+      }
+      cat.totalProductCount = currentTotal;
+      listTotal += currentTotal;
+    });
+    return listTotal;
   }
 
   processCategories() {

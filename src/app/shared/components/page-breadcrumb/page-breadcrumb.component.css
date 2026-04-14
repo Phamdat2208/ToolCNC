@@ -1,3 +1,90 @@
-.app-breadcrumb {
+/* ===================================================
+   BREADCRUMB COMPONENT — Minimalist Dark Theme
+   Matching the requested visual style
+   =================================================== */
+
+.breadcrumb-nav {
+  display: block;
+  width: 100%;
   margin-bottom: 24px;
+}
+
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: transparent; /* No container background */
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Home icon ── */
+.home-icon {
+  display: inline-flex;
+  align-items: center;
+  color: #64748b; /* Slate-500 */
+  transition: color 0.2s ease;
+  margin-right: 8px;
+}
+
+.home-icon:hover {
+  color: #3b82f6; /* Blue-500 */
+}
+
+/* ── Separator chevron ── */
+.breadcrumb-separator {
+  display: inline-flex;
+  align-items: center;
+  color: #475569; /* Slate-600 */
+  margin: 0 12px;
+  flex-shrink: 0;
+}
+
+/* ── Link items ── */
+.breadcrumb-link {
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.breadcrumb-link:hover {
+  color: #60a5fa; /* Lighter blue on hover */
+}
+
+/* ── Current (active) page ── */
+.breadcrumb-current {
+  color: #94a3b8; /* Light Slate / Grey from image */
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* ── Contextual adjustments ── */
+
+/* If on the admin page, ensure it looks good against its specific background */
+:host-context(.admin-container) {
+  padding: 10px 0;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .breadcrumb-separator {
+    margin: 0 8px;
+  }
+  .breadcrumb-link, .breadcrumb-current {
+    font-size: 14px;
+  }
 }

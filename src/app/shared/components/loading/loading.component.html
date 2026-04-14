@@ -1,3 +1,9 @@
-<nz-spin [nzSpinning]="isLoading" [nzSize]="size" [nzTip]="tip">
-  <ng-content></ng-content>
-</nz-spin>
+<div class="app-loading-wrapper" [class.is-loading]="isLoading">
+  <div class="loading-content-area">
+    <ng-content></ng-content>
+  </div>
+  
+  <div class="global-luxury-overlay" *ngIf="isLoading">
+    <div class="minimal-gradient-spinner"></div>
+  </div>
+</div>

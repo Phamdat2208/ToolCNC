@@ -53,19 +53,19 @@ export class HomeComponent implements OnInit {
     {
       title: 'Hệ thống Dao cụ Cắt gọt Kỹ thuật cao',
       content: 'Chuyên cung cấp các giải pháp gia công kim loại với độ chính xác tuyệt đối',
-      color: 'linear-gradient(135deg, #0f172a 0%, #334155 100%)',
+      color: 'linear-gradient(135deg, #0f172a 0%, #2563eb 100%)',
       image: 'assets/images/dung-cu-cat-got-banner.png'
     },
     {
       title: 'Chip tiện Insert chính hãng - Giá Xưởng',
       content: 'Giảm đến 20% cho đơn hàng số lượng lớn các dòng mã chip CNMG, WNMG, MGMN',
-      color: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+      color: 'linear-gradient(135deg, #7f1d1d 0%, #ea580c 100%)',
       image: 'assets/images/chip-dao-tien-cnc-banner.png'
     },
     {
       title: 'Tư vấn giải pháp gia công CAM/CNC',
       content: 'Tối ưu hóa quy trình sản xuất và tăng tuổi thọ dao cụ cùng chuyên gia',
-      color: 'linear-gradient(135deg, #0ea5e9 0%, #0c4a6e 100%)',
+      color: 'linear-gradient(135deg, #064e3b 0%, #0d9488 100%)',
       image: 'assets/images/phu-kien-cnc-banner.png'
     }
   ];

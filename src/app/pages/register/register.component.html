@@ -1,70 +1,130 @@
-<div class="register-container">
-  <button
-    nz-button
-    class="back-button"
-    nzType="default"
-    nzShape="circle"
-    routerLink="/"
-  >
-    <nz-icon nzType="arrow-left" />
-  </button>
-  <div class="register-box">
-    <div class="register-header">
-      <h2>Đăng ký Tài khoản</h2>
-      <p>Điền thông tin của bạn để tạo tài khoản mới</p>
+<div class="auth-page">
+
+  <!-- ===== LEFT PANEL – Brand Panel ===== -->
+  <div class="brand-panel">
+    <a routerLink="/" class="brand-back-link">
+      <nz-icon nzType="arrow-left" /> Về trang chủ
+    </a>
+
+    <div class="brand-content">
+      <div class="brand-logo">
+        <img src="Logo.ico" alt="Logo" class="brand-logo-img" />
+        <span class="brand-tool">Tool</span><span class="brand-cnc">CNC</span>
+      </div>
+      <h1 class="brand-headline">
+        Tham gia cùng<br />
+        <span class="brand-highlight">ToolCNC</span>
+      </h1>
+      <p class="brand-desc">
+        Tạo tài khoản miễn phí để bắt đầu mua sắm dao phay, chip tiện, mũi khoan với giá tốt nhất thị trường.
+      </p>
+
+      <div class="brand-features">
+        <div class="brand-feature">
+          <div class="feature-icon">
+            <nz-icon nzType="gift" />
+          </div>
+          <span>Ưu đãi thành viên mới</span>
+        </div>
+        <div class="brand-feature">
+          <div class="feature-icon">
+            <nz-icon nzType="history" />
+          </div>
+          <span>Theo dõi đơn hàng dễ dàng</span>
+        </div>
+        <div class="brand-feature">
+          <div class="feature-icon">
+            <nz-icon nzType="heart" />
+          </div>
+          <span>Lưu sản phẩm yêu thích</span>
+        </div>
+      </div>
     </div>
 
-    <form
-      nz-form
-      [formGroup]="registerForm"
-      class="register-form"
-      (ngSubmit)="submitForm()"
-    >
-      <app-custom-input
-        formControlName="username"
-        placeholder="Tên đăng nhập"
-        prefixIcon="user"
-        errorTip="Vui lòng nhập tên đăng nhập dài hơn 4 ký tự!"
-      ></app-custom-input>
-
-      <app-custom-input
-        formControlName="email"
-        type="email"
-        placeholder="Email (abc@gmail.com)"
-        prefixIcon="mail"
-        errorTip="Vui lòng nhập Email hợp lệ!"
-      ></app-custom-input>
-
-      <app-custom-input
-        formControlName="password"
-        type="password"
-        placeholder="Mật khẩu"
-        prefixIcon="lock"
-        errorTip="Vui lòng nhập mật khẩu dài hơn 6 ký tự!"
-        (ngModelChange)="updateConfirmValidator()"
-      ></app-custom-input>
-
-      <app-custom-input
-        formControlName="confirmPassword"
-        type="password"
-        placeholder="Nhập lại Mật khẩu"
-        prefixIcon="lock"
-        [errorTip]="confirmPasswordError"
-      ></app-custom-input>
-
-      <button
-        nz-button
-        class="register-form-button register-form-margin"
-        [nzType]="'primary'"
-        [nzLoading]="isLoading"
-        nzBlock
-      >
-        Tạo tài khoản
-      </button>
-
-      <div class="register-footer">
-        Đã có tài khoản? <a routerLink="/login">Đăng nhập</a>
-      </div>
-    </form>
+    <div class="brand-decoration">
+      <div class="deco-circle deco-1"></div>
+      <div class="deco-circle deco-2"></div>
+      <div class="deco-circle deco-3"></div>
+    </div>
   </div>
+
+  <div class="form-panel">
+    <div class="form-card">
+      <a routerLink="/" class="mobile-back-link">
+        <nz-icon nzType="arrow-left" /> Về trang chủ
+      </a>
+      <div class="form-header">
+        <div class="form-icon-badge register-badge">
+          <nz-icon nzType="user-add" />
+        </div>
+        <h2 class="form-title">Tạo tài khoản</h2>
+        <p class="form-subtitle">Điền thông tin bên dưới để đăng ký tài khoản mới.</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="submitForm()" class="auth-form">
+
+        <div class="field-group">
+          <label class="field-label">Tên đăng nhập</label>
+          <app-custom-input
+            formControlName="username"
+            placeholder="Tối thiểu 4 ký tự"
+            prefixIcon="user"
+            errorTip="Vui lòng nhập tên đăng nhập dài hơn 4 ký tự!"
+          ></app-custom-input>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Email</label>
+          <app-custom-input
+            formControlName="email"
+            type="email"
+            placeholder="example@gmail.com"
+            prefixIcon="mail"
+            errorTip="Vui lòng nhập Email hợp lệ!"
+          ></app-custom-input>
+        </div>
+
+        <div class="form-row">
+          <div class="field-group">
+            <label class="field-label">Mật khẩu</label>
+            <app-custom-input
+              formControlName="password"
+              type="password"
+              placeholder="Tối thiểu 6 ký tự"
+              prefixIcon="lock"
+              errorTip="Vui lòng nhập mật khẩu dài hơn 6 ký tự!"
+              (ngModelChange)="updateConfirmValidator()"
+            ></app-custom-input>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Xác nhận mật khẩu</label>
+            <app-custom-input
+              formControlName="confirmPassword"
+              type="password"
+              placeholder="Nhập lại mật khẩu"
+              prefixIcon="lock"
+              [errorTip]="confirmPasswordError"
+            ></app-custom-input>
+          </div>
+        </div>
+
+        <button
+          nz-button
+          nzType="primary"
+          nzBlock
+          [nzLoading]="isLoading"
+          class="submit-btn register-btn"
+        >
+          <nz-icon nzType="user-add" *ngIf="!isLoading" />
+          Tạo tài khoản
+        </button>
+
+        <div class="form-switch">
+          Đã có tài khoản?
+          <a routerLink="/login" class="switch-link">Đăng nhập ngay</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </div>

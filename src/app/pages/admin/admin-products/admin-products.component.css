@@ -1,12 +1,20 @@
-    .admin-products-container { padding: 0; }
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-    .page-header h2 { margin: 0; font-weight: 600; }
-    .search-bar { margin-bottom: 20px; max-width: 400px; }
+.admin-products-container {
+  padding: 0;
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.page-header h2 {
+  margin: 0;
+  font-weight: 600;
+}
+.search-bar {
+  margin-bottom: 20px;
+  max-width: 400px;
+}
 
 .header-actions {
   display: flex;
@@ -15,4 +23,48 @@
 
 .mr-8 {
   margin-right: 8px;
+}
+
+.add-btn {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 8px;
+  background: #2563eb;
+  border-color: #2563eb;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.add-btn:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.import-btn {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: none;
+}
+
+.import-btn:hover {
+  background: #e0e0e0;
+  color: #000000;
+}
+
+.import-btn:focus {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.table-card { 
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.edit-icon {
+  font-size: 1.1rem;
+  color: #2563eb;
 }
