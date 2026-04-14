@@ -119,9 +119,18 @@ export class ProductDetailComponent implements OnInit {
 
         this.breadcrumbItems = [
           { label: 'Trang chủ', url: '/' },
-          { label: 'Sản phẩm', url: '/products' },
-          { label: this.product.name }
+          { label: 'Sản phẩm', url: '/products' }
         ];
+
+        if (this.product.categoryName || this.product.category?.name) {
+          const catName = this.product.categoryName || this.product.category?.name;
+          this.breadcrumbItems.push({ 
+            label: catName, 
+            url: `/products?category=${encodeURIComponent(catName)}` 
+          });
+        }
+
+        this.breadcrumbItems.push({ label: this.product.name });
 
         this.isLoading = false;
 

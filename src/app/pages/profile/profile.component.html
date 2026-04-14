@@ -1,82 +1,162 @@
-<div class="profile-container">
-  <div class="profile-header-main">
-    <h2><nz-icon nzType="user" /> Quản lý Tài khoản</h2>
-    <div class="header-actions">
-      <ng-container *ngIf="!editMode; else editActionsTpl">
-        <button nz-button nzType="primary" *ngIf="!isLoadingProfile" (click)="toggleEdit()">
-          <nz-icon nzType="edit" /> Chỉnh sửa hồ sơ
-        </button>
-      </ng-container>
-      <ng-template #editActionsTpl>
-        <div class="form-actions-header">
-          <button nz-button nzType="default" (click)="cancelEdit()" [disabled]="isSaving">Hủy bỏ</button>
-          <button nz-button nzType="primary" [nzLoading]="isSaving" (click)="saveProfile()" class="btn-save-inline">
-            <nz-icon nzType="check" /> Lưu thay đổi
-          </button>
+<div class="profile-page">
+
+  <!-- ===== LEFT: Avatar Panel ===== -->
+  <div class="avatar-panel">
+    <div class="avatar-panel-inner">
+      <div class="avatar-circle">
+        {{ (userInfo?.username || '?').charAt(0).toUpperCase() }}
+      </div>
+      <div class="avatar-username">{{ userInfo?.username || '...' }}</div>
+      <div class="avatar-role">
+        <span class="role-chip">{{ userInfo?.role || 'USER' }}</span>
+      </div>
+
+      <div class="avatar-stats">
+        <div class="stat-item">
+          <nz-icon nzType="mail" />
+          <span class="stat-label">Email</span>
+          <span class="stat-value">{{ userInfo?.email || '—' }}</span>
         </div>
-      </ng-template>
+        <div class="stat-item">
+          <nz-icon nzType="phone" />
+          <span class="stat-label">SĐT</span>
+          <span class="stat-value">{{ userInfo?.phone || 'Chưa cập nhật' }}</span>
+        </div>
+        <div class="stat-item">
+          <nz-icon nzType="user" />
+          <span class="stat-label">Họ tên</span>
+          <span class="stat-value">{{ userInfo?.fullName || 'Chưa cập nhật' }}</span>
+        </div>
+      </div>
+
+      <a routerLink="/orders" class="orders-shortcut">
+        <nz-icon nzType="history" /> Đơn hàng của tôi
+      </a>
+    </div>
+
+    <div class="panel-deco">
+      <div class="deco-ring deco-ring-1"></div>
+      <div class="deco-ring deco-ring-2"></div>
     </div>
   </div>
 
-  <app-loading [isLoading]="isLoadingProfile" tip="Đang tải thông tin...">
-    <div class="profile-card shadow-premium" *ngIf="!isLoadingProfile">
-      <div class="view-mode">
+  <!-- ===== RIGHT: Form Panel ===== -->
+  <div class="form-panel">
+    <app-loading [isLoading]="isLoadingProfile" tip="Đang tải thông tin...">
+      <div class="profile-content" *ngIf="!isLoadingProfile">
+
+        <!-- Section Header -->
+        <div class="section-header">
+          <div class="section-title-group">
+            <h2 class="section-title">Hồ sơ cá nhân</h2>
+            <p class="section-subtitle">Quản lý thông tin tài khoản của bạn</p>
+          </div>
+          <div class="header-actions">
+            <ng-container *ngIf="!editMode; else editActionsTpl">
+              <button class="btn-edit" (click)="toggleEdit()">
+                <nz-icon nzType="edit" /> Chỉnh sửa
+              </button>
+            </ng-container>
+            <ng-template #editActionsTpl>
+              <div class="edit-action-group">
+                <button class="btn-cancel" (click)="cancelEdit()" [disabled]="isSaving">Hủy bỏ</button>
+                <button class="btn-save" [class.loading]="isSaving" (click)="saveProfile()" [disabled]="isSaving">
+                  <nz-icon nzType="check" *ngIf="!isSaving" />
+                  <nz-icon nzType="loading" nzSpin *ngIf="isSaving" />
+                  Lưu thay đổi
+                </button>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- Info Fields -->
         <form nz-form [formGroup]="profileForm" nzLayout="vertical">
-          <div class="user-info-grid">
-            <div class="info-row">
-              <div class="info-label">Tên đăng nhập</div>
-              <div class="info-value">{{ userInfo?.username }}</div>
-            </div>
-            <div class="info-row">
-              <div class="info-label">Email</div>
-              <div class="info-value">{{ userInfo?.email || 'Chưa cập nhật' }}</div>
-            </div>
-            <div class="info-divider"></div>
+          <div class="fields-grid">
 
-            <!-- Inline Editable: Họ và tên -->
-            <div class="info-row" [class.editing]="editMode">
-              <div class="info-label">Họ và tên</div>
-              <div class="info-value">
-                <ng-container *ngIf="!editMode; else editFullNameTpl">
-                  <span class="emphasis">{{ userInfo?.fullName || 'Chưa cập nhật' }}</span>
+            <!-- Static: username -->
+            <div class="field-card static-field">
+              <div class="field-icon-wrap">
+                <nz-icon nzType="user" />
+              </div>
+              <div class="field-body">
+                <span class="field-label">Tên đăng nhập</span>
+                <span class="field-value">{{ userInfo?.username }}</span>
+              </div>
+              <span class="field-lock-badge"><nz-icon nzType="lock" /></span>
+            </div>
+
+            <!-- Static: email -->
+            <div class="field-card static-field">
+              <div class="field-icon-wrap">
+                <nz-icon nzType="mail" />
+              </div>
+              <div class="field-body">
+                <span class="field-label">Email</span>
+                <span class="field-value">{{ userInfo?.email || 'Chưa cập nhật' }}</span>
+              </div>
+              <span class="field-lock-badge"><nz-icon nzType="lock" /></span>
+            </div>
+
+            <!-- Editable: fullName -->
+            <div class="field-card" [class.editing-field]="editMode">
+              <div class="field-icon-wrap cyan">
+                <nz-icon nzType="idcard" />
+              </div>
+              <div class="field-body">
+                <span class="field-label">Họ và tên</span>
+                <ng-container *ngIf="!editMode; else editFullName">
+                  <span class="field-value emphasis">{{ userInfo?.fullName || 'Chưa cập nhật' }}</span>
                 </ng-container>
-                <ng-template #editFullNameTpl>
-                  <div class="inline-form-item">
-                    <app-custom-input
-                      formControlName="fullName"
-                      placeholder="VD: Nguyễn Văn A"
-                    ></app-custom-input>
-                  </div>
+                <ng-template #editFullName>
+                  <app-custom-input
+                    formControlName="fullName"
+                    placeholder="VD: Nguyễn Văn A"
+                  ></app-custom-input>
                 </ng-template>
+              </div>
+              <span class="field-edit-badge" *ngIf="editMode"><nz-icon nzType="edit" /></span>
+            </div>
+
+            <!-- Editable: phone -->
+            <div class="field-card" [class.editing-field]="editMode">
+              <div class="field-icon-wrap cyan">
+                <nz-icon nzType="phone" />
+              </div>
+              <div class="field-body">
+                <span class="field-label">Số điện thoại</span>
+                <ng-container *ngIf="!editMode; else editPhone">
+                  <span class="field-value emphasis">{{ userInfo?.phone || 'Chưa cập nhật' }}</span>
+                </ng-container>
+                <ng-template #editPhone>
+                  <app-custom-input
+                    formControlName="phone"
+                    placeholder="VD: 0912 345 678"
+                    [errorTip]="profileForm.get('phone')?.hasError('pattern') ? 'Số điện thoại không hợp lệ!' : ''"
+                  ></app-custom-input>
+                </ng-template>
+              </div>
+              <span class="field-edit-badge" *ngIf="editMode"><nz-icon nzType="edit" /></span>
+            </div>
+
+            <!-- Static: role -->
+            <div class="field-card static-field">
+              <div class="field-icon-wrap">
+                <nz-icon nzType="safety-certificate" />
+              </div>
+              <div class="field-body">
+                <span class="field-label">Quyền hạn</span>
+                <span class="field-value">
+                  <span class="role-badge-inline">{{ userInfo?.role }}</span>
+                </span>
               </div>
             </div>
 
-            <!-- Inline Editable: Số điện thoại -->
-            <div class="info-row" [class.editing]="editMode">
-              <div class="info-label">Số điện thoại</div>
-              <div class="info-value">
-                <ng-container *ngIf="!editMode; else editPhoneTpl">
-                  <span class="emphasis">{{ userInfo?.phone || 'Chưa cập nhật' }}</span>
-                </ng-container>
-                <ng-template #editPhoneTpl>
-                  <div class="inline-form-item">
-                    <app-custom-input
-                      formControlName="phone"
-                      placeholder="VD: 0912345678"
-                      [errorTip]="profileForm.get('phone')?.hasError('pattern') ? 'Số điện thoại không hợp lệ!' : ''"
-                    ></app-custom-input>
-                  </div>
-                </ng-template>
-              </div>
-            </div>
-
-            <div class="info-row">
-              <div class="info-label">Quyền hạn</div>
-              <div class="info-value"><span class="role-badge">{{ userInfo?.role }}</span></div>
-            </div>
           </div>
         </form>
+
       </div>
-    </div>
-  </app-loading>
+    </app-loading>
+  </div>
+
 </div>

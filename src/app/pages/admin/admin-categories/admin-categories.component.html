@@ -6,62 +6,100 @@
     </button>
   </div>
 
-  <div class="table-card">
-    <nz-table #basicTable [nzData]="filteredCategories" 
-      [nzLoading]="loading" 
-      [nzFrontPagination]="false" 
-      [nzShowPagination]="false">
-      <thead>
-        <tr>
-          <th nzWidth="80px">ID</th>
-          <th>Tên Danh mục</th>
-          <th nzWidth="150px">Số lượng SP</th>
-          <th nzWidth="120px" nzRight>Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of basicTable.data">
-          <td>{{ data.id }}</td>
-          <td>
-            <div class="category-name-cell" [style.padding-left.px]="data.level * 28">
-              <!-- Expand/Collapse toggle for parents -->
-              <span 
-                *ngIf="data.children && data.children.length > 0"
-                class="expand-trigger"
-                (click)="data.expand = !data.expand"
+  <app-loading [isLoading]="loading">
+    <div class="table-card">
+      <nz-table
+        #basicTable
+        [nzData]="filteredCategories"
+        [nzFrontPagination]="false"
+        [nzShowPagination]="false"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="80px">ID</th>
+            <th>Tên danh mục</th>
+            <th nzWidth="150px">Số lượng SP</th>
+            <th nzWidth="120px" nzRight>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{ data.id }}</td>
+            <td>
+              <div
+                class="category-name-cell"
+                [style.padding-left.px]="data.level * 28"
               >
-                <nz-icon [nzType]="data.expand ? 'down' : 'right'" class="tree-icon" />
-              </span>
-              
-              <!-- Indent icon for children without their own children -->
-              <span *ngIf="(!data.children || data.children.length === 0) && data.level > 0" class="sub-node-icon">
-                <nz-icon nzType="enter" [class.grandchild-icon]="data.level > 1" />
-              </span>
+                <!-- Expand/Collapse toggle for parents -->
+                <span
+                  *ngIf="data.children && data.children.length > 0"
+                  class="expand-trigger"
+                  (click)="data.expand = !data.expand"
+                >
+                  <nz-icon
+                    [nzType]="data.expand ? 'down' : 'right'"
+                    class="tree-icon"
+                  />
+                </span>
 
-              <span [class.parent-cat]="data.level === 0" [class.grandchild-cat]="data.level > 1">
-                {{ data.name }}
+                <!-- Indent icon for children without their own children -->
+                <span
+                  *ngIf="
+                    (!data.children || data.children.length === 0) &&
+                    data.level > 0
+                  "
+                  class="sub-node-icon"
+                >
+                  <nz-icon
+                    nzType="enter"
+                    [class.grandchild-icon]="data.level > 1"
+                  />
+                </span>
+
+                <span
+                  [class.parent-cat]="data.level === 0"
+                  [class.grandchild-cat]="data.level > 1"
+                >
+                  {{ data.name }}
+                </span>
+              </div>
+            </td>
+            <td>
+              <span
+                class="product-count-badge"
+                *ngIf="data.totalProductCount != null"
+              >
+                {{ data.totalProductCount }} sản phẩm
               </span>
-            </div>
-          </td>
-          <td>
-            <span class="product-count-badge" *ngIf="data.productCount != null">
-              {{ data.productCount }} sản phẩm
-            </span>
-          </td>
-          <td nzRight>
-            <div class="action-buttons">
-              <button nz-button nzType="text" (click)="showEditModal(data)" nz-tooltip nzTooltipTitle="Chỉnh sửa">
-                <nz-icon nzType="edit" class="edit-icon" />
-              </button>
-              <button nz-button nzType="text" nzDanger (click)="deleteCategory(data.id)" nz-tooltip nzTooltipTitle="Xóa">
-                <nz-icon nzType="delete" />
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
-  </div>
+            </td>
+            <td nzRight>
+              <div class="action-buttons">
+                <button
+                  nz-button
+                  nzType="text"
+                  (click)="showEditModal(data)"
+                  nz-tooltip
+                  nzTooltipTitle="Chỉnh sửa"
+                >
+                  <nz-icon nzType="edit" class="edit-icon" />
+                </button>
+                <button
+                  nz-button
+                  nzType="text"
+                  nzDanger
+                  (click)="deleteCategory(data.id)"
+                  nz-tooltip
+                  nzTooltipTitle="Xóa"
+                >
+                  <nz-icon nzType="delete" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </app-loading>
 
   <!-- Modal Thêm/Sửa -->
   <nz-modal
@@ -77,15 +115,27 @@
         <nz-form-item>
           <nz-form-label nzRequired>Tên danh mục</nz-form-label>
           <nz-form-control nzErrorTip="Vui lòng nhập tên danh mục">
-            <input nz-input formControlName="name" placeholder="Ví dụ: Dao Phay (End Mill)" />
+            <input
+              nz-input
+              formControlName="name"
+              placeholder="Ví dụ: Dao Phay (End Mill)"
+            />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
           <nz-form-label>Danh mục cha</nz-form-label>
           <nz-form-control>
-            <nz-select formControlName="parentId" nzAllowClear nzPlaceHolder="Chọn danh mục cha (để trống nếu là danh mục gốc)">
-              <nz-option *ngFor="let opt of parentOptions" [nzValue]="opt.id" [nzLabel]="opt.displayName"></nz-option>
+            <nz-select
+              formControlName="parentId"
+              nzAllowClear
+              nzPlaceHolder="Chọn danh mục cha (để trống nếu là danh mục gốc)"
+            >
+              <nz-option
+                *ngFor="let opt of parentOptions"
+                [nzValue]="opt.id"
+                [nzLabel]="opt.displayName"
+              ></nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>

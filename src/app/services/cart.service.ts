@@ -132,10 +132,12 @@ export class CartService {
     });
   }
 
-  updateQuantity(id: number, quantity: number): Observable<any> { // id is CartItem ID
+  updateQuantity(id: number, productId: number, variantId: number | undefined, quantity: number): Observable<any> { // id is CartItem ID
     if (!this.authService.isLoggedIn()) return of(null);
 
     const payload = {
+      productId: productId,
+      variantId: variantId || null,
       quantity: quantity
     };
 
