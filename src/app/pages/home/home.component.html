@@ -1,32 +1,35 @@
 <div class="home-container">
   <!-- Banner Carousel -->
-  <nz-carousel [nzEffect]="'fade'" nzAutoPlay nzDotPosition="bottom">
-    <div nz-carousel-content *ngFor="let banner of banners">
-      <div class="banner-slide" [style.background]="banner.color">
-        <div class="banner-content-wrapper">
-          <div class="banner-text">
-            <h1 appScrollReveal>{{ banner.title }}</h1>
-            <p appScrollReveal style="transition-delay: 0.2s">{{ banner.content }}</p>
-            <button
-              nz-button
-              nzType="primary"
-              nzSize="large"
-              routerLink="/products"
-              appScrollReveal
-              class="banner-btn-premium"
-              style="transition-delay: 0.4s"
-            >
-              <span>Khám phá ngay</span>
-              <nz-icon nzType="arrow-right" />
-            </button>
-          </div>
-          <div class="banner-image floating-effect">
-            <img [src]="banner.image" alt="CNC Machine" />
+  <div class="banner-wrapper">
+    <nz-carousel [nzEffect]="'fade'" nzAutoPlay nzDotPosition="bottom">
+      <div nz-carousel-content *ngFor="let banner of banners">
+        <div class="banner-slide" [style.background]="banner.color">
+          <div class="banner-content-wrapper">
+            <div class="banner-text">
+              <h1>{{ banner.title }}</h1>
+              <p style="transition-delay: 0.2s">{{ banner.content }}</p>
+              
+              <div class="banner-actions">
+                <button
+                  nz-button
+                  nzType="primary"
+                  nzSize="large"
+                  routerLink="/products"
+                  class="banner-btn-premium"
+                >
+                  <span>Khám phá ngay</span>
+                  <nz-icon nzType="arrow-right" />
+                </button>
+              </div>
+            </div>
+            <div class="banner-image floating-effect">
+              <img [src]="banner.image" alt="CNC Machine" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </nz-carousel>
+    </nz-carousel>
+  </div>
   
   <!-- Trust Badges Section -->
   <div class="trust-badges-section" appScrollReveal>
@@ -80,7 +83,7 @@
         <div
           class="category-card"
           [routerLink]="['/products']"
-          [queryParams]="{ categoryId: cat.id }"
+          [queryParams]="{ category: cat.name }"
         >
           <div class="category-icon-wrapper">
             <nz-icon
@@ -96,47 +99,49 @@
   </div>
 
   <!-- Featured Brands Section -->
-  <div class="brands-section" appScrollReveal style="transition-delay: 0.2s">
-    <h2 class="section-title">Thương hiệu nổi bật</h2>
-    <div nz-row [nzGutter]="[16, 16]" nzJustify="center" class="brands-grid">
-      <div nz-col nzXs="12" nzSm="8" nzMd="4" *ngFor="let brand of featuredBrands">
-        <div
-          class="brand-card"
-          [routerLink]="['/products']"
-          [queryParams]="{ brand: brand.name }"
-        >
-          <div class="brand-logo-wrapper">
-            <img [src]="brand.logoUrl" [alt]="brand.name" class="brand-logo-img" />
+  <div class="brands-wrapper-dark" appScrollReveal style="transition-delay: 0.2s">
+    <div class="container-inner">
+      <h2 class="section-title">Thương hiệu đối tác</h2>
+    </div>
+    <div class="marquee-wrapper">
+      <div class="marquee-track">
+        <!-- Render 2 lần để tạo vòng lặp mượt mà -->
+        <ng-container *ngFor="let loop of [1, 2]">
+          <div class="brand-item-marquee" *ngFor="let brand of featuredBrands" [routerLink]="['/products']" [queryParams]="{ brands: brand.name }">
+            <div class="brand-logo-wrapper">
+              <img [src]="brand.logoUrl" [alt]="brand.name" class="brand-logo-img" />
+            </div>
           </div>
-        </div>
+        </ng-container>
       </div>
     </div>
   </div>
 
   <!-- Featured Products -->
   <div class="featured-section">
-    <h2 class="section-title">Sản phẩm nổi bật</h2>
-    <app-loading [isLoading]="loading">
-      <div nz-row [nzGutter]="[24, 24]">
-        <div
-          nz-col
-          nzXs="24"
-          nzSm="12"
-          nzMd="8"
-          nzMd="8"
-          nzLg="6"
-          *ngFor="let product of featuredProducts"
-        >
-          <app-product-card [product]="product"></app-product-card>
+    <div class="featured-container">
+      <h2 class="section-title" appScrollReveal>Sản phẩm nổi bật</h2>
+      <app-loading [isLoading]="loading">
+        <div nz-row [nzGutter]="[24, 24]" appScrollReveal style="transition-delay: 0.2s">
+          <div
+            nz-col
+            nzXs="24"
+            nzSm="12"
+            nzMd="8"
+            nzLg="6"
+            *ngFor="let product of featuredProducts"
+          >
+            <app-product-card [product]="product"></app-product-card>
+          </div>
         </div>
-      </div>
-    </app-loading>
+      </app-loading>
 
-    <div class="view-all-btn">
-      <button nz-button nzType="default" nzSize="large" routerLink="/products" class="btn-explore-more">
-        <span>Xem tất cả sản phẩm</span>
-        <nz-icon nzType="right" />
-      </button>
+      <div class="view-all-btn" appScrollReveal>
+        <button nz-button nzType="default" nzSize="large" routerLink="/products" class="btn-explore-more">
+          <span>Xem tất cả sản phẩm</span>
+          <nz-icon nzType="right" />
+        </button>
+      </div>
     </div>
   </div>
 

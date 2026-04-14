@@ -1,11 +1,7 @@
 <div class="quick-select-container">
-  <!-- Loading state -->
-  <div *ngIf="isLoading" class="loading-box">
-    <nz-spin nzSimple nzSize="large" nzTip="Đang tải dữ liệu kỹ thuật..."></nz-spin>
-  </div>
-
-  <!-- Content state -->
-  <div *ngIf="!isLoading && product" class="content-box animate-up">
+  <app-loading [isLoading]="isLoading">
+    <!-- Content state -->
+    <div *ngIf="product" class="content-box animate-up">
     <div class="product-header">
       <div class="header-main-row">
         <h3 class="product-name">{{ product.name }}</h3>
@@ -82,8 +78,9 @@
               [nzLoading]="isAddingToCart"
               (click)="addToCart()">
         <nz-icon nzType="shopping-cart" /> 
-        Tiến hành thêm {{ totalSelectedCount > 0 ? totalSelectedCount : '' }} sản phẩm vào giỏ
+        Thêm {{ totalSelectedCount > 0 ? totalSelectedCount : '' }} sản phẩm vào giỏ
       </button>
     </div>
   </div>
+  </app-loading>
 </div>

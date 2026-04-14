@@ -14,6 +14,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
@@ -26,7 +27,7 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
 
 @Component({
   selector: 'app-product-catalog',
-  imports: [CommonModule, FormsModule, NzGridModule, NzMenuModule, NzCheckboxModule, NzSliderModule, NzInputModule, NzCardModule, NzButtonModule, NzIconModule, NzPaginationModule, NzDropDownModule, NzSpinModule, NzEmptyModule, ProductCardComponent, PageBreadcrumbComponent, LoadingComponent, PaginationComponent],
+  imports: [CommonModule, FormsModule, NzGridModule, NzMenuModule, NzCheckboxModule, NzSliderModule, NzInputModule, NzCardModule, NzButtonModule, NzIconModule, NzPaginationModule, NzDropDownModule, NzSpinModule, NzEmptyModule, NzPopoverModule, ProductCardComponent, PageBreadcrumbComponent, LoadingComponent, PaginationComponent],
   templateUrl: './product-catalog.component.html',
   styleUrl: './product-catalog.component.css'
 })
@@ -179,19 +180,19 @@ export class ProductCatalogComponent implements OnInit {
   private syncStateToUrl(resetPage = false) {
     const targetPage = resetPage ? 1 : this.pageIndex;
     const queryParams: any = {
-      page: targetPage > 1 ? targetPage : undefined,
-      category: this.activeCategory || undefined,
-      keyword: this.searchKeyword || undefined,
-      sort: this.currentSort !== 'Mới nhất' ? this.currentSort : undefined,
-      minPrice: this.priceRange[0] > 0 ? this.priceRange[0] : undefined,
-      maxPrice: this.priceRange[1] < this.MAX_PRICE ? this.priceRange[1] : undefined,
-      brands: this.selectedBrands.size > 0 ? [...this.selectedBrands].join(',') : undefined
+      page: targetPage > 1 ? targetPage : null,
+      category: this.activeCategory || null,
+      keyword: this.searchKeyword || null,
+      sort: this.currentSort !== 'Mới nhất' ? this.currentSort : null,
+      minPrice: this.priceRange[0] > 0 ? this.priceRange[0] : null,
+      maxPrice: this.priceRange[1] < this.MAX_PRICE ? this.priceRange[1] : null,
+      brands: this.selectedBrands.size > 0 ? [...this.selectedBrands].join(',') : null,
+      brand: null // Explicitly clear singular brand if it came from Home
     };
 
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams,
-      queryParamsHandling: 'merge'
+      queryParams
     });
   }
 

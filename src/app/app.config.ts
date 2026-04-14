@@ -86,7 +86,19 @@ import {
   DownloadOutline,
   SaveOutline,
   CodeSandboxOutline,
-  ReconciliationOutline
+  ReconciliationOutline,
+  FilterOutline,
+  RightOutline,
+  CheckOutline,
+  CaretDownOutline,
+  SafetyOutline,
+  CopyOutline,
+  UndoOutline,
+  ThunderboltOutline,
+  LoginOutline,
+  GiftOutline,
+  UserAddOutline,
+  IdcardOutline
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -165,7 +177,19 @@ const icons = [
   SaveOutline,
   CheckCircleOutline,
   CodeSandboxOutline,
-  ReconciliationOutline
+  ReconciliationOutline,
+  FilterOutline,
+  RightOutline,
+  CheckOutline,
+  CaretDownOutline,
+  SafetyOutline,
+  CopyOutline,
+  UndoOutline,
+  ThunderboltOutline,
+  LoginOutline, 
+  GiftOutline,
+  UserAddOutline,
+  IdcardOutline
 ];
 
 registerLocaleData(vi);

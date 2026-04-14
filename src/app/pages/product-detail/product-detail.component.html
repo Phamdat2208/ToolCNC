@@ -1,174 +1,219 @@
 <app-loading [isLoading]="isLoading">
-  <div *ngIf="product">
+  <div class="product-detail-page" *ngIf="product">
     <app-page-breadcrumb [items]="breadcrumbItems"></app-page-breadcrumb>
 
-    <div class="detail-top shadow-card">
-      <div nz-row nzGutter="48">
-        <div nz-col nzXs="24" nzMd="10" class="image-gallery">
-          <div
-            class="main-image img-wrapper-relative"
-            style="border-radius: 8px"
-          >
-            <img
-              [src]="mainImage"
-              alt="Hình ảnh sản phẩm"
-              [class.img-out-of-stock]="displayStock === 0"
-              style="width: 100%; border-radius: 8px"
-            />
-            <div
-              class="out-of-stock-banner"
-              *ngIf="displayStock === 0"
-              style="
-                font-size: 24px;
-                padding: 12px 40px;
-                transform: translate(-50%, -50%) rotate(-35deg);
-              "
-            >
-              HẾT HÀNG
+    <div class="detail-grid-container">
+      <div nz-row [nzGutter]="[48, 48]">
+        <!-- Image Gallery Column -->
+        <div nz-col nzXs="24" nzLg="11">
+          <div class="gallery-card">
+            <div class="main-image-wrapper">
+              <img
+                [src]="mainImage"
+                alt="Hình ảnh sản phẩm"
+                [class.img-out-of-stock]="displayStock === 0"
+                class="main-img"
+              />
+              <div class="sold-out-badge" *ngIf="displayStock === 0">
+                HẾT HÀNG
+              </div>
             </div>
-          </div>
-          <div class="thumbnail-list">
-            <div
-              class="thumb-item"
-              *ngFor="let img of product.images"
-              [class.active]="mainImage === img"
-              (click)="setMainImage(img)"
-            >
-              <img [src]="img" alt="Thu nhỏ" />
+
+            <div class="thumbnails-container">
+              <div
+                class="thumb-box"
+                *ngFor="let img of product.images"
+                [class.active]="mainImage === img"
+                (click)="setMainImage(img)"
+              >
+                <img [src]="img" alt="Thu nhỏ" />
+              </div>
             </div>
           </div>
         </div>
 
-        <div nz-col nzXs="24" nzMd="14" class="product-info">
-          <div class="title-with-admin">
-            <h1 class="product-title">{{ product.name }}</h1>
-            <button
-              *ngIf="authService.isAdmin()"
-              nz-button
-              nzType="default"
-              nzShape="round"
-              class="admin-edit-btn"
-              (click)="editProduct()"
+        <!-- Info & Actions Column -->
+        <div nz-col nzXs="24" nzLg="13">
+          <div class="info-card">
+            <div class="brand-badge" *ngIf="product.brand">
+              {{ product.brand.name }}
+            </div>
+
+            <div class="title-section">
+              <h1 class="p-name">{{ product.name }}</h1>
+              <button
+                *ngIf="authService.isAdmin()"
+                nz-button
+                nzType="default"
+                nzShape="circle"
+                class="btn-admin-edit"
+                (click)="editProduct()"
+                nz-tooltip
+                nzTooltipTitle="Chỉnh sửa sản phẩm"
+              >
+                <nz-icon nzType="edit" />
+              </button>
+            </div>
+
+            <div class="meta-tags">
+              <div class="tag-item">
+                <span class="label">Mã hàng:</span>
+                <span class="value">{{ displaySku }}</span>
+              </div>
+              <div class="divider-v"></div>
+              <div class="tag-item">
+                <span class="label">Kho:</span>
+                <span class="value status-ok" *ngIf="displayStock > 0"
+                  >{{ displayStock }} sản phẩm</span
+                >
+                <span class="value status-empty" *ngIf="displayStock === 0"
+                  >Hết hàng</span
+                >
+              </div>
+            </div>
+
+            <div class="luxury-price-row">
+              <div class="price-container">
+                <ng-container
+                  *ngIf="
+                    product.hasVariants &&
+                      !selectedVariant &&
+                      product.minPrice !== product.maxPrice;
+                    else singlePriceTemplate
+                  "
+                >
+                  <span class="p-price range">
+                    <small>Từ</small> {{ product.minPrice | number: "1.0-0" }}đ
+                    - {{ product.maxPrice | number: "1.0-0" }}đ
+                  </span>
+                </ng-container>
+                <ng-template #singlePriceTemplate>
+                  <span class="p-price actual"
+                    >{{ displayPrice | number: "1.0-0" }}đ</span
+                  >
+                </ng-template>
+
+                <div class="discount-row" *ngIf="product.oldPrice">
+                  <span class="p-old-price"
+                    >{{ product.oldPrice | number: "1.0-0" }}đ</span
+                  >
+                  <span class="p-save-percent"
+                    >Giảm
+                    {{
+                      ((product.oldPrice - displayPrice) / product.oldPrice) *
+                        100 | number: "1.0-0"
+                    }}%</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="variants-box"
+              *ngIf="product.hasVariants && product.variants?.length > 0"
             >
-              <nz-icon nzType="edit" /> Sửa thông tin
-            </button>
-          </div>
-          <div class="product-header">
-            <div class="product-meta">
-              <span class="sku">Mã hàng: <strong>{{ displaySku }}</strong></span>
-              <nz-divider nzType="vertical"></nz-divider>
-              <span class="brand">Thương hiệu: <strong>{{ product.brand?.name || 'Đang cập nhật' }}</strong></span>
-              <nz-divider nzType="vertical"></nz-divider>
-              <span class="brand">Số lượng: <strong>{{ displayStock }}</strong></span>
-            </div>
-          </div>
-
-          <div class="price-section">
-            <ng-container *ngIf="product.hasVariants && !selectedVariant && product.minPrice !== product.maxPrice; else singlePriceTemplate">
-              <span class="current-price">
-                {{ product.minPrice | number:'1.0-0' }}đ - {{ product.maxPrice | number:'1.0-0' }}đ
-              </span>
-            </ng-container>
-            <ng-template #singlePriceTemplate>
-              <span class="current-price">{{ displayPrice | number:'1.0-0' }}đ</span>
-            </ng-template>
-
-            <span class="old-price" *ngIf="product.oldPrice">{{ product.oldPrice | number:'1.0-0' }}đ</span>
-            <span class="discount-tag" *ngIf="product.oldPrice">
-              -{{ ((product.oldPrice - displayPrice) / product.oldPrice * 100) | number:'1.0-0' }}%
-            </span>
-          </div>
-
-          <nz-divider></nz-divider>
-
-          <!-- Variant Selection Section -->
-          <div class="variants-selection-container" *ngIf="product.hasVariants && product.variants?.length > 0">
-            <h4 class="selection-title">Mã sản phẩm:</h4>
-            <div class="variants-list">
-              <button 
-                *ngFor="let v of product.variants" 
-                nz-button 
-                [nzType]="selectedVariant?.id === v.id ? 'primary' : 'default'"
-                (click)="selectVariant(v)"
-                class="variant-chip"
-              >
-                {{ v.variantName }}
-              </button>
-            </div>
-            <nz-divider></nz-divider>
-          </div>
-
-          <div class="action-box">
-            <div class="quantity-selector">
-              <div class="quantity-input-group">
-                <span>Số lượng:</span>
-                <app-quantity-input
-                  [(quantity)]="quantity"
-                  [maxStock]="displayStock"
-                ></app-quantity-input>
-              </div>
-
-              <div
-                class="wishlist-inline-action"
-                (click)="toggleWishlist(product)"
-                [class.is-wishlisted]="wishlistService.isWishlisted(product.id)"
-              >
-                <nz-icon
-                  [nzType]="isTogglingWishlist ? 'loading' : 'heart'"
-                  [nzTheme]="isTogglingWishlist ? 'outline' : (wishlistService.isWishlisted(product.id) ? 'fill' : 'outline')"
-                />
-                <span>Yêu thích sản phẩm</span>
+              <p class="select-hint">Lựa chọn mã hàng:</p>
+              <div class="variant-grid">
+                <div
+                  *ngFor="let v of product.variants"
+                  class="variant-item"
+                  [class.selected]="selectedVariant?.id === v.id"
+                  (click)="selectVariant(v)"
+                >
+                  {{ v.variantName }}
+                  <nz-icon
+                    nzType="check-circle"
+                    theme="fill"
+                    class="check-icon"
+                    *ngIf="selectedVariant?.id === v.id"
+                  />
+                </div>
               </div>
             </div>
 
-            <div class="buttons">
-              <button
-                nz-button
-                nzType="primary"
-                nzSize="large"
-                class="btn-add-cart"
-                (click)="addToCart()"
-                [disabled]="displayStock === 0"
-                [nzLoading]="isAddingToCart"
-              >
-                <nz-icon nzType="shopping-cart" *ngIf="!isAddingToCart" /> THÊM
-                VÀO GIỎ
-              </button>
-              <button
-                nz-button
-                nzType="primary"
-                nzDanger
-                nzSize="large"
-                class="btn-buy-now"
-              >
-                MUA NGAY
-              </button>
+            <div class="cart-actions-panel">
+              <div class="qty-control-row">
+                <span class="label">Số lượng:</span>
+                <div class="qty-wishlist-group">
+                  <app-quantity-input
+                    [(quantity)]="quantity"
+                    [maxStock]="displayStock"
+                  ></app-quantity-input>
+
+                  <div
+                    class="wishlist-btn-circle"
+                    [class.active]="wishlistService.isWishlisted(product.id)"
+                    (click)="toggleWishlist(product)"
+                    nz-tooltip
+                    nzTooltipTitle="Lưu vào yêu thích"
+                  >
+                    <nz-icon
+                      [nzType]="isTogglingWishlist ? 'loading' : 'heart'"
+                      [nzTheme]="
+                        isTogglingWishlist
+                          ? 'outline'
+                          : wishlistService.isWishlisted(product.id)
+                          ? 'fill'
+                          : 'outline'
+                      "
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="action-buttons">
+                <button
+                  nz-button
+                  nzSize="large"
+                  class="btn-add-to-cart-premium"
+                  (click)="addToCart()"
+                  [disabled]="displayStock === 0"
+                  [nzLoading]="isAddingToCart"
+                >
+                  <nz-icon nzType="shopping-cart" />
+                  <span>THÊM VÀO GIỎ</span>
+                </button>
+                <button
+                  nz-button
+                  nzType="primary"
+                  nzDanger
+                  nzSize="large"
+                  class="btn-buy-now-premium"
+                >
+                  MUA NGAY
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="detail-bottom shadow-card">
-      <nz-tabset [nzAnimated]="false">
-        <nz-tab nzTitle="Mô tả chi tiết">
-          <div class="tab-content">
-            <p>{{ product?.description }}</p>
+    <!-- Long Content Section -->
+    <div class="content-tabs-section">
+      <nz-tabset
+        nzTabPosition="top"
+        [nzAnimated]="{ inkBar: true, tabPane: true }"
+      >
+        <nz-tab nzTitle="Mô tả kỹ thuật">
+          <div class="tab-body fade-in">
+            <p class="desc-text">{{ product?.description }}</p>
           </div>
         </nz-tab>
         <nz-tab nzTitle="Thông số kỹ thuật">
-          <div class="tab-content">
-            <table *ngIf="parsedSpecs.length > 0" class="spec-table">
-              <tbody>
-                <tr *ngFor="let spec of parsedSpecs">
-                  <td class="spec-label">{{ spec.key }}</td>
-                  <td class="spec-value">{{ spec.value }}</td>
-                </tr>
-              </tbody>
-            </table>
-            <div *ngIf="parsedSpecs.length === 0" class="no-data">
-              <nz-icon nzType="info-circle" /> Chưa có thông số kỹ thuật chi
-              tiết cho sản phẩm này.
+          <div class="tab-body fade-in">
+            <div class="spec-grid" *ngIf="parsedSpecs.length > 0">
+              <div class="spec-row" *ngFor="let spec of parsedSpecs">
+                <div class="s-key">{{ spec.key }}</div>
+                <div class="s-val">{{ spec.value }}</div>
+              </div>
+            </div>
+            <div *ngIf="parsedSpecs.length === 0" class="empty-state">
+              <nz-icon nzType="info-circle" />
+              <p>
+                Thông tin kỹ thuật đang được cập nhật cho dòng sản phẩm chuyên
+                dụng này.
+              </p>
             </div>
           </div>
         </nz-tab>
