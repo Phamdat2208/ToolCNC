@@ -1,85 +1,87 @@
-.catalog-page-wrapper {
-  background: #f8fafc; /* Màu nền tông xám trắng siêu nhạt cho toàn trang */
-  min-height: 100vh;
-  padding-bottom: 64px;
-}
-
-/* === HERO BANNER DẠNG SOLID === */
-.catalog-hero-banner {
-  background: linear-gradient(110deg, #0f172a 0%, #1e293b 60%, #ea580c 100%);
-  padding: 64px 48px;
-  color: white;
-  margin-bottom: 40px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  border-radius: 12px;
-}
-
-.catalog-hero-content {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.hero-title {
-  color: white;
-  font-size: 38px;
-  font-weight: 800;
-  margin-top: 16px;
-  margin-bottom: 8px;
-  letter-spacing: -0.5px;
-}
-
-.hero-subtitle {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 16px;
-  font-weight: 400;
-}
-
-/* Đổi màu chữ Breadcrumb dính trên nền tối */
-::ng-deep .catalog-hero-banner .ant-breadcrumb a,
-::ng-deep .catalog-hero-banner .ant-breadcrumb span {
-  color: rgba(255, 255, 255, 0.6) !important;
-  transition: color 0.3s ease;
-}
-::ng-deep .catalog-hero-banner .ant-breadcrumb a:hover {
-  color: white !important;
-}
-::ng-deep .catalog-hero-banner .ant-breadcrumb-separator {
-  color: rgba(255, 255, 255, 0.4) !important;
-}
-
-/* === MAIN CONTAINER === */
 .catalog-container {
-  padding: 0 48px;
-  max-width: 1400px;
+  padding: 32px 48px;
+  max-width: 1600px;
   margin: 0 auto;
+  background-color: #f8fafc;
+  min-height: 100vh;
 }
 
-/* === SIDEBAR (BỘ LỌC) [DARK THEME] === */
-.filters-sidebar {
-  max-height: fit-content;
-  background: #0f172a; /* Nền xanh than đậm (Dark Slate) chuẩn máy móc */
-  padding: 24px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-}
-
-.filter-group {
+/* Breadcrumb Styling */
+.breadcrumb-section {
   margin-bottom: 32px;
 }
 
-.filter-group h3 {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Viền mờ */
-  padding-bottom: 12px;
-  color: #f8fafc; /* Chữ trắng sáng */
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+/* Sidebar Filters Card (Dark Theme) */
+.filters-card {
+  background: #0f172a; /* Deep Navy */
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  color: #f8fafc;
 }
 
-.category-tree-list, .child-list {
+.sticky-sidebar {
+  position: sticky;
+  top: 100px;
+  z-index: 10;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  /* Custom scrollbar - Dark theme */
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.sticky-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sticky-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sticky-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.sticky-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.filter-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filter-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-section {
+  margin-bottom: 32px;
+}
+
+.section-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  display: block;
+}
+
+/* Category Tree Styling (Dark + Ellipsis) */
+.category-tree-list {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -89,212 +91,319 @@
   display: flex;
   align-items: center;
   padding: 10px 12px;
+  border-radius: 10px;
   cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   margin-bottom: 4px;
-  color: rgba(255, 255, 255, 0.65); /* Chữ hơi mờ cho list item */
+  color: #cbd5e1;
+  position: relative;
+  overflow: hidden; /* Necessary for ellipsis */
 }
 
 .tree-node-item:hover {
-  background-color: rgba(255, 255, 255, 0.05); /* Hover nền sáng mờ */
-  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
 }
 
-/* Trạng thái danh mục đang chọn (Dark Theme) */
 .tree-node-item.active {
-  background-color: rgba(249, 115, 22, 0.15); /* Nền cam trong suốt */
+  background: rgba(249, 115, 22, 0.15);
   color: var(--primary-color);
   font-weight: 600;
 }
 
-.node-content {
-  display: flex;
-  align-items: center;
-  width: 100%;
+.tree-node-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 70%;
+  width: 3px;
+  background: var(--primary-color);
+  border-radius: 0 4px 4px 0;
 }
 
-.toggle-icon-wrapper {
+.toggle-icon {
   margin-right: 8px;
   font-size: 14px;
   display: flex;
-  align-items: center;
-  color: rgba(255, 255, 255, 0.4);
+  color: #64748b;
+  flex-shrink: 0;
 }
 
-.toggle-icon-wrapper:hover {
-  color: white;
+.dot-indicator {
+  width: 6px;
+  height: 6px;
+  background: #334155;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
 }
 
-.no-children-spacer {
-  width: 22px; 
-  display: inline-block;
+.tree-node-item.active .dot-indicator {
+  background: var(--primary-color);
 }
 
 .cat-name {
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Cắt chữ bằng dấu ... */
+  margin-right: 8px;
 }
 
 .count-badge {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
-  padding: 2px 8px;
-  border-radius: 12px;
   font-size: 11px;
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 8px;
+  border-radius: 20px;
+  color: #94a3b8;
+  font-weight: 500;
   flex-shrink: 0;
-  margin-left: 8px;
-  transition: all 0.3s ease;
 }
 
 .tree-node-item.active .count-badge {
-  background: var(--primary-color);
-  color: white;
+  background: rgba(249, 115, 22, 0.2);
+  color: var(--primary-color);
 }
 
-/* === NG-ZORRO SLIDER ĐỔI SANG MÀU CAM TỪ XANH === */
-::ng-deep .ant-slider-track {
-  background-color: var(--primary-color) !important;
-}
-::ng-deep .ant-slider-handle {
-  border-color: var(--primary-color) !important;
-}
-::ng-deep .ant-slider:hover .ant-slider-track {
-  background-color: var(--primary-color) !important;
-}
-::ng-deep .ant-slider:hover .ant-slider-handle {
-  border-color: var(--primary-color) !important;
-}
-::ng-deep .ant-slider-rail {
-  background-color: rgba(255, 255, 255, 0.1) !important;
+.child-list {
+  list-style: none;
+  padding: 0;
+  margin-left: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.price-inputs {
+/* Price Slider & Inputs */
+.price-slider-wrapper {
+  padding: 0 8px;
+}
+
+.price-inputs-modern {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-top: 16px;
-  color: rgba(255, 255, 255, 0.6);
 }
 
-::ng-deep .price-inputs .ant-input {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
-}
-::ng-deep .price-inputs .ant-input:focus {
-  border-color: var(--primary-color) !important;
-  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2) !important;
-}
-
-.brand-filters label {
-  margin-bottom: 10px;
-  color: rgba(255, 255, 255, 0.7);
-}
-::ng-deep .brand-filters .ant-checkbox-wrapper {
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-::ng-deep .brand-filters .ant-checkbox-wrapper:hover {
-  color: white !important;
-}
-::ng-deep .brand-filters .ant-checkbox-inner {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
-}
-::ng-deep .brand-filters .ant-checkbox:hover .ant-checkbox-inner {
-  border-color: var(--primary-color) !important;
-}
-::ng-deep .brand-filters .ant-checkbox-checked .ant-checkbox-inner {
-  background-color: var(--primary-color) !important;
-  border-color: var(--primary-color) !important;
-}
-::ng-deep .brand-filters .ant-checkbox-checked::after {
-  border-color: var(--primary-color) !important;
+.price-field {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-/* === NÚT BAM BỘ LỌC (CÙNG TÔNG NÚT TRANG CHỦ) === */
-.filters-sidebar .ant-btn-primary {
-  height: 44px;
-  border-radius: 8px;
-  font-weight: 600;
-  background: var(--primary-color) !important;
+.price-field input {
+  width: 100%;
   border: none;
-  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.3);
-  transition: all 0.3s ease;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  color: #f8fafc;
+  font-weight: 600;
 }
-.filters-sidebar .ant-btn-primary:hover {
-  background: linear-gradient(90deg, #f59e0b 0%, #ea580c 100%) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(234, 88, 12, 0.4);
+
+.currency {
+  color: #64748b;
+  font-size: 14px;
 }
-.filters-sidebar .ant-btn-default {
-  height: 44px;
-  border-radius: 8px;
+
+.separator {
+  color: #334155;
+}
+
+/* NG-ZORRO Overrides for Orange Theme */
+::ng-deep .ant-slider-track {
+  background-color: var(--primary-color) !important;
+}
+
+::ng-deep .ant-slider-handle {
+  border-color: var(--primary-color) !important;
+  background-color: #0f172a !important;
+}
+
+::ng-deep .ant-slider-handle:focus {
+  box-shadow: 0 0 0 5px rgba(249, 115, 22, 0.2) !important;
+}
+
+::ng-deep .ant-slider:hover .ant-slider-track {
+  background-color: var(--primary-hover) !important;
+}
+
+::ng-deep .ant-slider:hover .ant-slider-handle {
+  border-color: var(--primary-hover) !important;
+}
+
+/* Brand Grid (With Ellipsis) */
+.brand-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.brand-chip {
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 100px;
+  font-size: 13px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.8) !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-.filters-sidebar .ant-btn-default:hover {
-  color: white !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 100%; /* Ensure it can shrink */
+  overflow: hidden;
 }
 
+.brand-chip:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
 
-/* === CATALOG HEADER BAR === */
-.catalog-header {
+.brand-chip.selected {
+  background: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+}
+
+.brand-name-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Cắt chữ cho thương hiệu */
+}
+
+.btn-primary-gradient {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  border: none;
+  color: white;
+  height: 44px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+}
+
+.btn-primary-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+  color: white;
+}
+
+/* Display Header */
+.catalog-display-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  background: white;
-  padding: 16px 24px;
-  border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.02);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  background: #ffffff;
+  padding: 20px 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 }
 
-.catalog-header h2 {
+.display-title {
   margin: 0;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  color: var(--text-main);
+  color: #1e293b;
 }
 
-.catalog-sort {
-  color: var(--text-secondary);
+.accent-text {
+  color: var(--primary-color);
+}
+
+.count-pill {
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-size: 13px;
+  margin-left: 8px;
+}
+
+.display-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sort-label {
+  font-size: 13px;
+  color: #94a3b8;
   font-weight: 500;
 }
 
-.catalog-sort .ant-btn {
+.sort-dropdown-btn {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  border-radius: 10px;
   font-weight: 600;
+  min-width: 180px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.sort-dropdown-btn:hover {
+  border-color: var(--primary-color) !important;
   color: var(--primary-color) !important;
 }
 
-/* === ĐỒNG BỘ PAGINATION SANG MÀU CAM === */
-.pagination-wrapper {
-  margin-top: 48px;
-  display: flex;
-  justify-content: center;
-}
-::ng-deep .ant-pagination-item-active {
-  border-color: var(--primary-color) !important;
-  background: var(--primary-color) !important;
-}
-::ng-deep .ant-pagination-item-active a {
-  color: white !important;
+.premium-menu {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f1f5f9;
 }
 
-/* === TRẠNG THÁI TRỐNG === */
-.empty-state-container {
-  padding: 80px 0;
+/* Product Grid Adjustments */
+.products-main-grid {
+  margin-bottom: 40px;
+}
+
+.product-col-animate {
+  animation: slideUpFade 0.5s ease backwards;
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Empty State */
+.premium-empty-state {
+  background: white;
+  padding: 60px 24px;
+  border-radius: 20px;
   text-align: center;
-  background: transparent;
-  border-radius: 12px;
-  border: 2px dashed rgba(0,0,0,0.1);
-  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+/* Pagination container */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  padding-bottom: 50px;
+}
+
+@media (max-width: 768px) {
+  .catalog-container {
+    padding: 16px;
+  }
+  .filters-card {
+    position: static;
+    margin-bottom: 24px;
+  }
 }

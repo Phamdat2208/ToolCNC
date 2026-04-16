@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { OrderService } from '../../services/order.service';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -22,6 +23,7 @@ import { LoadingComponent } from "../../shared/components/loading/loading.compon
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     NzTableModule,
     NzTagModule,
     NzSpinModule,
@@ -78,11 +80,11 @@ export class OrderManagementComponent implements OnInit {
 
   getStatusColor(status: string): string {
     switch (status?.toUpperCase()) {
-      case 'PENDING': return 'warning';
-      case 'SHIPPING': return 'processing';
-      case 'COMPLETED': return 'success';
-      case 'CANCELLED': return 'error';
-      default: return 'default';
+      case 'PENDING': return '#f59e0b';   // Amber 500
+      case 'SHIPPING': return '#0ea5e9';  // Cyan 500
+      case 'COMPLETED': return '#10b981'; // Emerald 500
+      case 'CANCELLED': return '#ef4444'; // Red 500
+      default: return '#94a3b8';          // Slate 400
     }
   }
 

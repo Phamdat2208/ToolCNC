@@ -1,174 +1,166 @@
-<div class="catalog-page-wrapper">
-  <!-- Hero Banner Dạng Ngầu -->
-  <div class="catalog-hero-banner">
-    <div class="catalog-hero-content">
-      <app-page-breadcrumb [items]="breadcrumbItems"></app-page-breadcrumb>
-      <h1 class="hero-title">Sản Phẩm Dao Cụ & Trang Thiết Bị</h1>
-      <p class="hero-subtitle">Mang đến sức mạnh và độ chính xác tuyệt đối cho hệ thống máy gia công CNC của bạn.</p>
-    </div>
+<div class="catalog-container">
+  <div class="breadcrumb-section">
+    <app-page-breadcrumb [items]="breadcrumbItems"></app-page-breadcrumb>
   </div>
 
-  <div class="catalog-container">
-    <div nz-row nzGutter="40">
+  <div nz-row nzGutter="32">
     <!-- Sidebar / Filters -->
-    <div nz-col nzXs="24" nzMd="6" class="filters-sidebar">
-      <div class="filter-group">
-        <h3>Danh mục sản phẩm</h3>
-        <ul class="category-tree-list">
-          <!-- Option All -->
-          <li
-            class="tree-node-item"
-            [class.active]="activeCategory === ''"
-            (click)="selectCategory('')"
-          >
-            <div class="node-content">
-              <span class="cat-name">Tất cả sản phẩm</span>
-              <span class="count-badge">{{ totalAllProducts }}</span>
-            </div>
-          </li>
+    <div nz-col nzXs="24" nzMd="6">
+      <div class="filters-card sticky-sidebar">
+        <div class="filter-card-header">
+          <span class="filter-title"><nz-icon nzType="filter" /> Bộ lọc sản phẩm</span>
+          <button nz-button nzType="text" nzDanger size="small" (click)="clearFilters()">Xóa hết</button>
+        </div>
 
-          <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: categories, level: 0 }"></ng-container>
-        </ul>
-
-        <ng-template #recursiveTree let-nodes let-level="level">
-          <li *ngFor="let node of nodes" class="tree-node-wrapper">
-            <div 
-              class="tree-node-item" 
-              [class.active]="node.name === activeCategory"
-              [style.padding-left.px]="level * 16 + 12"
-              (click)="selectCategory(node.name)"
+        <!-- Categories -->
+        <div class="filter-section">
+          <h4 class="section-label">Danh mục</h4>
+          <ul class="category-tree-list">
+            <li
+              class="tree-node-item root-node"
+              [class.active]="activeCategory === ''"
+              (click)="selectCategory('')"
             >
-              <div class="node-content">
-                <span class="toggle-icon-wrapper" *ngIf="node.children && node.children.length > 0" (click)="toggleExpand($event, node.id)">
-                   <nz-icon [nzType]="isExpanded(node.id) ? 'minus-square' : 'plus-square'" nzTheme="outline"></nz-icon>
+              <span class="cat-name" title="Tất cả sản phẩm">Tất cả sản phẩm</span>
+              <span class="count-badge">{{ totalAllProducts }}</span>
+            </li>
+
+            <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: categories, level: 0 }"></ng-container>
+          </ul>
+
+          <ng-template #recursiveTree let-nodes let-level="level">
+            <li *ngFor="let node of nodes" class="tree-node-wrapper">
+              <div 
+                class="tree-node-item" 
+                [class.active]="node.name === activeCategory"
+                [style.padding-left.px]="level * 12 + 12"
+                (click)="selectCategory(node.name)"
+              >
+                <span class="toggle-icon" *ngIf="node.children && node.children.length > 0" (click)="toggleExpand($event, node.id)">
+                   <nz-icon [nzType]="isExpanded(node.id) ? 'down' : 'right'" />
                 </span>
-                <span class="no-children-spacer" *ngIf="!node.children || node.children.length === 0"></span>
-                
-                <span class="cat-name">{{ node.name }}</span>
+                <span class="dot-indicator" *ngIf="!node.children || node.children.length === 0"></span>
+                <span class="cat-name" [title]="node.name">{{ node.name }}</span>
                 <span class="count-badge">{{ node.displayCount }}</span>
               </div>
+              
+              <ul class="child-list" *ngIf="isExpanded(node.id) && node.children && node.children.length > 0">
+                <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: node.children, level: level + 1 }"></ng-container>
+              </ul>
+            </li>
+          </ng-template>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-section">
+          <h4 class="section-label">Khoảng giá (VND)</h4>
+          <div class="price-slider-wrapper">
+            <nz-slider
+              nzRange
+              [nzMin]="0"
+              [nzMax]="10000000"
+              [nzStep]="500000"
+              [(ngModel)]="priceRange"
+            ></nz-slider>
+            <div class="price-inputs-modern">
+               <div class="price-field">
+                 <span class="currency">₫</span>
+                 <input type="number" [(ngModel)]="priceRange[0]" />
+               </div>
+               <span class="separator">-</span>
+               <div class="price-field">
+                 <span class="currency">₫</span>
+                 <input type="number" [(ngModel)]="priceRange[1]" />
+               </div>
             </div>
-            
-            <ul class="child-list" *ngIf="isExpanded(node.id) && node.children && node.children.length > 0">
-              <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: node.children, level: level + 1 }"></ng-container>
-            </ul>
-          </li>
-        </ng-template>
-      </div>
+          </div>
+        </div>
 
-      <div class="filter-group">
-        <h3>Khoảng giá (VND)</h3>
-        <nz-slider
-          nzRange
-          [nzMin]="0"
-          [nzMax]="10000000"
-          [nzStep]="1000000"
-          [(ngModel)]="priceRange"
-        ></nz-slider>
-        <div class="price-inputs">
-          <input
-            nz-input
-            type="number"
-            [ngModel]="priceRange[0]"
-            (ngModelChange)="priceRange = [$event, priceRange[1]]"
-            placeholder="Từ"
-          />
-          <span> - </span>
-          <input
-            nz-input
-            type="number"
-            [ngModel]="priceRange[1]"
-            (ngModelChange)="priceRange = [priceRange[0], $event]"
-            placeholder="Đến"
-          />
+        <!-- Brands -->
+        <div class="filter-section">
+          <h4 class="section-label">Thương hiệu</h4>
+          <div class="brand-grid">
+            <div 
+              *ngFor="let brand of knownBrands" 
+              class="brand-chip" 
+              [class.selected]="selectedBrands.has(brand.name)"
+              (click)="toggleBrand(brand.name, !selectedBrands.has(brand.name))"
+              [title]="brand.name"
+            >
+              <span class="brand-name-text">{{ brand.name }}</span>
+              <nz-icon nzType="check" *ngIf="selectedBrands.has(brand.name)" />
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-actions-bottom">
+          <button nz-button class="btn-primary-gradient" nzBlock (click)="applyFilters()">
+            Áp dụng bộ lọc
+          </button>
         </div>
       </div>
-
-      <div class="filter-group">
-        <h3>Thương hiệu</h3>
-        <div class="brand-filters">
-          <ng-container *ngFor="let brand of knownBrands">
-            <label
-              nz-checkbox
-              [nzChecked]="selectedBrands.has(brand.name)"
-              (nzCheckedChange)="toggleBrand(brand.name, $event)"
-              >{{ brand.name }}</label
-            ><br />
-          </ng-container>
-        </div>
-      </div>
-
-      <button nz-button nzType="primary" nzBlock (click)="applyFilters()" class="btn-apply-filters">
-        Lọc kết quả
-      </button>
-      <button nz-button nzBlock (click)="clearFilters()" class="mt-8 btn-clear-filters">
-        <nz-icon nzType="reload" />
-        Xóa bộ lọc
-      </button>
     </div>
 
     <!-- Product Grid -->
     <div nz-col nzXs="24" nzMd="18">
-      <div class="catalog-header">
-        <h2>
-          <ng-container *ngIf="searchKeyword"
-            >Kết quả cho "<em>{{ searchKeyword }}</em
-          >"</ng-container
-          >
-          <ng-container *ngIf="!searchKeyword">Tất cả sản phẩm</ng-container>
-        </h2>
-        <div class="catalog-sort">
-          <span>Sắp xếp theo: </span>
+      <div class="catalog-display-header">
+        <div class="results-info">
+          <h2 class="display-title">
+            <ng-container *ngIf="searchKeyword">
+              Tìm thấy <span class="accent-text">{{ totalProducts }}</span> kết quả cho "{{ searchKeyword }}"
+            </ng-container>
+            <ng-container *ngIf="!searchKeyword">
+              Tất cả sản phẩm <span class="count-pill">{{ totalProducts }}</span>
+            </ng-container>
+          </h2>
+        </div>
+        
+        <div class="display-controls">
+          <span class="sort-label">Sắp xếp:</span>
           <button
             nz-button
-            nzType="text"
+            class="sort-dropdown-btn"
             nz-dropdown
             [nzDropdownMenu]="sortMenu"
             nzPlacement="bottomRight"
           >
-            {{ currentSort }} <nz-icon nzType="down" />
+            {{ currentSort }} <nz-icon nzType="caret-down" />
           </button>
           <nz-dropdown-menu #sortMenu="nzDropdownMenu">
-            <ul nz-menu>
+            <ul nz-menu class="premium-menu">
               <li nz-menu-item (click)="changeSort('Mới nhất')">Mới nhất</li>
-              <li nz-menu-item (click)="changeSort('Giá: Thấp đến Cao')">
-                Giá: Thấp đến Cao
-              </li>
-              <li nz-menu-item (click)="changeSort('Giá: Cao đến Thấp')">
-                Giá: Cao đến Thấp
-              </li>
-              <li nz-menu-item (click)="changeSort('Bán chạy nhất')">
-                Bán chạy nhất
-              </li>
+              <li nz-menu-item (click)="changeSort('Giá: Thấp đến Cao')">Giá: Thấp đến Cao</li>
+              <li nz-menu-item (click)="changeSort('Giá: Cao đến Thấp')">Giá: Cao đến Thấp</li>
+              <li nz-menu-item (click)="changeSort('Bán chạy nhất')">Bán chạy nhất</li>
             </ul>
           </nz-dropdown-menu>
         </div>
       </div>
 
       <app-loading [isLoading]="loading">
-        <div nz-row [nzGutter]="[16, 16]">
+        <div nz-row [nzGutter]="[20, 20]" class="products-main-grid">
           <div
             nz-col
             nzXs="24"
             nzSm="12"
             nzLg="8"
             *ngFor="let product of products"
+            class="product-col-animate"
           >
             <app-product-card [product]="product"></app-product-card>
           </div>
         </div>
 
-        <!-- Trạng thái trống -->
-        <div
-          *ngIf="!loading && products.length === 0"
-          class="empty-state-container mt-24"
-        >
+        <!-- Empty State -->
+        <div *ngIf="!loading && products.length === 0" class="premium-empty-state">
           <nz-empty
-            nzNotFoundContent="Không tìm thấy sản phẩm nào phù hợp với yêu cầu của bạn."
+            [nzNotFoundImage]="'https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg'"
+            nzNotFoundContent="Rất tiếc, chúng tôi không tìm thấy sản phẩm nào phù hợp."
           ></nz-empty>
+          <button nz-button (click)="clearFilters()">Xóa tất cả bộ lọc</button>
         </div>
 
-        <div class="pagination-wrapper" *ngIf="totalProducts > 0">
+        <div class="pagination-container" *ngIf="totalProducts > 0">
           <app-pagination
             [total]="totalProducts"
             [pageIndex]="pageIndex"
@@ -181,5 +173,4 @@
       </app-loading>
     </div>
   </div>
-</div>
 </div>

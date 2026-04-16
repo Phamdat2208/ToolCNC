@@ -7,7 +7,8 @@
     </div>
   
     <div class="table-card">
-      <nz-table #basicTable [nzData]="brands" [nzLoading]="loading" [nzPageSize]="100">
+      <app-loading [isLoading]="loading">
+      <nz-table #basicTable [nzData]="brands" [nzPageSize]="100">
         <thead>
           <tr>
             <th nzWidth="80px">ID</th>
@@ -40,6 +41,7 @@
           </tr>
         </tbody>
       </nz-table>
+      </app-loading>
     </div>
   
     <!-- Modal Thêm/Sửa -->

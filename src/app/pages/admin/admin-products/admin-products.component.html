@@ -2,10 +2,10 @@
       <div class="page-header">
         <h2>Quản lý sản phẩm</h2>
         <div class="header-actions">
-          <button nz-button nzType="default" (click)="showImportModal()" class="mr-8" nz-tooltip nzTooltipTitle="Thêm sản phẩm hàng loạt từ Excel">
+          <button nz-button nzType="default" (click)="showImportModal()" class="import-btn mr-8">
             <nz-icon nzType="file-excel" /> Nhập hàng loạt
           </button>
-          <button nz-button nzType="primary" routerLink="/admin/products/new">
+          <button nz-button nzType="primary" routerLink="/admin/products/new" class="add-btn">
             <nz-icon nzType="plus" /> Thêm sản phẩm mới
           </button>
         </div>
@@ -31,10 +31,10 @@
         <ng-template #prefixIconSearch><nz-icon nzType="search" /></ng-template>
       </div>
 
+      <app-loading [isLoading]="loading">
       <nz-table
         #basicTable
         [nzData]="products"
-        [nzLoading]="loading"
         [nzTotal]="total"
         [nzPageIndex]="page"
         [nzPageSize]="size"
@@ -49,9 +49,9 @@
             <th>Tên sản phẩm</th>
             <th>Danh mục</th>
             <th>Thương hiệu</th>
-            <th>Tồn kho</th>
+            <th nzWidth="120px">Tồn kho</th>
             <th>Giá</th>
-            <th nzWidth="150px">Thao tác</th>
+            <th nzWidth="100px">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -76,7 +76,7 @@
               <td class="text-danger font-bold">{{ data.price | currency:'VND':'symbol':'1.0-0' }}</td>
             </ng-template>
             <td>
-              <button nz-button nzType="text" [routerLink]="['/admin/products', data.id, 'edit']" class="text-primary" nz-tooltip nzTooltipTitle="Sửa">
+              <button nz-button nzType="text" [routerLink]="['/admin/products', data.id, 'edit']" class="edit-icon text-primary" nz-tooltip nzTooltipTitle="Sửa">
                 <nz-icon nzType="edit" />
               </button>
               <button nz-button nzType="text" nzDanger (click)="deleteProduct(data.id)" nz-tooltip nzTooltipTitle="Xóa">
@@ -97,4 +97,5 @@
           (pageSizeChange)="onPageSizeChange($event)"
         ></app-pagination>
       </div>
+      </app-loading>
     </div>

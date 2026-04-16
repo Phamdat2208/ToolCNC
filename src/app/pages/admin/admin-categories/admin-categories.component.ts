@@ -12,6 +12,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { CategoryService } from '../../../services/category.service';
 import { Category } from '../../../models/category.model';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-admin-categories',
@@ -27,7 +28,8 @@ import { Category } from '../../../models/category.model';
     NzModalModule,
     NzToolTipModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LoadingComponent
   ],
   templateUrl: './admin-categories.component.html',
   styleUrl: './admin-categories.component.css'

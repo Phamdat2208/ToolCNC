@@ -12,6 +12,7 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { OrderService } from '../../services/order.service';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
@@ -22,6 +23,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 import { CustomSelectComponent, SelectOption } from '../../shared/components/custom-select/custom-select.component';
 import { CustomTextareaComponent } from '../../shared/components/custom-textarea/custom-textarea.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-checkout',
@@ -40,9 +42,11 @@ import { CustomTextareaComponent } from '../../shared/components/custom-textarea
     NzResultModule, 
     NzTagModule, 
     NzIconModule,
+    NzToolTipModule,
     CustomInputComponent,
     CustomSelectComponent,
-    CustomTextareaComponent
+    CustomTextareaComponent,
+    LoadingComponent
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
@@ -161,6 +165,10 @@ export class CheckoutComponent implements OnInit {
 
   get cartTotal() {
     return this.cartService.totalAmount;
+  }
+
+  get totalItems() {
+    return this.cartService.totalItems;
   }
 
   validateForm: FormGroup = this.fb.group({

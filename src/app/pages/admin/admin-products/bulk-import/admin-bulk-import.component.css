@@ -137,3 +137,35 @@
 .mb-8 { margin-bottom: 8px; }
 .mr-8 { margin-right: 8px; }
 .mb-24 { margin-bottom: 24px; }
+
+.clear-btn {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 8px;
+  background: #ffffff;
+  border-color: #cdced3;
+}
+
+.clear-btn:hover {
+  background: #cdced3;
+  border-color: #cdced3;
+  color: #000000 !important;
+}
+
+.save-btn:disabled {
+  background: #cdced3 !important;
+  border-color: #cdced3 !important;
+}
+
+.save-btn {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 8px;
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.save-btn:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}

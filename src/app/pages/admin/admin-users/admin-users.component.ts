@@ -7,11 +7,12 @@ import { UserService } from '../../../services/user.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, NzTableModule, NzTagModule, NzAvatarModule, PaginationComponent],
+  imports: [CommonModule, NzTableModule, NzTagModule, NzAvatarModule, PaginationComponent, LoadingComponent],
   templateUrl: './admin-users.component.html',
   styleUrl: './admin-users.component.css'
 })

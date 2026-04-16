@@ -4,6 +4,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { LoadingComponent } from '../loading/loading.component';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
@@ -27,7 +28,9 @@ import { FormsModule } from '@angular/forms';
     NzIconModule, 
     NzSpinModule,
     NzCheckboxModule,
-    NzInputNumberModule
+    NzInputNumberModule,
+    LoadingComponent,
+    QuantityInputComponent
   ],
   templateUrl: './quick-select-modal.component.html',
   styleUrl: './quick-select-modal.component.css'

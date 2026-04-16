@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { UrlUtils } from '../../../shared/utils/url-utils';
 import { AdminBulkImportComponent } from './bulk-import/admin-bulk-import.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-admin-products',
@@ -30,7 +31,8 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
     NzToolTipModule,
     FormsModule,
     AdminBulkImportComponent,
-    PaginationComponent
+    PaginationComponent,
+    LoadingComponent
   ],
   templateUrl: './admin-products.component.html',
   styleUrl: './admin-products.component.css'

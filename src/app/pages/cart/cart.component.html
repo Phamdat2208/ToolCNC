@@ -1,141 +1,160 @@
-<div class="cart-page-wrapper">
-  <div class="container-standard">
-    <div class="cart-header-row">
-      <h1 class="page-main-title">
-        <nz-icon nzType="shopping-cart" /> Giỏ hàng của bạn
-      </h1>
-      <button nz-button nzType="default" routerLink="/products" class="btn-continue-shop" nzShape="round">
-        <nz-icon nzType="arrow-left" /> Tiếp tục tìm sản phẩm
+<div class="cart-container">
+  <!-- Breadcrumb -->
+  <div class="breadcrumb-section">
+    <app-page-breadcrumb [items]="breadcrumbItems"></app-page-breadcrumb>
+  </div>
+
+  <div class="cart-header">
+    <h1 class="page-title">
+      <nz-icon nzType="shopping-cart" /> Giỏ hàng của bạn
+      <span class="item-count" *ngIf="cartItems.length > 0">({{ cartItems.length }} sản phẩm)</span>
+    </h1>
+    <div class="cart-header-actions" *ngIf="cartItems.length > 0">
+      <button nz-button nzType="link" routerLink="/products" class="continue-shopping">
+        <nz-icon nzType="arrow-left" /> Tiếp tục mua sắm
       </button>
     </div>
+  </div>
 
-    <div nz-row [nzGutter]="[32, 32]" *ngIf="cartItems.length > 0; else emptyCart">
-      <!-- Cart Items Section -->
-      <div nz-col nzXs="24" nzLg="16">
-        <div class="industrial-cart-card">
-          <div class="table-responsive-container">
-            <nz-table
+  <app-loading [isLoading]="isLoading || isUpdatingTotal">
+    <div nz-row [nzGutter]="32" *ngIf="cartItems.length > 0; else emptyCart" class="cart-content-row">
+      <!-- Main Cart Content -->
+      <div nz-col nzXs="24" nzLg="16" class="cart-main-body">
+        <div class="cart-table-wrapper">
+          <nz-table
             #cartTable
             [nzData]="cartItems"
             [nzShowPagination]="false"
-            [nzFrontPagination]="false"
-            class="premium-industrial-table"
             [nzScroll]="{ x: '750px' }"
+            class="premium-table"
           >
             <thead>
               <tr>
-                <th class="head-product">SẢN PHẨM</th>
-                <th nzWidth="140px" class="text-center">ĐƠN GIÁ</th>
-                <th nzWidth="150px" class="text-center">SỐ LƯỢNG</th>
-                <th nzWidth="150px" class="text-right">THÀNH TIỀN</th>
-                <th nzWidth="70px" class="text-center"></th>
+                <th nzLeft>Sản phẩm</th>
+                <th nzWidth="140px">Đơn giá</th>
+                <th nzWidth="150px">Số lượng</th>
+                <th nzWidth="140px" nzRight>Thành tiền</th>
+                <th nzWidth="80px" nzRight></th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let data of cartTable.data; trackBy: trackById">
-                <td>
-                  <div class="product-item-info">
-                    <div class="product-thumb">
-                      <img [src]="data.img" [alt]="data.name" />
+              <tr *ngFor="let data of cartTable.data; trackBy: trackById" class="cart-item-row">
+                <td nzLeft>
+                  <div class="product-cell-modern">
+                    <div class="product-img-box" (click)="goToProduct(data.productId)">
+                      <img [src]="data.img" alt="{{ data.name }}" />
                     </div>
-                    <div class="product-details">
-                      <h4 class="name">{{ data.name }}</h4>
-                      <div class="variant-pill" *ngIf="data.variantName">
-                        <span class="label">Phân loại:</span>
-                        <span class="value">{{ data.variantName }}</span>
+                    <div class="product-info-box">
+                      <span class="item-name" (click)="goToProduct(data.productId)">{{ data.name }}</span>
+                      <div class="item-variant" *ngIf="data.variantName">
+                        <nz-tag nzColor="default">{{ data.variantName }}</nz-tag>
                       </div>
                     </div>
                   </div>
                 </td>
-                <td class="text-center unit-price">{{ data.price | number:'1.0-0' }}đ</td>
-                <td class="text-center">
-                  <div class="qty-control-wrapper">
+                <td class="price-cell">
+                  <span class="unit-price-label">Đơn giá:</span>
+                  {{ data.price | currency: "VND" : "symbol" : "1.0-0" }}
+                </td>
+                <td>
+                  <div class="quantity-control-wrapper">
                     <app-quantity-input
-                      [quantity]="data.quantity"
-                      (quantityChange)="updateQuantity(data.id, $event)"
+                      [(quantity)]="data.quantity"
+                      (quantityChange)="updateQuantity(data, $event)"
                       [maxStock]="100"
                     ></app-quantity-input>
                   </div>
                 </td>
-                <td class="text-right subtotal-price">
-                  {{ data.price * data.quantity | number:'1.0-0' }}đ
+                <td nzRight class="total-cell">
+                  {{ data.price * data.quantity | currency: "VND" : "symbol" : "1.0-0" }}
                 </td>
-                <td class="text-center">
-                  <div
-                    class="btn-remove-item"
+                <td nzRight>
+                  <button
+                    nz-button
+                    nzType="text"
+                    nzDanger
+                    class="remove-btn"
                     (click)="removeItem(data.id)"
-                    [class.loading]="isRemoving[data.id]"
+                    [nzLoading]="isRemoving[data.id]"
                   >
-                    <nz-icon [nzType]="isRemoving[data.id] ? 'loading' : 'delete'" />
-                  </div>
+                    <nz-icon nzType="delete" />
+                  </button>
                 </td>
               </tr>
             </tbody>
-            </nz-table>
-          </div>
+          </nz-table>
         </div>
       </div>
 
-      <!-- Result Summary Section -->
-      <div nz-col nzXs="24" nzLg="8">
-        <div class="cart-summary-card shadow-premium">
+      <!-- Order Summary Card -->
+      <div nz-col nzXs="24" nzLg="8" class="cart-sidebar">
+        <div class="order-summary-card sticky-card">
           <h3 class="summary-title">Tóm tắt đơn hàng</h3>
+          
           <div class="summary-details">
             <div class="summary-line">
-              <span class="label">Tạm tính ({{ cartItems.length }} sản phẩm)</span>
-              <span class="val">{{ totalAmount | number:'1.0-0' }}đ</span>
+              <span class="label">Tạm tính ({{ cartItems.length }} mã hàng)</span>
+              <span class="value">{{ totalAmount | currency: "VND" : "symbol" : "1.0-0" }}</span>
             </div>
             <div class="summary-line">
               <span class="label">Phí vận chuyển</span>
-              <span class="val text-success">Tính sau</span>
+              <span class="value highlight">Thỏa thuận</span>
             </div>
-            
-            <nz-divider class="my-16"></nz-divider>
-            
-            <div class="summary-line total-line">
-              <span class="label">Tổng cộng</span>
-              <div class="total-price-group">
-                <span class="final-price">{{ totalAmount | number:'1.0-0' }}đ</span>
-                <nz-icon nzType="sync" [nzSpin]="true" *ngIf="isUpdatingTotal" class="price-sync-icon" />
+            <div class="summary-line discount">
+              <span class="label">Giảm giá</span>
+              <span class="value">- 0₫</span>
+            </div>
+          </div>
+
+          <nz-divider></nz-divider>
+
+          <div class="total-section">
+            <div class="total-label-row">
+              <span class="main-total-label">Tổng cộng</span>
+              <div class="loading-inline" *ngIf="isUpdatingTotal">
+                <nz-icon nzType="sync" [nzSpin]="true" />
               </div>
             </div>
-            
+            <div class="main-total-value">
+              {{ totalAmount | currency: "VND" : "symbol" : "1.0-0" }}
+            </div>
             <p class="vat-info">(Đã bao gồm VAT nếu có)</p>
           </div>
 
-          <div class="cart-cta-hub">
+          <div class="action-section">
             <button
               nz-button
+              nzType="primary"
               nzBlock
-              nzSize="large"
-              class="cta-btn btn-checkout-gradient"
+              class="premium-checkout-btn"
               routerLink="/checkout"
             >
-              <span>TIẾN HÀNH THANH TOÁN</span>
+              TIẾN HÀNH THANH TOÁN
               <nz-icon nzType="arrow-right" />
             </button>
-          </div>
-
-          <div class="trust-icons">
-            <div class="trust-item"><nz-icon nzType="safety-certificate" /> Bảo mật</div>
-            <div class="trust-item"><nz-icon nzType="car" /> Giao lắp tận nơi</div>
+            
+            <div class="payment-trust-badges">
+              <span class="badge-text"><nz-icon nzType="safety" /> Thanh toán an toàn 100%</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </app-loading>
 
-    <!-- Empty State -->
-    <ng-template #emptyCart>
-      <div class="empty-cart-state animate-up">
-        <div class="empty-icon-circle">
-          <nz-icon nzType="shopping-cart" />
+  <!-- Empty Cart State -->
+  <ng-template #emptyCart>
+    <div class="premium-empty-cart">
+      <div class="empty-animation-container">
+        <div class="empty-cart-icon-wrapper">
+           <nz-icon nzType="shopping-cart" class="large-empty-icon" />
         </div>
-        <h2>Giỏ hàng của bạn đang trống</h2>
-        <p>Có vẻ như bạn chưa chọn được sản phẩm nào ưng ý.</p>
-        <button nz-button nzType="primary" nzSize="large" routerLink="/products" class="btn-go-shopping">
-          Quay lại cửa hàng
-        </button>
       </div>
-    </ng-template>
-  </div>
+      <h2>Giỏ hàng của bạn đang trống</h2>
+      <p>Không có sản phẩm nào trong giỏ hàng. Hãy khám phá và chọn cho mình những món đồ ưng ý nhé!</p>
+      <button nz-button class="btn-primary-gradient mt-24" nzSize="large" routerLink="/products">
+        MUA SẮM NGAY
+      </button>
+    </div>
+  </ng-template>
 </div>

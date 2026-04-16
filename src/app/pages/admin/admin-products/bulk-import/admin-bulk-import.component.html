@@ -57,8 +57,8 @@
         </nz-tag>
       </div>
       <div class="preview-actions">
-        <button nz-button (click)="clearPreview()" class="mr-8">Làm mới tất cả</button>
-        <button nz-button nzType="primary" [nzLoading]="isSaving" [disabled]="isImportInvalid" (click)="saveBulk()" [nz-tooltip]="isImportInvalid ? 'Vui lòng nạp đầy đủ ảnh chính và ảnh bổ sung để tiếp tục' : ''">
+        <button nz-button (click)="clearPreview()" class="clear-btn mr-8">Làm mới tất cả</button>
+        <button nz-button nzType="primary" class="save-btn" [nzLoading]="isSaving" [disabled]="isImportInvalid" (click)="saveBulk()" [nz-tooltip]="isImportInvalid ? 'Vui lòng nạp đầy đủ ảnh chính và ảnh bổ sung để tiếp tục' : ''">
             <nz-icon [nzType]="isSaving ? 'loading' : 'save'" /> 
             {{ isSaving ? 'Đang nạp dữ liệu...' : 'Lưu vào hệ thống' }}
         </button>

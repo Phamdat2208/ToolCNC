@@ -7,8 +7,8 @@
   </div>
 
   <div class="table-card">
+    <app-loading [isLoading]="loading">
     <nz-table #basicTable [nzData]="filteredCategories" 
-      [nzLoading]="loading" 
       [nzFrontPagination]="false" 
       [nzShowPagination]="false">
       <thead>
@@ -61,6 +61,7 @@
         </tr>
       </tbody>
     </nz-table>
+    </app-loading>
   </div>
 
   <!-- Modal Thêm/Sửa -->

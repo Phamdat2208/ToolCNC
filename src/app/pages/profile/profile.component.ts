@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
@@ -18,9 +18,12 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
   selector: 'app-profile',
   standalone: true,
   imports: [
-    CommonModule, 
-    NzDescriptionsModule, 
+    CommonModule,
+    RouterLink,
     NzButtonModule,
+    NzIconModule,
+    NzFormModule,
+    NzSpinModule,
     ReactiveFormsModule,
     CustomInputComponent,
     LoadingComponent
