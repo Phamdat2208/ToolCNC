@@ -102,8 +102,9 @@ export class CheckoutComponent implements OnInit {
     this.isLoadingProvinces = true;
     this.locationService.getProvinces().subscribe({
       next: (data) => {
-        this.provinces = data;
-        this.provinceOptions = data.map(p => ({ label: p.name, value: p.code }));
+        const list = Array.isArray(data) ? data : [];
+        this.provinces = list;
+        this.provinceOptions = list.map(p => ({ label: p.name, value: p.code }));
         this.isLoadingProvinces = false;
       },
       error: () => {
@@ -134,8 +135,9 @@ export class CheckoutComponent implements OnInit {
     this.isLoadingWards = true;
     this.locationService.getWards(code).subscribe({
       next: (data) => {
-        this.wards = data;
-        this.wardOptions = data.map(w => ({ label: w.name, value: w.code }));
+        const list = Array.isArray(data) ? data : [];
+        this.wards = list;
+        this.wardOptions = list.map(w => ({ label: w.name, value: w.code }));
         this.isLoadingWards = false;
       },
       error: () => {

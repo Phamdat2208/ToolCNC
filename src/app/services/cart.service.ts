@@ -61,7 +61,8 @@ export class CartService {
     ).subscribe(backendItems => {
       if (backendItems) {
         // Chuyển đổi CartItem backend sang frontend shape
-        const items: CartItem[] = backendItems.map(bItem => ({
+        const itemsList = Array.isArray(backendItems) ? backendItems : [];
+        const items: CartItem[] = itemsList.map(bItem => ({
           id: bItem.id, // Now it's the actual CartItem ID
           productId: bItem.product.id,
           name: bItem.product.name,

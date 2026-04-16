@@ -73,7 +73,7 @@ export class HeaderComponent {
       })
     ).subscribe({
       next: (res: any) => {
-        if (res && res.content) {
+        if (res && res.content && Array.isArray(res.content)) {
           this.searchResults = res.content.map((p: any) => ({
             ...p,
             img: p.imageUrl || `https://placehold.co/50x50?text=${encodeURIComponent(p.name?.charAt(0) ?? '?')}`

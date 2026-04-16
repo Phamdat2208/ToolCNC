@@ -54,8 +54,9 @@ export class WishlistService {
       })
     ).subscribe(backendItems => {
       if (backendItems) {
+        const list = Array.isArray(backendItems) ? backendItems : [];
         // Map backend response (WishlistItem containing a Product) to frontend product array
-        const products = backendItems.map(item => ({
+        const products = list.map(item => ({
           ...item.product,
           img: item.product.imageUrl || `https://placehold.co/300x200?text=${encodeURIComponent(item.product.name)}`
         }));

@@ -137,7 +137,8 @@ export class ProductCatalogComponent implements OnInit {
   loadBrands() {
     this.brandService.getBrands().subscribe({
       next: (list) => {
-        this.knownBrands = list.map(b => ({
+        const data = Array.isArray(list) ? list : [];
+        this.knownBrands = data.map(b => ({
           ...b,
           logoUrl: UrlUtils.getFullUrl(b.logoUrl)
         }));
@@ -162,11 +163,12 @@ export class ProductCatalogComponent implements OnInit {
       brands
     ).subscribe({
       next: (res) => {
-        this.products = res.content.map((p: any) => ({
+        const data = (res && Array.isArray(res.content)) ? res.content : [];
+        this.products = data.map((p: any) => ({
           ...p,
           imageUrl: UrlUtils.getFullUrl(p.imageUrl)
         }));
-        this.totalProducts = res.totalElements;
+        this.totalProducts = res?.totalElements || 0;
         this.loading = false;
       },
       error: (err) => {

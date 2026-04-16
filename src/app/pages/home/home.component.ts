@@ -78,7 +78,8 @@ export class HomeComponent implements OnInit {
 
   loadCategories() {
     this.categoryService.getCategories().subscribe(res => {
-      this.categories = res.map((cat: Category) => ({
+      const data = Array.isArray(res) ? res : [];
+      this.categories = data.map((cat: Category) => ({
         ...cat,
         icon: this.getIconForCategory(cat.name)
       }));
@@ -88,7 +89,8 @@ export class HomeComponent implements OnInit {
   loadBrands() {
     this.brandService.getBrands().subscribe({
       next: (res) => {
-        this.featuredBrands = res.map(brand => ({
+        const data = Array.isArray(res) ? res : [];
+        this.featuredBrands = data.map(brand => ({
           ...brand,
           logoUrl: UrlUtils.getFullUrl(brand.logoUrl)
         }));
@@ -120,7 +122,8 @@ export class HomeComponent implements OnInit {
     this.loading = true;
     this.productService.getProducts(0, 12, 'Mới nhất').subscribe({
       next: (res) => {
-        this.featuredProducts = res.content.map((p: any) => ({
+        const data = (res && Array.isArray(res.content)) ? res.content : [];
+        this.featuredProducts = data.map((p: any) => ({
           ...p,
           img: p.imageUrl || `https://placehold.co/300x200?text=${encodeURIComponent(p.name)}`
         }));
