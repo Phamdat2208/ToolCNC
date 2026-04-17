@@ -1,5 +1,5 @@
 import { registerLocaleData } from '@angular/common';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import vi from '@angular/common/locales/vi';
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -105,6 +105,7 @@ import {
   WarningFill,
   WarningOutline
 } from '@ant-design/icons-angular/icons';
+import { maskingInterceptor } from './shared/interceptors/masking.interceptor';
 
 const icons = [
   CheckCircleOutline,
@@ -210,6 +211,7 @@ export const appConfig: ApplicationConfig = {
     provideNzI18n(vi_VN),
     provideNzIcons(icons),
     provideNzConfig({ notification: { nzDuration: 3000, nzMaxStack: 3, nzPlacement: 'bottomRight' } }),
-    importProvidersFrom(NzModalModule)
+    importProvidersFrom(NzModalModule),
+    provideHttpClient(withInterceptors([maskingInterceptor])),
   ]
 };
