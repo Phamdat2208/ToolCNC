@@ -64,6 +64,7 @@ export class AdminCategoriesComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (res) => {
         this.categories = res;
+        this.calculateTotalProductCount(this.categories);
         this.processCategories();
         this.loading = false;
       },
@@ -72,6 +73,19 @@ export class AdminCategoriesComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  calculateTotalProductCount(list: Category[]): number {
+    let listTotal = 0;
+    list.forEach(cat => {
+      let currentTotal = cat.productCount || 0;
+      if (cat.children && cat.children.length > 0) {
+        currentTotal += this.calculateTotalProductCount(cat.children);
+      }
+      cat.totalProductCount = currentTotal;
+      listTotal += currentTotal;
+    });
+    return listTotal;
   }
 
   processCategories() {
