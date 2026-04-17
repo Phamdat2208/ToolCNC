@@ -11,19 +11,19 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
-import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { Brand, BrandService } from '../../services/brand.service';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
-import { BrandService, Brand } from '../../services/brand.service';
-import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
-import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
-import { UrlUtils } from '../../shared/utils/url-utils';
+import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
+import { ToastService } from '../../shared/services/toast.service';
+import { UrlUtils } from '../../shared/utils/url-utils';
 
 @Component({
   selector: 'app-product-catalog',
@@ -53,10 +53,10 @@ export class ProductCatalogComponent implements OnInit {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private notification = inject(NzNotificationService);
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
   private brandService = inject(BrandService);
+  private toastService = inject(ToastService);
 
   searchKeyword = '';
   private initialized = false;
@@ -89,6 +89,11 @@ export class ProductCatalogComponent implements OnInit {
 
       // 3. Load Data
       this.loadProducts();
+      
+      if (this.activeCategory && this.categories.length > 0) {
+        this.expandToActiveCategory(this.categories, this.activeCategory);
+      }
+      
       this.initialized = true;
     });
   }
@@ -102,6 +107,10 @@ export class ProductCatalogComponent implements OnInit {
         
         if (this.searchKeyword && !this.activeCategory) {
           this.matchKeywordToCategory();
+        }
+
+        if (this.activeCategory) {
+          this.expandToActiveCategory(this.categories, this.activeCategory);
         }
       },
       error: (err) => console.error('Error fetching categories', err)
@@ -173,7 +182,7 @@ export class ProductCatalogComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching products', err);
-        this.notification.error('Lỗi', 'Không thể kết nối đến máy chủ.');
+        this.toastService.showError('Không thể kết nối đến máy chủ.');
         this.loading = false;
       }
     });
@@ -262,5 +271,21 @@ export class ProductCatalogComponent implements OnInit {
     if (matchedCat) {
       this.activeCategory = matchedCat.name;
     }
+  }
+
+  private expandToActiveCategory(nodes: any[], targetName: string, path: number[] = []): boolean {
+    if (!targetName) return false;
+    for (const node of nodes) {
+      if (node.name === targetName) {
+        path.forEach(id => this.expandedIds.add(id));
+        return true;
+      }
+      if (node.children && node.children.length > 0) {
+        if (this.expandToActiveCategory(node.children, targetName, [...path, node.id])) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

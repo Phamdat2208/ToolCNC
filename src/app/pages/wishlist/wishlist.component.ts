@@ -4,10 +4,10 @@ import { RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   standalone: true,
@@ -18,7 +18,7 @@ import { WishlistService } from '../../services/wishlist.service';
 export class WishlistComponent {
   wishlistService = inject(WishlistService);
   cartService = inject(CartService);
-  private notification = inject(NzNotificationService);
+  private toastService = inject(ToastService);
 
   isAddingToCart: { [key: number]: boolean } = {};
   isRemoving: { [key: number]: boolean } = {};
@@ -36,7 +36,7 @@ export class WishlistComponent {
     this.cartService.addToCart(product, 1, product.img || product.imageUrl).subscribe(success => {
       this.isAddingToCart[product.id] = false;
       if (success) {
-        this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`);
+        this.toastService.showSuccess(`Đã thêm ${product.name} vào giỏ hàng`);
       }
     });
   }
@@ -46,7 +46,7 @@ export class WishlistComponent {
     this.wishlistService.removeViaObservable(productId, false).subscribe({
       next: () => {
         this.isRemoving[productId] = false;
-        this.notification.info('Yêu thích', 'Đã xóa sản phẩm khỏi danh sách yêu thích');
+        this.toastService.showInfo('Đã xóa sản phẩm khỏi danh sách yêu thích');
       },
       error: () => {
         this.isRemoving[productId] = false;

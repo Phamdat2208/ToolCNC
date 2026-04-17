@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { UserService } from '../../../services/user.service';
 import { LoadingComponent } from "../../../shared/components/loading/loading.component";
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-admin-users',
@@ -17,7 +17,7 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 })
 export class AdminUsersComponent implements OnInit {
   private userService = inject(UserService);
-  private message = inject(NzMessageService);
+  private toastService = inject(ToastService);
   users: any[] = [];
   loading = true;
   page = 1;
@@ -35,7 +35,7 @@ export class AdminUsersComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.message.error('Không thể tải danh sách người dùng');
+        this.toastService.showError('Không thể tải danh sách người dùng');
         this.loading = false;
         console.error(err);
       }

@@ -193,7 +193,8 @@ const icons = [
   UserAddOutline,
   IdcardOutline,
   RocketOutline,
-  RestOutline
+  RestOutline,
+  LoadingOutline,
 ];
 
 registerLocaleData(vi);
@@ -202,11 +203,9 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })),
-    provideHttpClient(withInterceptors([maskingInterceptor])),
     provideAnimationsAsync(),
     provideNzI18n(vi_VN),
     provideNzIcons(icons),
-    provideNzConfig({ notification: { nzDuration: 3000, nzMaxStack: 3, nzPlacement: 'bottomRight' } }),
     importProvidersFrom(NzModalModule),
     provideHttpClient(withInterceptors([maskingInterceptor])),
   ]

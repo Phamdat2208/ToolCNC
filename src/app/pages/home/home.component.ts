@@ -1,21 +1,21 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NzCarouselModule } from 'ng-zorro-antd/carousel';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzGridModule } from 'ng-zorro-antd/grid';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
-import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
-import { ProductService } from '../../services/product.service';
-import { CategoryService } from '../../services/category.service';
-import { BrandService, Brand } from '../../services/brand.service';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzCarouselModule } from 'ng-zorro-antd/carousel';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { Category } from '../../models/category.model';
-import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
+import { Brand, BrandService } from '../../services/brand.service';
+import { CategoryService } from '../../services/category.service';
+import { ProductService } from '../../services/product.service';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
+import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
+import { ToastService } from '../../shared/services/toast.service';
 import { UrlUtils } from '../../shared/utils/url-utils';
 
 @Component({
@@ -39,13 +39,13 @@ import { UrlUtils } from '../../shared/utils/url-utils';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  private notification = inject(NzNotificationService);
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
   private brandService = inject(BrandService);
+  private toastService = inject(ToastService);
 
   addToCart(product: any) {
-    this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`);
+    this.toastService.showSuccess(`Đã thêm ${product.name} vào giỏ hàng`);
   }
   
   categories: Category[] = [];

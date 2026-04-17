@@ -1,19 +1,19 @@
-import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzTagModule } from 'ng-zorro-antd/tag';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { OrderService } from '../../../services/order.service';
-import { FormsModule } from '@angular/forms';
 import { CustomInputComponent } from '../../../shared/components/custom-input/custom-input.component';
-import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { LoadingComponent } from "../../../shared/components/loading/loading.component";
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-admin-orders',
@@ -38,7 +38,7 @@ import { LoadingComponent } from "../../../shared/components/loading/loading.com
 })
 export class AdminOrdersComponent implements OnInit {
   private orderService = inject(OrderService);
-  private message = inject(NzMessageService);
+  private toastService = inject(ToastService);
 
   orders: any[] = [];
   loading = true;
@@ -66,7 +66,7 @@ export class AdminOrdersComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.message.error('Không thể tải danh sách đơn hàng');
+        this.toastService.showError('Không thể tải danh sách đơn hàng');
         this.loading = false;
       }
     });
@@ -104,7 +104,7 @@ export class AdminOrdersComponent implements OnInit {
 
   submitAdminCancel() {
     if (!this.adminCancelReasonText.trim()) {
-      this.message.warning('Vui lòng nhập lý do hủy đơn');
+      this.toastService.showWarning('Vui lòng nhập lý do hủy đơn');
       return;
     }
     this.performStatusUpdate(this.orderBeingCancelled.id, 'CANCELLED', this.adminCancelReasonText);
@@ -122,12 +122,12 @@ export class AdminOrdersComponent implements OnInit {
   performStatusUpdate(orderId: number, status: string, cancelReason?: string) {
     this.orderService.updateOrderStatus(orderId, status, cancelReason).subscribe({
       next: () => {
-        this.message.success(`Đã cập nhật trạng thái đơn hàng #${orderId}`);
+        this.toastService.showSuccess(`Đã cập nhật trạng thái đơn hàng #${orderId}`);
         this.previousStatusMap[orderId] = status;
         this.loadOrders(); 
       },
       error: () => {
-        this.message.error('Lỗi khi cập nhật trạng thái');
+        this.toastService.showError('Lỗi khi cập nhật trạng thái');
         this.loadOrders(); 
       }
     });

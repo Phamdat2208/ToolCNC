@@ -1,22 +1,22 @@
-import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzUploadModule, NzUploadFile, NzUploadChangeParam } from 'ng-zorro-antd/upload';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDividerComponent } from "ng-zorro-antd/divider";
+import { NzEmptyComponent } from "ng-zorro-antd/empty";
+import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { NzGridModule } from 'ng-zorro-antd/grid';
-import { NzAlertModule } from 'ng-zorro-antd/alert';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { CategoryService } from '../../../../services/category.service';
-import { BrandService } from '../../../../services/brand.service';
+import { NzUploadChangeParam, NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
 import { forkJoin, lastValueFrom } from 'rxjs';
 import * as XLSX from 'xlsx';
-import { ProductService } from '../../../../services/product.service';
+import { BrandService } from '../../../../services/brand.service';
+import { CategoryService } from '../../../../services/category.service';
 import { CloudinaryService } from '../../../../services/cloudinary.service';
-import { NzDividerComponent } from "ng-zorro-antd/divider";
-import { NzEmptyComponent } from "ng-zorro-antd/empty";
+import { ProductService } from '../../../../services/product.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-admin-bulk-import',
@@ -32,7 +32,7 @@ export class AdminBulkImportComponent {
   private categoryService = inject(CategoryService);
   private brandService = inject(BrandService);
   private cloudinaryService = inject(CloudinaryService);
-  private notification = inject(NzNotificationService);
+  private toastService = inject(ToastService);
 
   productsPreview: any[] = [];
   selectedImages: Map<string, { file: File, url: string }> = new Map();
@@ -126,7 +126,7 @@ export class AdminBulkImportComponent {
 
   private processRawData(data: any[]) {
     if (data.length < 2) {
-      this.notification.error('Lỗi', 'Tệp Excel trống hoặc không đúng định dạng.');
+      this.toastService.showError('Tệp Excel trống hoặc không đúng định dạng.');
       return;
     }
 
@@ -258,7 +258,7 @@ export class AdminBulkImportComponent {
   }
 
   downloadTemplate() {
-    this.notification.info('Thông báo', 'Đang chuẩn bị dữ liệu mẫu mới nhất...');
+    this.toastService.showInfo('Đang chuẩn bị dữ liệu mẫu mới nhất...');
     
     // Gọi API lấy dữ liệu thực tế để người dùng tra cứu ID
     forkJoin({
@@ -269,7 +269,7 @@ export class AdminBulkImportComponent {
         this.generateExcelFile(res.categories, res.brands);
       },
       error: () => {
-        this.notification.warning('Cảnh báo', 'Không thể lấy dữ liệu tra cứu, tệp mẫu sẽ ở dạng mặc định.');
+        this.toastService.showWarning('Không thể lấy dữ liệu tra cứu, tệp mẫu sẽ ở dạng mặc định.');
         this.generateExcelFile([], []);
       }
     });
@@ -338,7 +338,7 @@ export class AdminBulkImportComponent {
     XLSX.utils.book_append_sheet(wb, wsGuide, 'Bảng Tra Cứu ID (HDSD)');
 
     XLSX.writeFile(wb, 'ToolCNC_Products_Template.xlsx');
-    this.notification.success('Thành công', 'Mẫu thêm mới hàng loạt sản phẩm đã được tải về!');
+    this.toastService.showSuccess('Mẫu thêm mới hàng loạt sản phẩm đã được tải về!');
   }
 
   private flattenCategories(categories: any[], parentName: string = ''): any[] {
@@ -368,17 +368,17 @@ export class AdminBulkImportComponent {
           const duplicateSet = new Set(duplicates.map(n => n.toLowerCase()));
           listToSave = listToSave.filter(p => !duplicateSet.has(p.name.toLowerCase()));
           
-          this.notification.warning('Thông báo', `Bỏ qua ${duplicates.length} sản phẩm đã tồn tại tên trên hệ thống.`);
+          this.toastService.showWarning(`Bỏ qua ${duplicates.length} sản phẩm đã tồn tại tên trên hệ thống.`);
           
           if (listToSave.length === 0) {
-            this.notification.error('Thất bại', 'Tất cả sản phẩm trong danh sách đều đã tồn tại!');
+            this.toastService.showError('Tất cả sản phẩm trong danh sách đều đã tồn tại!');
             this.isSaving = false;
             return;
           }
         }
 
         try {
-          this.notification.info('Đang xử lý', `Bắt đầu tải ảnh cho ${listToSave.length} sản phẩm mới...`);
+          this.toastService.showInfo(`Bắt đầu tải ảnh cho ${listToSave.length} sản phẩm mới...`);
           
           // Tính tổng số ảnh cần tải (bao gồm cả gallery) của danh sách đã lọc
           let totalToUpload = 0;
@@ -442,25 +442,25 @@ export class AdminBulkImportComponent {
           // 2. Gọi API nạp hàng loạt dữ liệu đã có URL Cloudinary (danh sách đã lọc)
           this.productService.createProductsBulk(listToSave).subscribe({
             next: () => {
-              this.notification.success('Thành công', `Đã nạp thành công ${listToSave.length} sản phẩm mới!`);
+              this.toastService.showSuccess(`Đã nạp thành công ${listToSave.length} sản phẩm mới!`);
               this.isSaving = false;
               this.clearPreview();
               this.onComplete.emit();
             },
             error: (err) => {
               this.isSaving = false;
-              this.notification.error('Lỗi nạp hàng loạt', err.error || 'Có lỗi xảy ra khi lưu vào database');
+              this.toastService.showError(err.error || 'Có lỗi xảy ra khi lưu vào database');
             }
           });
 
         } catch (error) {
           this.isSaving = false;
-          this.notification.error('Lỗi hệ thống', 'Có lỗi xảy ra trong quá trình nạp ảnh.');
+          this.toastService.showError('Có lỗi xảy ra trong quá trình nạp ảnh.');
         }
       },
       error: () => {
         this.isSaving = false;
-        this.notification.error('Lỗi', 'Không thể kiểm tra trùng lặp sản phẩm.');
+        this.toastService.showError('Không thể kiểm tra trùng lặp sản phẩm.');
       }
     });
   }

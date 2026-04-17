@@ -1,18 +1,19 @@
-import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalService, NzModalModule } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { CategoryService } from '../../../services/category.service';
 import { Category } from '../../../models/category.model';
+import { CategoryService } from '../../../services/category.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { ConfirmModalService } from '../../../shared/services/confirm-modal.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-admin-categories',
@@ -36,9 +37,9 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 })
 export class AdminCategoriesComponent implements OnInit {
   private categoryService = inject(CategoryService);
-  private message = inject(NzMessageService);
-  private modalService = inject(NzModalService);
+  private confirmModalService = inject(ConfirmModalService);
   private fb = inject(FormBuilder);
+  private toastService = inject(ToastService);
 
   categories: Category[] = [];
   displayCategories: any[] = [];
@@ -69,7 +70,7 @@ export class AdminCategoriesComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.message.error('Không thể tải danh sách danh mục');
+        this.toastService.showError('Không thể tải danh sách danh mục');
         this.loading = false;
       }
     });
@@ -172,20 +173,20 @@ export class AdminCategoriesComponent implements OnInit {
       if (this.isEditMode && this.currentCategoryId) {
         this.categoryService.updateCategory(this.currentCategoryId, data).subscribe({
           next: () => {
-            this.message.success('Cập nhật thành công');
+            this.toastService.showSuccess('Cập nhật thành công');
             this.handleCancel();
             this.loadCategories();
           },
-          error: (err: any) => this.message.error(err.error?.message || 'Lỗi khi cập nhật')
+          error: (err: any) => this.toastService.showError(err.error?.message || 'Lỗi khi cập nhật')
         });
       } else {
         this.categoryService.createCategory(data).subscribe({
           next: () => {
-            this.message.success('Thêm thành công');
+            this.toastService.showSuccess('Thêm thành công');
             this.handleCancel();
             this.loadCategories();
           },
-          error: (err: any) => this.message.error(err.error?.message || 'Lỗi khi thêm mới')
+          error: (err: any) => this.toastService.showError(err.error?.message || 'Lỗi khi thêm mới')
         });
       }
     } else {
@@ -203,23 +204,23 @@ export class AdminCategoriesComponent implements OnInit {
   }
 
   deleteCategory(id: number) {
-    this.modalService.confirm({
-      nzTitle: 'Xác nhận xóa',
-      nzContent: 'Xóa danh mục này có thể ảnh hưởng đến các sản phẩm liên quan. Bạn có chắc chắn?',
-      nzOkText: 'Xóa',
-      nzOkDanger: true,
-      nzOnOk: () => {
-        this.categoryService.deleteCategory(id).subscribe({
-          next: () => {
-            this.message.success('Xóa thành công');
-            this.loadCategories();
-          },
-          error: (err: any) => {
-             const msg = err.error?.message || 'Lỗi khi xóa';
-             this.message.error(msg);
-          }
-        });
-      }
+    this.confirmModalService.confirm({
+      title: 'Xác nhận xóa',
+      content: 'Xóa danh mục này có thể ảnh hưởng đến các sản phẩm liên quan. Bạn có chắc chắn?',
+      okText: 'Xóa',
+      cancelText: 'Hủy',
+      type: 'danger'
+    }, () => {
+      this.categoryService.deleteCategory(id).subscribe({
+        next: () => {
+          this.toastService.showSuccess('Xóa thành công');
+          this.loadCategories();
+        },
+        error: (err: any) => {
+           const msg = err.error?.message || 'Lỗi khi xóa';
+           this.toastService.showError(msg);
+        }
+      });
     });
   }
 }

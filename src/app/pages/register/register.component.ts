@@ -1,13 +1,13 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthService } from '../../services/auth.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -28,7 +28,7 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private notification = inject(NzNotificationService);
+  private toastService = inject(ToastService);
 
   isLoading = false;
 
@@ -70,7 +70,7 @@ export class RegisterComponent {
       }).subscribe({
         next: () => {
           this.isLoading = false;
-          this.notification.success('Đăng ký thành công', 'Bạn có thể đăng nhập bằng tài khoản mới.');
+          this.toastService.showSuccess('Đăng ký thành công! Bạn có thể đăng nhập bằng tài khoản mới.');
           this.router.navigate(['/login']);
         },
         error: (err) => {
@@ -82,7 +82,7 @@ export class RegisterComponent {
           } else if (beMsg.includes('email')) {
             errorMsg = 'Email này đã được đăng ký. Vui lòng dùng email khác.';
           }
-          this.notification.error('Đăng ký thất bại', errorMsg);
+          this.toastService.showError(errorMsg);
         }
       });
     } else {

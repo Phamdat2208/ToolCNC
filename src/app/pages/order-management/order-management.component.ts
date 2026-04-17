@@ -1,21 +1,20 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { OrderService } from '../../services/order.service';
-import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { Router, RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { Router } from '@angular/router';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { AuthService } from '../../services/auth.service';
+import { OrderService } from '../../services/order.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 import { LoadingComponent } from "../../shared/components/loading/loading.component";
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-order-management',
@@ -42,7 +41,7 @@ export class OrderManagementComponent implements OnInit {
   authService = inject(AuthService);
   orderService = inject(OrderService);
   router = inject(Router);
-  private message = inject(NzMessageService);
+  private toastService = inject(ToastService);
 
   orders: any[] = [];
   isLoadingOrders = true;
@@ -110,14 +109,14 @@ export class OrderManagementComponent implements OnInit {
 
   submitCancelOrder() {
     if (!this.cancelReasonText.trim()) {
-      this.message.warning('Vui lòng nhập lý do hủy đơn hàng');
+      this.toastService.showWarning('Vui lòng nhập lý do hủy đơn hàng');
       return;
     }
 
     this.isCancelling = true;
     this.orderService.cancelOrder(this.selectedOrder.id, this.cancelReasonText).subscribe({
       next: (res) => {
-        this.message.success(res.message || 'Hủy đơn thành công');
+        this.toastService.showSuccess(res.message || 'Hủy đơn thành công');
         this.isCancelling = false;
         this.isVisibleCancelModal = false;
         this.closeOrderModal();
@@ -125,7 +124,7 @@ export class OrderManagementComponent implements OnInit {
       },
       error: (err) => {
         const msg = typeof err.error === 'string' ? err.error : (err.error?.message || 'Có lỗi xảy ra khi hủy đơn');
-        this.message.error(msg);
+        this.toastService.showError(msg);
         this.isCancelling = false;
       }
     });

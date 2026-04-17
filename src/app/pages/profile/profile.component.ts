@@ -1,18 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { AuthService } from '../../services/auth.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-profile',
@@ -36,7 +34,7 @@ export class ProfileComponent implements OnInit {
   http = inject(HttpClient);
   router = inject(Router);
   fb = inject(FormBuilder);
-  message = inject(NzMessageService);
+  toastService = inject(ToastService);
 
   userInfo: any = null;
   isLoadingProfile = true;
@@ -107,13 +105,13 @@ export class ProfileComponent implements OnInit {
     this.isSaving = true;
     this.authService.updateProfile(this.profileForm.value).subscribe({
       next: (res) => {
-        this.message.success('Cập nhật hồ sơ thành công');
+        this.toastService.showSuccess('Cập nhật hồ sơ thành công');
         this.userInfo = { ...this.userInfo, ...this.profileForm.value };
         this.editMode = false;
         this.isSaving = false;
       },
       error: (err) => {
-        this.message.error('Lỗi cập nhật hồ sơ');
+        this.toastService.showError('Lỗi cập nhật hồ sơ');
         this.isSaving = false;
       }
     });

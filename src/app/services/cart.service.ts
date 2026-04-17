@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { ConfirmModalService } from '../shared/services/confirm-modal.service';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
 import { catchError, distinctUntilChanged } from 'rxjs/operators';
@@ -28,7 +29,7 @@ export class CartService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private modal = inject(NzModalService);
+  private confirmModalService = inject(ConfirmModalService);
 
   private getAuthHeaders() {
     const token = this.authService.getToken();
@@ -171,13 +172,13 @@ export class CartService {
 
   private requireLogin(actionContent: string): boolean {
     if (!this.authService.isLoggedIn()) {
-      this.modal.confirm({
-        nzTitle: 'Yêu cầu đăng nhập',
-        nzContent: `Bạn cần đăng nhập để ${actionContent}. Chuyển đến trang đăng nhập?`,
-        nzOkText: 'Đăng nhập',
-        nzCancelText: 'Đóng',
-        nzOnOk: () => this.router.navigate(['/login'])
-      });
+      this.confirmModalService.confirm({
+        title: 'Yêu cầu đăng nhập',
+        content: `Bạn cần đăng nhập để ${actionContent}. Chuyển đến trang đăng nhập?`,
+        okText: 'Đăng nhập',
+        cancelText: 'Đóng',
+        type: 'info'
+      }, () => this.router.navigate(['/login']));
       return false;
     }
     return true;

@@ -1,20 +1,20 @@
-import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { ProductService } from '../../../services/product.service';
-import { FormsModule } from '@angular/forms';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { ToastService } from '../../../shared/services/toast.service';
 import { UrlUtils } from '../../../shared/utils/url-utils';
 import { AdminBulkImportComponent } from './bulk-import/admin-bulk-import.component';
-import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-admin-products',
@@ -39,8 +39,8 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 })
 export class AdminProductsComponent implements OnInit {
   private productService = inject(ProductService);
-  private message = inject(NzMessageService);
   private modal = inject(NzModalService);
+  private toastService = inject(ToastService);
 
   products: any[] = [];
   loading = true;
@@ -76,7 +76,7 @@ export class AdminProductsComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.message.error('Không thể tải danh sách sản phẩm');
+        this.toastService.showError('Không thể tải danh sách sản phẩm');
         this.loading = false;
       }
     });
@@ -104,10 +104,10 @@ export class AdminProductsComponent implements OnInit {
       nzOnOk: () => {
         this.productService.deleteProduct(id).subscribe({
           next: () => {
-            this.message.success('Đã xóa sản phẩm thành công');
+            this.toastService.showSuccess('Đã xóa sản phẩm thành công');
             this.loadProducts();
           },
-          error: () => this.message.error('Lỗi khi xóa sản phẩm')
+          error: () => this.toastService.showError('Lỗi khi xóa sản phẩm')
         });
       }
     });

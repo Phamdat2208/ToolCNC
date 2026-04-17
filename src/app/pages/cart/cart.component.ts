@@ -1,23 +1,23 @@
-import { Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, Router } from '@angular/router';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { Router, RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzEmptyModule } from 'ng-zorro-antd/empty';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { debounceTime, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { CartService } from '../../services/cart.service';
-import { QuantityInputComponent } from '../../shared/components/quantity-input/quantity-input.component';
-import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
-import { Subject, debounceTime, takeUntil, switchMap, tap } from 'rxjs';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
+import { QuantityInputComponent } from '../../shared/components/quantity-input/quantity-input.component';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-cart',
@@ -45,7 +45,7 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
 export class CartComponent implements OnDestroy {
   cartService = inject(CartService);
   private router = inject(Router);
-  private notification = inject(NzNotificationService);
+  private toastService = inject(ToastService);
   
   private destroy$ = new Subject<void>();
   private quantityUpdateSubject = new Subject<{ id: number, productId: number, variantId: number | undefined, quantity: number }>();
@@ -100,10 +100,10 @@ export class CartComponent implements OnDestroy {
     this.cartService.removeItem(id).subscribe({
       next: () => {
         delete this.isRemoving[id];
-        this.notification.success('Đã xóa sản phẩm', 'Sản phẩm đã được gỡ khỏi giỏ hàng.');
+        this.toastService.showSuccess('Đã xóa sản phẩm khỏi giỏ hàng.');
         
         if (this.cartItems.length === 0) {
-          this.notification.info('Giỏ hàng trống', 'Giỏ hàng của bạn đang trống. Hãy tiếp tục mua sắm nhé!', { nzDuration: 5000 });
+          this.toastService.showInfo('Giỏ hàng của bạn đã trống. Hãy tiếp tục mua sắm nhé!');
         }
       },
       error: () => {

@@ -1,33 +1,27 @@
-import { Component, inject, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
+import { CommonModule, Location } from '@angular/common';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzTabsModule } from 'ng-zorro-antd/tabs';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { FormsModule } from '@angular/forms';
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../../services/auth.service';
-import { ProductService } from '../../../services/product.service';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
+import { BrandService } from '../../../services/brand.service';
 import { CategoryService } from '../../../services/category.service';
-import { BrandService, Brand } from '../../../services/brand.service';
 import { CloudinaryService } from '../../../services/cloudinary.service';
+import { ProductService } from '../../../services/product.service';
 
 import { CustomInputComponent } from '../../../shared/components/custom-input/custom-input.component';
 import { CustomSelectComponent, SelectOption } from '../../../shared/components/custom-select/custom-select.component';
-import { LoadingComponent } from '../../../shared/components/loading/loading.component';
-import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../shared/services/toast.service';
 import { UrlUtils } from '../../../shared/utils/url-utils';
 
 @Component({
@@ -80,16 +74,14 @@ export class ProductAddComponent implements OnInit {
   ];
 
   private fb = inject(FormBuilder);
-  private notification = inject(NzNotificationService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
   private brandService = inject(BrandService);
   private location = inject(Location);
-  private http = inject(HttpClient);
-  private authService = inject(AuthService);
   private cloudinaryService = inject(CloudinaryService);
+  private toastService = inject(ToastService);
 
   isSubmitting = false;
   categories: any[] = [];
@@ -217,7 +209,7 @@ export class ProductAddComponent implements OnInit {
     if (!file) return;
     
     if (!file.type.startsWith('image/')) {
-      this.notification.error('Lỗi', 'Vui lòng chọn file hình ảnh (JPG, PNG, WEBP)');
+      this.toastService.showError('Vui lòng chọn file hình ảnh (JPG, PNG, WEBP)');
       return;
     }
 
@@ -320,17 +312,17 @@ export class ProductAddComponent implements OnInit {
 
   uploadAndAddGallery() {
     if (this.galleryUrls.length >= this.MAX_GALLERY) {
-      this.notification.warning('Giới hạn', `Đã đạt tối đa ${this.MAX_GALLERY} ảnh`);
+      this.toastService.showWarning(`Đã đạt tối đa ${this.MAX_GALLERY} ảnh`);
       return;
     }
 
     this.isGalleryUploading = true;
-    this.notification.info('Đang xử lý', 'Đang tải ảnh bổ sung lên hệ thống...');
+    this.toastService.showInfo('Đang tải ảnh bổ sung lên hệ thống...');
     
     this.uploadResizedImage(this._galleryResizedBlob, this._gallerySelectedFile)
       .then((url) => {
         this.galleryUrls.push(url);
-        this.notification.success('Thành công', 'Đã thêm ảnh vào thư viện');
+        this.toastService.showSuccess('Đã thêm ảnh vào thư viện');
         this.isGalleryUploading = false;
         // Only clear gallery state
         this.galleryShowCropper = false;
@@ -343,7 +335,7 @@ export class ProductAddComponent implements OnInit {
       })
       .catch((err) => {
         console.error(err);
-        this.notification.error('Lỗi', 'Không thể tải ảnh lên. Vui lòng thử lại.');
+        this.toastService.showError('Không thể tải ảnh lên. Vui lòng thử lại.');
         this.isGalleryUploading = false;
       });
   }
@@ -447,7 +439,7 @@ export class ProductAddComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.notification.error('Lỗi', 'Không thể tải thông tin sản phẩm');
+        this.toastService.showError('Không thể tải thông tin sản phẩm'); 
         console.error(err);
       }
     });
@@ -475,7 +467,7 @@ export class ProductAddComponent implements OnInit {
         request$.subscribe({
           next: () => {
             this.isSubmitting = false;
-            this.notification.success('Thành công', this.isEditMode ? 'Đã cập nhật sản phẩm!' : 'Đã thêm sản phẩm mới!');
+            this.toastService.showSuccess(this.isEditMode ? 'Đã cập nhật sản phẩm!' : 'Đã thêm sản phẩm mới!');
             if (this.router.url.startsWith('/admin')) {
               this.router.navigate(['/admin/products']);
             } else {
@@ -485,7 +477,7 @@ export class ProductAddComponent implements OnInit {
           error: (err) => {
             this.isSubmitting = false;
             const msg = typeof err.error === 'string' ? err.error : 'Lỗi máy chủ. Vui lòng thử lại.';
-            this.notification.error('Thất bại', msg);
+            this.toastService.showError(msg);
           }
         });
       };
@@ -493,11 +485,11 @@ export class ProductAddComponent implements OnInit {
       const startFlow = () => {
         // If using upload mode and an image was selected, upload it first
         if (this.uploadMode === 'upload' && this._mainResizedBlob) {
-          this.notification.info('Đang xử lý', 'Đang tải ảnh lên máy chủ...');
+          this.toastService.showInfo('Đang tải ảnh lên máy chủ...');
           this.uploadResizedImage(this._mainResizedBlob, this._mainSelectedFile)
             .then((url) => finishSubmit(url))
             .catch(() => {
-              this.notification.error('Lỗi', 'Không thể tải ảnh lên. Vui lòng thử lại hoặc dùng URL.');
+              this.toastService.showError('Không thể tải ảnh lên. Vui lòng thử lại hoặc dùng URL.');
               this.isSubmitting = false;
             });
         } else {
@@ -510,7 +502,7 @@ export class ProductAddComponent implements OnInit {
         this.productService.checkDuplicates([productName]).subscribe({
           next: (duplicates) => {
             if (duplicates && duplicates.length > 0) {
-              this.notification.error('Trùng lặp', `Sản phẩm "${productName}" đã tồn tại trên hệ thống!`);
+              this.toastService.showError(`Sản phẩm "${productName}" đã tồn tại trên hệ thống!`);
               this.isSubmitting = false;
             } else {
               startFlow();
@@ -535,7 +527,7 @@ export class ProductAddComponent implements OnInit {
     const url = this.newGalleryUrl.trim();
     if (!url) return;
     if (this.galleryUrls.length >= this.MAX_GALLERY) {
-      this.notification.warning('Giới hạn', `Chỉ được thêm tối đa ${this.MAX_GALLERY} ảnh`);
+      this.toastService.showWarning(`Chỉ được thêm tối đa ${this.MAX_GALLERY} ảnh`);
       return;
     }
     this.galleryUrls.push(url);

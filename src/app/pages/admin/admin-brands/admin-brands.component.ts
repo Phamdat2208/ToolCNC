@@ -1,22 +1,21 @@
-import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../../services/auth.service';
-import { CloudinaryService } from '../../../services/cloudinary.service';
-import { environment } from '../../../../environments/environment';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { Brand, BrandService } from '../../../services/brand.service';
+import { CloudinaryService } from '../../../services/cloudinary.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { ConfirmModalService } from '../../../shared/services/confirm-modal.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-admin-brands',
@@ -41,12 +40,11 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 })
 export class AdminBrandsComponent implements OnInit {
   private brandService = inject(BrandService);
-  private message = inject(NzMessageService);
-  private modalService = inject(NzModalService);
+  private confirmModalService = inject(ConfirmModalService);
   private fb = inject(FormBuilder);
-  private http = inject(HttpClient);
-  private authService = inject(AuthService);
   private cloudinaryService = inject(CloudinaryService);
+  private message = inject(NzMessageService);
+  private toastService = inject(ToastService);
 
   brands: Brand[] = [];
   loading = true;
@@ -83,7 +81,7 @@ export class AdminBrandsComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.message.error('Không thể tải danh sách thương hiệu');
+        this.toastService.showError('Không thể tải danh sách thương hiệu');
         this.loading = false;
       }
     });
@@ -186,11 +184,11 @@ export class AdminBrandsComponent implements OnInit {
 
         request$.subscribe({
           next: () => {
-            this.message.success(this.isEditMode ? 'Cập nhật thành công' : 'Thêm thành công');
+            this.toastService.showSuccess(this.isEditMode ? 'Cập nhật thành công' : 'Thêm thành công');
             this.isModalVisible = false;
             this.loadBrands();
           },
-          error: (err: any) => this.message.error(err.error?.message || 'Lỗi khi lưu dữ liệu')
+          error: (err: any) => this.toastService.showError(err.error?.message || 'Lỗi khi lưu dữ liệu')
         });
       };
 
@@ -201,7 +199,7 @@ export class AdminBrandsComponent implements OnInit {
           submit(url);
         }).catch(() => {
           this.message.remove();
-          this.message.error('Không thể tải logo lên');
+          this.toastService.showError('Không thể tải logo lên');
         });
       } else {
         submit();
@@ -225,20 +223,20 @@ export class AdminBrandsComponent implements OnInit {
   }
 
   deleteBrand(id: number) {
-    this.modalService.confirm({
-      nzTitle: 'Xác nhận xóa',
-      nzContent: 'Dữ liệu thương hiệu này sẽ bị gỡ bỏ khỏi hệ thống. Bạn có chắc chắn?',
-      nzOkText: 'Xóa',
-      nzOkDanger: true,
-      nzOnOk: () => {
-        this.brandService.deleteBrand(id).subscribe({
-          next: () => {
-            this.message.success('Xóa thành công');
-            this.loadBrands();
-          },
-          error: () => this.message.error('Lỗi khi xóa thương hiệu')
-        });
-      }
+    this.confirmModalService.confirm({
+      title: 'Xác nhận xóa',
+      content: 'Dữ liệu thương hiệu này sẽ bị gỡ bỏ khỏi hệ thống. Bạn có chắc chắn?',
+      okText: 'Xóa',
+      cancelText: 'Hủy',
+      type: 'danger'
+    }, () => {
+      this.brandService.deleteBrand(id).subscribe({
+        next: () => {
+          this.toastService.showSuccess('Xóa thành công');
+          this.loadBrands();
+        },
+        error: () => this.toastService.showError('Lỗi khi xóa thương hiệu')
+      });
     });
   }
 }

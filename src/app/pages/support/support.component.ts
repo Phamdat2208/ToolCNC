@@ -16,6 +16,7 @@ import { OrderService } from '../../services/order.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 import { CustomTextareaComponent } from '../../shared/components/custom-textarea/custom-textarea.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { ToastService } from '../../shared/services/toast.service';
 
 interface FAQ {
   question: string;
@@ -51,8 +52,8 @@ export class SupportComponent implements OnInit {
   searchQuery: string = '';
   contactForm!: FormGroup;
   private orderService = inject(OrderService);
-  private message = inject(NzMessageService);
   private fb = inject(FormBuilder);
+  private toastService = inject(ToastService);
 
   // Order tracking state
   trackingCode: string = '';
@@ -128,7 +129,7 @@ export class SupportComponent implements OnInit {
   trackOrderByCode(): void {
     const code = this.trackingCode.trim().toUpperCase();
     if (!code) {
-      this.message.warning('Vui lòng nhập mã đơn hàng.');
+      this.toastService.showWarning('Vui lòng nhập mã đơn hàng.');
       return;
     }
     this.isTracking = true;
@@ -178,7 +179,7 @@ export class SupportComponent implements OnInit {
 
   submitForm(): void {
     if (this.contactForm.valid) {
-      this.message.success('Cảm ơn bạn! Yêu cầu của bạn đã được gửi thành công. Chúng tôi sẽ phản hồi sớm nhất.');
+      this.toastService.showSuccess('Cảm ơn bạn! Yêu cầu của bạn đã được gửi thành công. Chúng tôi sẽ phản hồi sớm nhất.');
       this.contactForm.reset();
     } else {
       Object.values(this.contactForm.controls).forEach(control => {

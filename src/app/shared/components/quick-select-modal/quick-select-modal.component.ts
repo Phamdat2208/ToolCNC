@@ -1,21 +1,21 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { LoadingComponent } from '../loading/loading.component';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
-import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { Router } from '@angular/router';
-import { forkJoin, finalize, Observable } from 'rxjs';
-import { ProductService } from '../../../services/product.service';
-import { CartService } from '../../../services/cart.service';
-import { UrlUtils } from '../../utils/url-utils';
-import { QuantityInputComponent } from '../quantity-input/quantity-input.component';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { finalize, forkJoin, Observable } from 'rxjs';
+import { CartService } from '../../../services/cart.service';
+import { ProductService } from '../../../services/product.service';
+import { ToastService } from '../../services/toast.service';
+import { UrlUtils } from '../../utils/url-utils';
+import { LoadingComponent } from '../loading/loading.component';
+import { QuantityInputComponent } from '../quantity-input/quantity-input.component';
 @Component({
   selector: 'app-quick-select-modal',
   standalone: true,
@@ -40,8 +40,8 @@ export class QuickSelectModalComponent implements OnInit {
   private modalRef = inject(NzModalRef);
   private productService = inject(ProductService);
   private cartService = inject(CartService);
-  private notification = inject(NzNotificationService);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   product: any = null;
   isLoading = true;
@@ -85,7 +85,7 @@ export class QuickSelectModalComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.notification.error('Lỗi', 'Không thể tải thông tin sản phẩm');
+        this.toastService.showError('Không thể tải thông tin sản phẩm');
         this.modalRef.close();
       }
     });
@@ -98,7 +98,7 @@ export class QuickSelectModalComponent implements OnInit {
   addToCart() {
     const selected = this.selectedVariants;
     if (selected.length === 0) {
-      this.notification.warning('Thông báo', 'Vui lòng chọn ít nhất một mã hàng');
+      this.toastService.showWarning('Vui lòng chọn ít nhất một mã hàng');
       return;
     }
 
@@ -123,15 +123,15 @@ export class QuickSelectModalComponent implements OnInit {
       next: (results) => {
         const successCount = results.filter(res => res).length;
         if (successCount > 0) {
-          this.notification.success('Thành công', `Đã thêm ${successCount} mã hàng vào giỏ hàng`);
+          this.toastService.showSuccess(`Đã thêm ${successCount} mã hàng vào giỏ hàng`);
           this.modalRef.close(true);
         } else {
-          this.notification.error('Thất bại', 'Không thể thêm sản phẩm vào giỏ hàng');
+          this.toastService.showError('Không thể thêm sản phẩm vào giỏ hàng');
         }
       },
       error: (err: any) => {
         console.error('Lỗi kết nối', err);
-        this.notification.error('Lỗi kết nối', 'Có lỗi xảy ra khi thêm vào giỏ hàng');
+        this.toastService.showError('Có lỗi xảy ra khi thêm vào giỏ hàng');
       }
     });
   }

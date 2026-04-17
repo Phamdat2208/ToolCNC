@@ -1,29 +1,28 @@
-import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NzStepsModule } from 'ng-zorro-antd/steps';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzRadioModule } from 'ng-zorro-antd/radio';
-import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzResultModule } from 'ng-zorro-antd/result';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { OrderService } from '../../services/order.service';
-import { CartService } from '../../services/cart.service';
-import { AuthService } from '../../services/auth.service';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { LocationService, Province, Ward } from '../../services/location.service';
-import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { AuthService } from '../../services/auth.service';
+import { CartService } from '../../services/cart.service';
+import { LocationService, Province, Ward } from '../../services/location.service';
+import { OrderService } from '../../services/order.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 import { CustomSelectComponent, SelectOption } from '../../shared/components/custom-select/custom-select.component';
 import { CustomTextareaComponent } from '../../shared/components/custom-textarea/custom-textarea.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-checkout',
@@ -67,12 +66,12 @@ export class CheckoutComponent implements OnInit {
   isLoadingWards = false;
 
   private fb = inject(FormBuilder);
-  private notification = inject(NzNotificationService);
   private router = inject(Router);
   cartService = inject(CartService);
   private orderService = inject(OrderService);
   private authService = inject(AuthService);
   private locationService = inject(LocationService);
+  private toastService = inject(ToastService);
 
   ngOnInit(): void {
     this.loadProvinces();
@@ -108,7 +107,7 @@ export class CheckoutComponent implements OnInit {
         this.isLoadingProvinces = false;
       },
       error: () => {
-        this.notification.error('Lỗi', 'Không thể tải danh sách tỉnh thành');
+        this.toastService.showError('Không thể tải danh sách tỉnh thành');
         this.isLoadingProvinces = false;
       }
     });
@@ -141,7 +140,7 @@ export class CheckoutComponent implements OnInit {
         this.isLoadingWards = false;
       },
       error: () => {
-        this.notification.error('Lỗi', 'Không thể tải danh sách xã/phường');
+        this.toastService.showError('Không thể tải danh sách xã/phường');
         this.isLoadingWards = false;
       }
     });
@@ -195,7 +194,7 @@ export class CheckoutComponent implements OnInit {
 
   copyToClipboard(text: string): void {
     navigator.clipboard.writeText(text).then(() => {
-      this.notification.success('Đã sao chép', `Nội dung: ${text}`);
+      this.toastService.showSuccess('Đã sao chép');
     });
   }
 
@@ -241,12 +240,12 @@ export class CheckoutComponent implements OnInit {
         this.cartService.clearCart();
 
         this.currentStep = onSuccessStep;
-        this.notification.success('Đặt hàng thành công!', successMsg);
+        this.toastService.showSuccess(successMsg);
       },
       error: (err) => {
         this.isSubmitting = false;
         console.error('Lỗi đặt hàng', err);
-        this.notification.error('Đặt hàng thất bại', 'Đã có lỗi xảy ra trong quá trình đặt hàng, vui lòng thử lại!');
+        this.toastService.showError('Đặt hàng thất bại, vui lòng thử lại!');
       }
     });
   }
@@ -265,7 +264,7 @@ export class CheckoutComponent implements OnInit {
       }
     } else if (this.currentStep === 1) {
       if (!this.authService.isLoggedIn()) {
-        this.notification.error('Chưa đăng nhập', 'Vui lòng đăng nhập để tiến hành đặt hàng.');
+        this.toastService.showError('Vui lòng đăng nhập để tiến hành đặt hàng.');
         this.router.navigate(['/login']);
         return;
       }

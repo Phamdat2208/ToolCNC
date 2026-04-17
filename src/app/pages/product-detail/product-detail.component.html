@@ -142,7 +142,7 @@
                 >
                   <nz-icon
                     [nzType]="isTogglingWishlist ? 'loading' : 'heart'"
-                    [nzTheme]="wishlistService.isWishlisted(product.id) ? 'fill' : 'outline'"
+                    [nzTheme]="isTogglingWishlist ? 'outline' : (wishlistService.isWishlisted(product.id) ? 'fill' : 'outline')"
                   />
                 </div>
               </div>

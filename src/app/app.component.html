@@ -1,11 +1,12 @@
 <router-outlet></router-outlet>
-<app-speed-dial *ngIf="!isAdminRoute"></app-speed-dial>
+<app-speed-dial *ngIf="!isLoginRoute && !isAdminRoute"></app-speed-dial>
 
 <!-- Nút cuộn lên đầu trang -->
-<nz-back-top *ngIf="!isAdminRoute" [nzTemplate]="tpl" [nzVisibilityHeight]="400">
+<nz-back-top *ngIf="!isLoginRoute && !isAdminRoute" [nzTemplate]="tpl" [nzVisibilityHeight]="400">
   <ng-template #tpl>
     <div class="back-top-inner shadow-premium">
       <nz-icon nzType="arrow-up" />
     </div>
   </ng-template>
 </nz-back-top>
+<app-custom-toast></app-custom-toast>

@@ -1,0 +1,23 @@
+<div class="confirm-modal-wrapper">
+  <div class="modal-icon-header">
+    <div class="icon-circle" [ngClass]="iconColorClass">
+      <nz-icon [nzType]="iconType" nzTheme="outline"></nz-icon>
+    </div>
+  </div>
+
+  <div class="modal-content-body">
+    <h2 class="modal-title">{{ data.title }}</h2>
+    <p class="modal-description">{{ data.content }}</p>
+  </div>
+
+  <div class="modal-footer-actions">
+    <button class="btn-cancel" (click)="handleCancel()">
+      {{ data.cancelText || 'Hủy' }}
+    </button>
+    <button class="btn-confirm" 
+            [ngClass]="data.type === 'danger' ? 'btn-danger' : 'btn-primary'"
+            (click)="handleOk()">
+      {{ data.okText || 'Xác nhận' }}
+    </button>
+  </div>
+</div>

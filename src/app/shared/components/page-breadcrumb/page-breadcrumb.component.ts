@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 export interface BreadcrumbItem {
   label: string;
   url?: string;
+  queryParams?: { [key: string]: any };
 }
 
 @Component({

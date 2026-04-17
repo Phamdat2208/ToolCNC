@@ -1,0 +1,20 @@
+<div class="toast-stack" [ngClass]="{ 'login-page': isLoginRoute || isAdminRoute, 'basic-page': !isLoginRoute && !isAdminRoute, 'admin-page': isAdminRoute }">
+  <div *ngFor="let toast of toastService.toasts$ | async; trackBy: trackById" 
+       class="toast-item" 
+       [ngClass]="toast.type">
+    <div class="toast-body">
+      <div class="icon-section">
+        <nz-icon *ngIf="toast.type === 'success'" nzType="check-circle" nzTheme="outline"></nz-icon>
+        <nz-icon *ngIf="toast.type === 'error'" nzType="close-circle" nzTheme="outline"></nz-icon>
+        <nz-icon *ngIf="toast.type === 'warning'" nzType="warning" nzTheme="outline"></nz-icon>
+        <nz-icon *ngIf="toast.type === 'info'" nzType="info-circle" nzTheme="outline"></nz-icon>
+      </div>
+      <div class="content-section">
+        <span class="toast-message">{{ toast.message }}</span>
+      </div>
+    </div>
+    <button class="close-trigger" (click)="toastService.remove(toast.id)">
+      <nz-icon nzType="close"></nz-icon>
+    </button>
+  </div>
+</div>

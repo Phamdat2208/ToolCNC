@@ -1,17 +1,16 @@
-import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { NzCardModule } from 'ng-zorro-antd/card';
+import { Component, Input, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { NzModalService, NzModalModule } from 'ng-zorro-antd/modal';
-import { Router } from '@angular/router';
-import { CartService } from '../../../services/cart.service';
 import { AuthService } from '../../../services/auth.service';
+import { CartService } from '../../../services/cart.service';
 import { WishlistService } from '../../../services/wishlist.service';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
+import { ToastService } from '../../services/toast.service';
 import { UrlUtils } from '../../utils/url-utils';
 import { QuickSelectModalComponent } from '../quick-select-modal/quick-select-modal.component';
 
@@ -38,8 +37,8 @@ export class ProductCardComponent {
   authService = inject(AuthService);
   wishlistService = inject(WishlistService);
   private router = inject(Router);
-  private notification = inject(NzNotificationService);
   private modal = inject(NzModalService);
+  private toastService = inject(ToastService);
 
   get imageUrl(): string {
     return UrlUtils.getFullUrl(this.product.imageUrl || this.product.img);
@@ -58,7 +57,7 @@ export class ProductCardComponent {
     this.cartService.addToCart(product, 1, product.img).subscribe(success => {
       this.isAddingToCart = false;
       if (success) {
-        this.notification.success('Thành công', `Đã thêm ${product.name} vào giỏ hàng`);
+        this.toastService.showSuccess(`Đã thêm ${product.name} vào giỏ hàng`);
       }
     });
   }
@@ -82,9 +81,9 @@ export class ProductCardComponent {
       this.isTogglingWishlist = false;
       if (added === null) return; // Chưa login, chỉ hiển thị modal yêu cầu đăng nhập
       if (added) {
-        this.notification.success('Yêu thích', `Đã thêm ${product.name} vào danh sách yêu thích ♥`);
+        this.toastService.showSuccess(`Đã thêm ${product.name} vào danh sách yêu thích ♥`);
       } else {
-        this.notification.info('Yêu thích', `Đã xóa ${product.name} khỏi danh sách yêu thích`);
+        this.toastService.showInfo(`Đã xóa ${product.name} khỏi danh sách yêu thích`);
       }
     });
   }

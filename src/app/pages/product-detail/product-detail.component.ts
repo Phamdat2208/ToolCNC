@@ -1,24 +1,24 @@
-import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NzGridModule } from 'ng-zorro-antd/grid';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzTabsModule } from 'ng-zorro-antd/tabs';
-import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
-import { AuthService } from '../../services/auth.service';
 import { WishlistService } from '../../services/wishlist.service';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { QuantityInputComponent } from '../../shared/components/quantity-input/quantity-input.component';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { ToastService } from '../../shared/services/toast.service';
 import { UrlUtils } from '../../shared/utils/url-utils';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 @Component({
   selector: 'app-product-detail',
@@ -47,6 +47,7 @@ export class ProductDetailComponent implements OnInit {
   authService = inject(AuthService);
   route = inject(ActivatedRoute);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   product: any = null;
   breadcrumbItems: any[] = [];
@@ -57,8 +58,6 @@ export class ProductDetailComponent implements OnInit {
   isTogglingWishlist = false;
   parsedSpecs: any[] = [];
   selectedVariant: any = null;
-
-  private notification = inject(NzNotificationService);
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -126,7 +125,8 @@ export class ProductDetailComponent implements OnInit {
           const catName = this.product.categoryName || this.product.category?.name;
           this.breadcrumbItems.push({ 
             label: catName, 
-            url: `/products?category=${encodeURIComponent(catName)}` 
+            url: '/products',
+            queryParams: { category: catName }
           });
         }
 
@@ -142,7 +142,7 @@ export class ProductDetailComponent implements OnInit {
         */
       },
       error: (err) => {
-        this.notification.error('Lỗi', 'Không thể tải chi tiết sản phẩm');
+        this.toastService.showError('Không thể tải chi tiết sản phẩm');
         this.isLoading = false;
       }
     });
@@ -180,7 +180,7 @@ export class ProductDetailComponent implements OnInit {
   addToCart() {
     if (!this.product) return;
     if (this.product.hasVariants && !this.selectedVariant) {
-      this.notification.warning('Thông báo', 'Vui lòng chọn kích thước/mã hàng');
+      this.toastService.showWarning('Vui lòng chọn kích thước/mã hàng');
       return;
     }
 
@@ -201,7 +201,7 @@ export class ProductDetailComponent implements OnInit {
         if (this.selectedVariant) {
           msg = `Đã thêm ${this.quantity} sản phẩm (${this.selectedVariant.variantName}) vào giỏ hàng`;
         }
-        this.notification.success('Thành công', msg);
+        this.toastService.showSuccess(msg);
       }
     });
   }
@@ -213,9 +213,9 @@ export class ProductDetailComponent implements OnInit {
       this.isTogglingWishlist = false;
       if (added === null) return;
       if (added) {
-        this.notification.success('Yêu thích', `Đã thêm ${this.product.name} vào danh sách yêu thích ♥`);
+        this.toastService.showSuccess(`Đã thêm ${this.product.name} vào danh sách yêu thích ♥`);
       } else {
-        this.notification.info('Yêu thích', `Đã xóa ${this.product.name} khỏi danh sách yêu thích`);
+        this.toastService.showInfo(`Đã xóa ${this.product.name} khỏi danh sách yêu thích`);
       }
     });
   }

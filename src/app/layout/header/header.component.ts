@@ -17,6 +17,7 @@ import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { ProductService } from '../../services/product.service';
+import { ConfirmModalService } from '../../shared/services/confirm-modal.service';
  
 @Component({
   selector: 'app-header',
@@ -27,9 +28,9 @@ import { ProductService } from '../../services/product.service';
 export class HeaderComponent {
   cartService = inject(CartService);
   authService = inject(AuthService);
-  wishlistService = inject(WishlistService);
+  private wishlistService = inject(WishlistService);
   private router = inject(Router);
-  private modal = inject(NzModalService);
+  private confirmModalService = inject(ConfirmModalService);
   private productService = inject(ProductService);
   private el = inject(ElementRef);
 
@@ -140,13 +141,13 @@ export class HeaderComponent {
 
   goToCart() {
     if (!this.authService.isLoggedIn()) {
-      this.modal.confirm({
-        nzTitle: 'Yêu cầu đăng nhập',
-        nzContent: 'Bạn cần đăng nhập để xem danh sách giỏ hàng. Chuyển đến trang Đăng nhập?',
-        nzOkText: 'Đăng nhập',
-        nzCancelText: 'Đóng',
-        nzOnOk: () => this.router.navigate(['/login'])
-      });
+      this.confirmModalService.confirm({
+        title: 'Yêu cầu đăng nhập',
+        content: 'Bạn cần đăng nhập để xem danh sách giỏ hàng. Chuyển đến trang Đăng nhập?',
+        okText: 'Đăng nhập',
+        cancelText: 'Đóng',
+        type: 'info'
+      }, () => this.router.navigate(['/login']));
     } else {
       this.router.navigate(['/cart']);
     }
@@ -154,13 +155,13 @@ export class HeaderComponent {
 
   gotoWishList() {
     if (!this.authService.isLoggedIn()) {
-      this.modal.confirm({
-        nzTitle: 'Yêu cầu đăng nhập',
-        nzContent: 'Bạn cần đăng nhập để xem danh sách yêu thích. Chuyển đến trang Đăng nhập?',
-        nzOkText: 'Đăng nhập',
-        nzCancelText: 'Đóng',
-        nzOnOk: () => this.router.navigate(['/login'])
-      });
+      this.confirmModalService.confirm({
+        title: 'Yêu cầu đăng nhập',
+        content: 'Bạn cần đăng nhập để xem danh sách yêu thích. Chuyển đến trang Đăng nhập?',
+        okText: 'Đăng nhập',
+        cancelText: 'Đóng',
+        type: 'info'
+      }, () => this.router.navigate(['/login']));
     } else {
       this.router.navigate(['/wishlist']);
     }
