@@ -1,18 +1,17 @@
-import { Component, inject } from '@angular/core';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { WishlistService } from '../../services/wishlist.service';
-import { CartService } from '../../services/cart.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
-import { LoadingComponent } from "../../shared/components/loading/loading.component";
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { CartService } from '../../services/cart.service';
+import { WishlistService } from '../../services/wishlist.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterLink, NzButtonModule, NzIconModule, NzEmptyModule, LoadingComponent, NzToolTipModule],
+  imports: [CommonModule, RouterLink, NzButtonModule, NzIconModule, NzEmptyModule, NzToolTipModule],
   templateUrl: './wishlist.component.html',
   styleUrl: './wishlist.component.css'
 })

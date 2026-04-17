@@ -1,11 +1,7 @@
-/* ============================================================
-   AUTH PAGES — Split Screen Layout (Login & Register)
-   Industrial High-Tech Theme
-   ============================================================ */
-
-/* ---- Page Wrapper ---- */
-.auth-page {
+.login-container {
   display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
   width: 100%;
   background-color: #f8fafc; /* Nền xám trắng sạch sẽ theo yêu cầu */
@@ -21,16 +17,7 @@
   width: 44px;
   height: 44px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  gap: 28px;
-  z-index: 2;
-  position: relative;
-  padding: 48px 0;
-}
-
-.brand-logo {
-  display: flex;
   align-items: center;
   background: white !important;
   border: 1px solid rgba(0, 0, 0, 0.05) !important;

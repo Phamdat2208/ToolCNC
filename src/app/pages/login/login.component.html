@@ -21,74 +21,51 @@
       <p>Nhập tên tài khoản và mật khẩu để tiếp tục</p>
     </div>
 
-    <div class="brand-decoration">
-      <div class="deco-circle deco-1"></div>
-      <div class="deco-circle deco-2"></div>
-      <div class="deco-circle deco-3"></div>
-    </div>
-  </div>
+    <form
+      nz-form
+      [formGroup]="loginForm"
+      class="login-form"
+      (ngSubmit)="submitForm()"
+    >
+      <app-custom-input
+        formControlName="username"
+        placeholder="Tên đăng nhập"
+        prefixIcon="user"
+        errorTip="Vui lòng nhập tên đăng nhập!"
+      ></app-custom-input>
 
-  <div class="form-panel">
-    <div class="form-card">
-      <a routerLink="/" class="mobile-back-link">
-        <nz-icon nzType="arrow-left" /> Về trang chủ
-      </a>
-      <div class="form-header">
-        <div class="form-icon-badge">
-          <nz-icon nzType="user" />
-        </div>
-        <h2 class="form-title">Đăng nhập</h2>
-        <p class="form-subtitle">Chào mừng trở lại! Vui lòng đăng nhập để tiếp tục.</p>
-      </div>
+      <app-custom-input
+        formControlName="password"
+        type="password"
+        placeholder="Mật khẩu"
+        prefixIcon="lock"
+        errorTip="Vui lòng nhập mật khẩu!"
+      ></app-custom-input>
 
-      <form [formGroup]="loginForm" (ngSubmit)="submitForm()" class="auth-form">
-
-        <div class="field-group">
-          <label class="field-label">Tên đăng nhập</label>
-          <app-custom-input
-            formControlName="username"
-            placeholder="Nhập tên đăng nhập"
-            prefixIcon="user"
-            errorTip="Vui lòng nhập tên đăng nhập!"
-          ></app-custom-input>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Mật khẩu</label>
-          <app-custom-input
-            formControlName="password"
-            type="password"
-            placeholder="Nhập mật khẩu"
-            prefixIcon="lock"
-            errorTip="Vui lòng nhập mật khẩu!"
-          ></app-custom-input>
-        </div>
-
-        <div class="form-options">
-          <label class="remember-check">
-            <input type="checkbox" formControlName="remember" />
+      <div nz-row class="login-form-margin">
+        <div nz-col [nzSpan]="13">
+          <label nz-checkbox formControlName="remember">
             <span>Ghi nhớ đăng nhập</span>
           </label>
-          <a class="forgot-link">Quên mật khẩu?</a>
         </div>
-
-        <button
-          nz-button
-          nzType="primary"
-          nzBlock
-          [nzLoading]="isLoading"
-          class="submit-btn"
-        >
-          <nz-icon nzType="login" *ngIf="!isLoading" />
-          Đăng nhập
-        </button>
-
-        <div class="form-switch">
-          Chưa có tài khoản?
-          <a routerLink="/register" class="switch-link">Đăng ký ngay</a>
+        <div nz-col [nzSpan]="11" class="login-form-forgot">
+          <a class="login-form-forgot">Quên mật khẩu?</a>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <button
+        nz-button
+        class="login-form-button login-form-margin"
+        [nzType]="'primary'"
+        [nzLoading]="isLoading"
+        nzBlock
+      >
+        Đăng nhập
+      </button>
+
+      <div class="login-footer">
+        Hoặc <a routerLink="/register">đăng ký ngay!</a>
+      </div>
+    </form>
   </div>
-
 </div>
