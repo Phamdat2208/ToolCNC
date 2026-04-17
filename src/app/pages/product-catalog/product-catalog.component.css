@@ -28,8 +28,7 @@
   max-height: calc(100vh - 120px);
   overflow-y: auto;
   /* Custom scrollbar - Dark theme */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(6, 182, 212, 0.4) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
 .sticky-sidebar::-webkit-scrollbar {
@@ -41,12 +40,12 @@
 }
 
 .sticky-sidebar::-webkit-scrollbar-thumb {
-  background: rgba(6, 182, 212, 0.4);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 4px;
 }
 
 .sticky-sidebar::-webkit-scrollbar-thumb:hover {
-  background: rgba(6, 182, 212, 0.7);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .filter-card-header {
@@ -107,8 +106,8 @@
 }
 
 .tree-node-item.active {
-  background: rgba(6, 182, 212, 0.15);
-  color: #06b6d4;
+  background: rgba(249, 115, 22, 0.15);
+  color: var(--primary-color);
   font-weight: 600;
 }
 
@@ -119,7 +118,7 @@
   top: 15%;
   height: 70%;
   width: 3px;
-  background: #06b6d4;
+  background: var(--primary-color);
   border-radius: 0 4px 4px 0;
 }
 
@@ -141,7 +140,7 @@
 }
 
 .tree-node-item.active .dot-indicator {
-  background: #06b6d4;
+  background: var(--primary-color);
 }
 
 .cat-name {
@@ -163,8 +162,8 @@
 }
 
 .tree-node-item.active .count-badge {
-  background: rgba(6, 182, 212, 0.2);
-  color: #06b6d4;
+  background: rgba(249, 115, 22, 0.2);
+  color: var(--primary-color);
 }
 
 .child-list {
@@ -216,6 +215,28 @@
   color: #334155;
 }
 
+/* NG-ZORRO Overrides for Orange Theme */
+::ng-deep .ant-slider-track {
+  background-color: var(--primary-color) !important;
+}
+
+::ng-deep .ant-slider-handle {
+  border-color: var(--primary-color) !important;
+  background-color: #0f172a !important;
+}
+
+::ng-deep .ant-slider-handle:focus {
+  box-shadow: 0 0 0 5px rgba(249, 115, 22, 0.2) !important;
+}
+
+::ng-deep .ant-slider:hover .ant-slider-track {
+  background-color: var(--primary-hover) !important;
+}
+
+::ng-deep .ant-slider:hover .ant-slider-handle {
+  border-color: var(--primary-hover) !important;
+}
+
 /* Brand Grid (With Ellipsis) */
 .brand-grid {
   display: flex;
@@ -245,9 +266,9 @@
 }
 
 .brand-chip.selected {
-  background: #06b6d4;
+  background: var(--primary-color);
   color: #ffffff;
-  border-color: #06b6d4;
+  border-color: var(--primary-color);
 }
 
 .brand-name-text {
@@ -257,19 +278,19 @@
 }
 
 .btn-primary-gradient {
-  background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
   border: none;
   color: white;
   height: 44px;
   border-radius: 12px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
 }
 
 .btn-primary-gradient:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
   color: white;
 }
 
@@ -293,7 +314,7 @@
 }
 
 .accent-text {
-  color: #0ea5e9;
+  color: var(--primary-color);
 }
 
 .count-pill {
@@ -331,8 +352,8 @@
 }
 
 .sort-dropdown-btn:hover {
-  border-color: #0ea5e9;
-  color: #0ea5e9;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
 }
 
 .premium-menu {

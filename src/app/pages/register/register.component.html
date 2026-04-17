@@ -1,44 +1,24 @@
-<div class="auth-page">
-
-  <!-- ===== LEFT PANEL – Brand Panel ===== -->
-  <div class="brand-panel">
-    <a routerLink="/" class="brand-back-link">
-      <nz-icon nzType="arrow-left" /> Về trang chủ
-    </a>
-
-    <div class="brand-content">
-      <div class="brand-logo">
-        <img src="Logo.ico" alt="Logo" class="brand-logo-img" />
-        <span class="brand-tool">Tool</span><span class="brand-cnc">CNC</span>
+<div class="register-container">
+  <button
+    nz-button
+    class="back-button"
+    nzType="default"
+    nzShape="circle"
+    routerLink="/"
+  >
+    <nz-icon nzType="arrow-left" />
+  </button>
+  <div class="register-box">
+    <div class="brand-logo-container">
+      <img src="Logo.ico" alt="Logo" class="auth-logo" />
+      <div class="brand-text">
+        <span class="text-primary">Tool</span><span class="text-danger">CNC</span>
       </div>
-      <h1 class="brand-headline">
-        Tham gia cùng<br />
-        <span class="brand-highlight">ToolCNC</span>
-      </h1>
-      <p class="brand-desc">
-        Tạo tài khoản miễn phí để bắt đầu mua sắm dao phay, chip tiện, mũi khoan với giá tốt nhất thị trường.
-      </p>
+    </div>
 
-      <div class="brand-features">
-        <div class="brand-feature">
-          <div class="feature-icon">
-            <nz-icon nzType="gift" />
-          </div>
-          <span>Ưu đãi thành viên mới</span>
-        </div>
-        <div class="brand-feature">
-          <div class="feature-icon">
-            <nz-icon nzType="history" />
-          </div>
-          <span>Theo dõi đơn hàng dễ dàng</span>
-        </div>
-        <div class="brand-feature">
-          <div class="feature-icon">
-            <nz-icon nzType="heart" />
-          </div>
-          <span>Lưu sản phẩm yêu thích</span>
-        </div>
-      </div>
+    <div class="register-header">
+      <h2>Đăng ký Tài khoản</h2>
+      <p>Điền thông tin của bạn để tạo tài khoản mới</p>
     </div>
 
     <div class="brand-decoration">

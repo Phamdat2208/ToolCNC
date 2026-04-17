@@ -240,13 +240,13 @@
 /* Action Section */
 .premium-checkout-btn {
   height: 56px;
-  background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+  background: linear-gradient(90deg, #f59e0b 0%, #ea580c 100%) !important;
   border: none;
   border-radius: 14px;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.05em;
-  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 10px 20px rgba(234, 88, 12, 0.25) !important;
   display: flex;
   align-items: center;
   justify-content: center;

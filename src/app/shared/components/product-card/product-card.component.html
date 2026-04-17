@@ -1,64 +1,48 @@
-<div 
-  class="industrial-product-card hover-glow img-wrapper-relative" 
-  appScrollReveal 
-  [routerLink]="['/products', product.id]"
->
-  <!-- Top Section: Image & Wishlist -->
-  <div class="card-visual">
-    <div class="product-cover">
-      <img [alt]="product.name" [src]="imageUrl" [class.img-out-of-stock]="product.totalStock === 0" loading="lazy" />
-      <div class="sold-out-ribbon" *ngIf="product.totalStock === 0">
-        <span>HẾT HÀNG</span>
-      </div>
-    </div>
+<div class="modern-product-card" [routerLink]="['/products', product.id]" appScrollReveal>
+  <!-- Image Box -->
+  <div class="product-img-box img-wrapper-relative">
+    <img [alt]="product.name" [src]="imageUrl" [class.img-out-of-stock]="product.totalStock === 0" loading="lazy" />
+    <div class="out-of-stock-banner" *ngIf="product.totalStock === 0">Hết Hàng</div>
     
-    <!-- Floating Wishlist Button (Always Visible) -->
-    <button
-      nz-button
-      nzType="default"
-      [class.is-active]="wishlistService.isWishlisted(product.id)"
-      (click)="$event.stopPropagation(); toggleWishlist(product)"
-      class="floating-wishlist-btn"
-      [nzLoading]="isTogglingWishlist"
-      nz-tooltip
-      [nzTooltipTitle]="wishlistService.isWishlisted(product.id) ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'"
-    >
-      <nz-icon
-        [nzType]="'heart'"
-        [nzTheme]="wishlistService.isWishlisted(product.id) ? 'fill' : 'outline'"
-      />
-    </button>
+    <!-- Hover Actions Overlay -->
+    <div class="card-overlay-actions">
+      <!-- Heart Button -->
+      <button nz-button nzShape="circle" class="btn-overlay-wishlist"
+              [class.wishlisted]="wishlistService.isWishlisted(product.id)"
+              (click)="$event.stopPropagation(); toggleWishlist(product)"
+              nz-tooltip [nzTooltipTitle]="wishlistService.isWishlisted(product.id) ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'">
+         <nz-icon [nzType]="'heart'" [nzTheme]="wishlistService.isWishlisted(product.id) ? 'fill' : 'outline'" />
+      </button>
+    </div>
   </div>
 
-  <!-- Content Section -->
-  <div class="card-body">
-    <div class="brand-sku-row" *ngIf="product.sku">
-      <span class="sku-tag">{{ product.sku }}</span>
-    </div>
-    <h3 class="product-title" [nz-tooltip]="product.name.length > 50 ? product.name : ''">
-      {{ product.name }}
-    </h3>
-
-    <div class="card-footer-action">
-      <div class="price-box">
+  <!-- Content Box -->
+  <div class="product-info-box">
+    <h3 class="product-title" [title]="product.name">{{ product.name }}</h3>
+    
+    <div class="product-price-row">
+      <div class="price-display-wrapper">
         <ng-container *ngIf="product.hasVariants && product.minPrice !== product.maxPrice; else singlePrice">
-          <span class="price-label">Từ</span>
-          <span class="price-value">{{ product.minPrice | number:'1.0-0' }} <small>đ</small></span>
+          <span class="product-price range-price">
+            {{ product.minPrice | currency: "VND" : "" }} - {{ product.maxPrice | currency: "VND" : "symbol" }}
+          </span>
         </ng-container>
         <ng-template #singlePrice>
-          <span class="price-value">{{ product.price | number:'1.0-0' }} <small>đ</small></span>
+          <span class="product-price">{{ product.price | currency: "VND" : "symbol" }}</span>
         </ng-template>
       </div>
-
+      
+      <!-- Cart Button Bottom Right -->
       <button
         nz-button
         nzType="primary"
-        class="quick-add-btn"
-        (click)="$event.stopPropagation(); addToCart(product)"
-        [disabled]="product.totalStock === 0"
-        [nzLoading]="isAddingToCart"
+        nzShape="circle"
+        class="btn-cart-modern"
         nz-tooltip
         nzTooltipTitle="Thêm vào giỏ hàng"
+        [disabled]="product.totalStock === 0"
+        [nzLoading]="isAddingToCart"
+        (click)="$event.stopPropagation(); addToCart(product)"
       >
         <nz-icon nzType="shopping-cart" *ngIf="!isAddingToCart" />
       </button>

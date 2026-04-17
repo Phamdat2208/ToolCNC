@@ -35,7 +35,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
     PageBreadcrumbComponent, 
     QuantityInputComponent, 
     LoadingComponent,
-    NzToolTipModule
+    NzToolTipModule,
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'

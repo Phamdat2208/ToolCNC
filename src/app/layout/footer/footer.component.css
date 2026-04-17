@@ -1,5 +1,5 @@
 .footer-container {
-  background: linear-gradient(rgba(15, 23, 42, 0.15), rgba(15, 23, 42, 0.35)), url('../../../../public/assets/images/footer-bg.png'); /* Lớp overlay mỏng lỳ hơn */
+  background: linear-gradient(rgba(15, 23, 42, 0.15), rgba(15, 23, 42, 0.35)), url('../../../assets/images/footer-bg.png'); /* Lớp overlay mỏng lỳ hơn */
   background-size: cover;
   background-position: center;
   color: rgba(255, 255, 255, 0.85); /* Tăng độ sáng chữ */

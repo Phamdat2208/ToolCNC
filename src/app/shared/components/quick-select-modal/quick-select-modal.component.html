@@ -1,7 +1,7 @@
 <div class="quick-select-container">
   <app-loading [isLoading]="isLoading">
-    <!-- Content state -->
-    <div *ngIf="product" class="content-box animate-up">
+  <!-- Content state -->
+  <div *ngIf="!isLoading && product" class="content-box animate-up">
     <div class="product-header">
       <div class="header-main-row">
         <h3 class="product-name">{{ product.name }}</h3>
@@ -41,13 +41,7 @@
               <span class="v-price">{{ data.price | currency:'VND':'symbol':'1.0-0' }}</span>
             </td>
             <td>
-              <nz-input-number 
-                [(ngModel)]="data.selectedQuantity" 
-                [nzMin]="1" 
-                [nzStep]="1" 
-                (click)="$event.stopPropagation()"
-                class="qty-input-table">
-              </nz-input-number>
+              <app-quantity-input [(quantity)]="data.selectedQuantity" [maxStock]="data.stock"></app-quantity-input>
             </td>
             <td>
               <span class="v-subtotal">{{ (data.price * data.selectedQuantity) | currency:'VND':'symbol':'1.0-0' }}</span>

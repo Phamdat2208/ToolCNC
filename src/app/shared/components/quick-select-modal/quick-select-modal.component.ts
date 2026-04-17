@@ -4,6 +4,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { LoadingComponent } from '../loading/loading.component';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
@@ -15,8 +16,6 @@ import { CartService } from '../../../services/cart.service';
 import { UrlUtils } from '../../utils/url-utils';
 import { QuantityInputComponent } from '../quantity-input/quantity-input.component';
 import { FormsModule } from '@angular/forms';
-import { LoadingComponent } from '../loading/loading.component';
-
 @Component({
   selector: 'app-quick-select-modal',
   standalone: true,
@@ -29,7 +28,8 @@ import { LoadingComponent } from '../loading/loading.component';
     NzSpinModule,
     NzCheckboxModule,
     NzInputNumberModule,
-    LoadingComponent
+    LoadingComponent,
+    QuantityInputComponent
   ],
   templateUrl: './quick-select-modal.component.html',
   styleUrl: './quick-select-modal.component.css'

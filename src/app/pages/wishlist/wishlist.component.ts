@@ -7,11 +7,10 @@ import { CartService } from '../../services/cart.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { LoadingComponent } from "../../shared/components/loading/loading.component";
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
-  selector: 'app-wishlist',
   standalone: true,
   imports: [CommonModule, RouterLink, NzButtonModule, NzIconModule, NzEmptyModule, LoadingComponent, NzToolTipModule],
   templateUrl: './wishlist.component.html',

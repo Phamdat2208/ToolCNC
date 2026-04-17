@@ -16,7 +16,7 @@ import { AuthService } from '../../../services/auth.service';
 import { CloudinaryService } from '../../../services/cloudinary.service';
 import { environment } from '../../../../environments/environment';
 import { Brand, BrandService } from '../../../services/brand.service';
-import { LoadingComponent } from "../../../shared/components/loading/loading.component";
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-admin-brands',
@@ -35,7 +35,7 @@ import { LoadingComponent } from "../../../shared/components/loading/loading.com
     ReactiveFormsModule,
     ImageCropperComponent,
     LoadingComponent
-],
+  ],
   templateUrl: './admin-brands.component.html',
   styleUrl: './admin-brands.component.css'
 })

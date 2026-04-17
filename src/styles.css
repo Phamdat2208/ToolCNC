@@ -1,19 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  /* Brand Colors - Industrial High-Tech Palette */
-  --primary-color: #0ea5e9; /* Electric Cyan */
-  --primary-hover: #38bdf8;
-  --primary-light: #e0f2fe;
+  /* Brand Colors - Industrial Orange/Tech Palette */
+  --primary-color: #f97316; /* Vibrant Orange */
+  --primary-hover: #ea580c;
+  --primary-light: #fff7ed;
   --danger-color: #ef4444; 
   --success-color: #10b981;
   --warning-color: #f59e0b;
 
-  /* Neutrals - Slate Palette */
-  --text-main: #1e293b;
-  --text-secondary: #64748b;
+  /* Neutrals - Slate & Tech Palette */
+  --text-main: #0f172a; /* Deep Black/Slate */
+  --text-secondary: #475569;
   --text-light: #94a3b8;
-  --bg-gray: #f1f5f9;
+  --bg-gray: #f8fafc;
   --bg-white: #ffffff;
   --border-color: #e2e8f0;
 
@@ -174,6 +174,228 @@ body {
   overflow: hidden;
 }
 
+/* === TRIỆT TIÊU MÀU XANH CỦA INPUT (GLOBAL) === */
+.ant-input:hover,
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
+  border-color: var(--text-secondary) !important;
+}
+
+/* --- Global Premium Overrides (Modals & Notifications) --- */
+.ant-modal-mask {
+  background: rgba(15, 23, 42, 0.7) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* ---- Container ---- */
+.ant-modal-content {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(226, 232, 240, 0.6) !important;
+  background: #ffffff !important;
+}
+
+/* ---- Header ---- */
+.ant-modal-header {
+  background: #0f172a !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  border-radius: 20px 20px 0 0 !important;
+  padding: 18px 24px !important;
+}
+
+.ant-modal-title {
+  color: #f1f5f9 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* ---- Close Button ---- */
+.ant-modal-close {
+  top: 14px !important;
+  right: 16px !important;
+  color: #64748b !important;
+  transition: all 0.2s ease !important;
+}
+
+.ant-modal-close:hover {
+  color: #06b6d4 !important;
+  background: rgba(6, 182, 212, 0.1) !important;
+  border-radius: 8px !important;
+}
+
+.ant-modal-close-x {
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  font-size: 16px !important;
+}
+
+/* ---- Body ---- */
+.ant-modal-body {
+  padding: 28px 24px !important;
+  background: #ffffff !important;
+  font-size: 14px !important;
+  color: #334155 !important;
+}
+
+/* ---- Footer ---- */
+.ant-modal-footer {
+  border-top: 1px solid #f1f5f9 !important;
+  padding: 16px 24px !important;
+  border-radius: 0 0 20px 20px !important;
+  background: #f8fafc !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+}
+
+/* Footer buttons */
+.ant-modal-footer .ant-btn {
+  height: 40px !important;
+  padding: 0 20px !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  transition: all 0.25s ease !important;
+}
+
+.ant-modal-footer .ant-btn-default {
+  border-color: #e2e8f0 !important;
+  color: #64748b !important;
+}
+
+.ant-modal-footer .ant-btn-default:hover {
+  border-color: #0ea5e9 !important;
+  color: #0ea5e9 !important;
+}
+
+.ant-modal-footer .ant-btn-primary {
+  background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%) !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25) !important;
+}
+
+.ant-modal-footer .ant-btn-primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4) !important;
+}
+
+.ant-modal-footer .ant-btn-dangerous {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border: none !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25) !important;
+}
+
+.ant-modal-footer .ant-btn-dangerous:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4) !important;
+}
+
+/* ---- Form inside Modal ---- */
+.ant-modal-body .ant-form-item-label > label {
+  font-weight: 700 !important;
+  font-size: 12.5px !important;
+  color: #475569 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.ant-modal-body .ant-input,
+.ant-modal-body .ant-input-affix-wrapper,
+.ant-modal-body .ant-select-selector,
+.ant-modal-body textarea.ant-input {
+  border-radius: 10px !important;
+  border-color: #e2e8f0 !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+}
+
+.ant-modal-body .ant-input:focus,
+.ant-modal-body .ant-input-affix-wrapper-focused,
+.ant-modal-body .ant-select-focused .ant-select-selector,
+.ant-modal-body textarea.ant-input:focus {
+  border-color: #0ea5e9 !important;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
+}
+
+/* ---- Section Divider inside Modal ---- */
+.ant-modal-body .ant-divider-inner-text {
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: #94a3b8 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+
+.ant-notification-notice {
+  border-radius: 16px !important;
+  padding: 16px 20px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
+  border: 1px solid #f1f5f9 !important;
+}
+
+.ant-notification-notice-message {
+  font-weight: 700 !important;
+}
+
+.ant-notification-notice-icon-success {
+  color: var(--primary-color) !important;
+}
+
+.ant-notification-notice-icon-info {
+  color: #3b82f6 !important;
+}
+
+/* Adjusting Steps colors globally - TRIỆT TIÊU MÀU XANH TUYỆT ĐỐI */
+.ant-steps-item-icon, 
+.ant-steps-item-tail,
+.ant-steps-item-tail::after,
+.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after,
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon .ant-steps-icon {
+  color: #fff !important;
+}
+
+/* Đảm bảo đường nối luôn cam */
+.ant-steps-item-tail::after {
+  background-color: var(--primary-color) !important;
+  background-image: none !important;
+}
+
+.ant-steps-item-title::after {
+  background-color: var(--primary-color) !important;
+}
+
+/* Fix cho cả Input group có prefix/suffix */
+.ant-input-affix-wrapper-focused .ant-input {
+  box-shadow: none !important;
+}
+
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper-focused,
+.ant-input-affix-wrapper:focus {
+  border-color: var(--text-secondary) !important;
+  box-shadow: 0 0 0 2px rgba(71, 85, 105, 0.1) !important; /* Xám Slate mờ */
+}
+
+/* Fix cho cả Input group có prefix/suffix */
+.ant-input-affix-wrapper-focused .ant-input {
+  box-shadow: none !important;
+}
+
 /* Custom Notification */
 .ant-notification-notice {
   padding: 16px 20px !important;
@@ -265,10 +487,6 @@ body {
 .hover-glow:hover {
   animation: pulseGlow 1.5s infinite;
 }
-
-/* Floating Header Utility — handled inside header.component.css */
-
-
 
 /* Back to Top & Speed Dial Global Styling - Perfectly Aligned */
 .ant-back-top,

@@ -8,6 +8,7 @@
 
   <app-loading [isLoading]="loading">
     <div class="table-card">
+      <app-loading [isLoading]="loading">
       <nz-table #basicTable [nzData]="brands" [nzPageSize]="100">
         <thead>
           <tr>
@@ -60,6 +61,7 @@
           </tr>
         </tbody>
       </nz-table>
+      </app-loading>
     </div>
   </app-loading>
 

@@ -1,84 +1,76 @@
-<div class="wishlist-page">
-  <!-- Page Header -->
-  <header class="page-header">
-    <div class="header-container">
-      <div class="header-left">
-        <div class="header-icon-box">
-          <nz-icon nzType="heart" nzTheme="fill" />
-        </div>
-        <div class="header-text">
-          <h1 class="page-title">Sản phẩm yêu thích</h1>
-          <p class="page-subtitle">Danh sách các thiết bị bạn đang quan tâm</p>
-        </div>
-      </div>
-      <div class="header-actions">
-        <button nz-button class="btn-shop-more" routerLink="/products">
-          <nz-icon nzType="shopping" /> Tiếp tục mua sắm
-        </button>
-      </div>
+<div class="wishlist-page-wrapper">
+  <div class="container-standard">
+    <div class="wishlist-header-row">
+      <h2 class="wishlist-main-title">
+        <nz-icon nzType="heart" nzTheme="fill" class="heart-icon-premium" />
+        Sản phẩm đang quan tâm
+      </h2>
+      <button nz-button nzType="default" class="btn-back-to-shop" routerLink="/products">
+        <nz-icon nzType="arrow-left" /> Tiếp tục xem hàng
+      </button>
     </div>
-  </header>
 
-  <div class="wishlist-content-container">
-    <app-loading [isLoading]="isLoading">
-      <!-- Empty State -->
-      <div *ngIf="wishlistService.items().length === 0 && !isLoading" class="premium-empty-state">
-        <div class="empty-visual">
-          <div class="empty-icon-circle">
-            <nz-icon nzType="heart" nzTheme="outline" />
-          </div>
-        </div>
-        <h3>Danh mục yêu thích trống</h3>
-        <p>Có vẻ như bạn chưa thêm sản phẩm nào vào danh sách yêu thích của mình.</p>
-        <button nz-button nzType="primary" routerLink="/products" class="btn-explore">
-          KHÁM PHÁ NGAY
-        </button>
+    <!-- Empty State -->
+    <div *ngIf="wishlistService.items().length === 0" class="wishlist-empty-state animate-up">
+      <div class="empty-icon-circle">
+        <nz-icon nzType="heart" nzTheme="outline" />
       </div>
-    
-      <!-- Wishlist List (Rows) -->
-      <div class="wishlist-rows" *ngIf="wishlistService.items().length > 0">
-        <div class="wishlist-item-row animate-fade-up" *ngFor="let product of wishlistService.items(); let i = index" [style.animation-delay]="i * 0.05 + 's'">
-          <!-- Image Section -->
-          <div class="row-image-section">
-            <a [routerLink]="['/products', product.id]">
-              <img [src]="product.img || product.imageUrl || 'https://placehold.co/200x200?text=No+Image'" 
-                   [alt]="product.name" 
-                   [class.dimmed]="product.totalStock === 0" />
-            </a>
-            <div class="stock-badge oos" *ngIf="product.totalStock === 0">Hết hàng</div>
+      <h2>Danh sách còn trống</h2>
+      <p>Lưu lại những dụng cụ bạn cần để dễ dàng theo dõi giá và đặt hàng sau.</p>
+      <button nz-button nzType="primary" routerLink="/products" class="btn-go-catalog">
+        KHÁM PHÁ SẢN PHẨM <nz-icon nzType="search" />
+      </button>
+    </div>
+
+    <!-- Premium Wishlist Row-based List -->
+    <div class="premium-wishlist-list" *ngIf="wishlistService.items().length > 0">
+      <div 
+        class="wishlist-premium-row animate-up" 
+        *ngFor="let product of wishlistService.items()"
+        [style.animation-delay]="'0.' + product.id + 's'"
+      >
+        <div class="row-inner">
+          <a [routerLink]="['/products', product.id]" class="product-visual">
+            <img 
+              [src]="product.img || product.imageUrl || 'https://placehold.co/300x300?text=ToolCNC'" 
+              [alt]="product.name" 
+              [class.img-dimmed]="product.totalStock === 0"
+            />
+            <div class="stock-badge-overlay" *ngIf="product.totalStock === 0">Hết hàng</div>
+          </a>
+
+          <div class="product-info-segment">
+            <div class="brand-tag">{{ product?.brand?.name || 'Chính hãng' }}</div>
+            <a [routerLink]="['/products', product.id]" class="product-name-link">{{ product.name }}</a>
+            <div class="product-code" *ngIf="product.code">Mã SP: <strong>{{ product.code }}</strong></div>
           </div>
 
-          <!-- Info Section -->
-          <div class="row-info-section">
-            <div class="brand-tag" *ngIf="product?.brand?.name">{{ product.brand.name }}</div>
-            <a [routerLink]="['/products', product.id]" class="product-name">{{ product.name }}</a>
+          <div class="product-action-segment">
             <div class="price-box">
-              <span class="curr-price">{{ product.price | currency:'VND':'symbol':'1.0-0' }}</span>
+              <span class="currency">đ</span>
+              <span class="value">{{ product.price | number:'1.0-0' }}</span>
             </div>
-          </div>
-
-          <!-- Actions Section -->
-          <div class="row-actions-section">
-            <div class="action-buttons-group">
-              <button
-                nz-button
-                nzType="primary"
-                class="btn-add-cart"
-                (click)="addToCart(product)"
-                [disabled]="product.totalStock === 0"
+            
+            <div class="action-buttons">
+              <button 
+                nz-button 
+                class="btn-quick-add-cart"
                 [nzLoading]="isAddingToCart[product.id]"
+                (click)="addToCart(product)"
               >
-                <nz-icon nzType="shopping-cart" /> Thêm vào giỏ
+                <nz-icon nzType="shopping-cart" /> 
+                <span class="btn-text">Thêm vào giỏ</span>
               </button>
               
-              <button
-                nz-button
-                nzType="default"
-                nzDanger
-                class="btn-remove"
-                nz-tooltip="Xóa khỏi danh sách"
-                (click)="removeFromWishlist(product.id)"
+              <button 
+                nz-button 
+                nzType="text" 
+                nzDanger 
+                class="btn-remove-wishlist"
                 [nzLoading]="isRemoving[product.id]"
+                (click)="removeFromWishlist(product.id)"
+                nz-tooltip
+                nzTooltipTitle="Xóa khỏi danh sách"
               >
                 <nz-icon nzType="delete" />
               </button>
@@ -86,6 +78,6 @@
           </div>
         </div>
       </div>
-    </app-loading>
+    </div>
   </div>
 </div>

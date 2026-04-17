@@ -7,6 +7,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { UserService } from '../../../services/user.service';
 import { LoadingComponent } from "../../../shared/components/loading/loading.component";
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-admin-users',

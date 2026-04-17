@@ -17,7 +17,7 @@
           <nz-icon nzType="search" class="search-icon-anim" />
         </ng-template>
         <ng-template #suffixButton>
-          <button nz-button nzType="primary" class="search-btn-hero" (click)="onSearch()">
+          <button nz-button nzType="default" nzShape="round" (click)="onSearch()" class="search-btn-hero">
             Tra cứu
           </button>
         </ng-template>
@@ -84,9 +84,9 @@
             [(ngModel)]="trackingCode" (keyup.enter)="trackOrderByCode()" />
         </nz-input-group>
         <ng-template #trackPrefix>
-          <nz-icon nzType="barcode" style="font-size: 18px; color: var(--primary-color)" />
+          <nz-icon nzType="barcode" style="font-size: 18px" />
         </ng-template>
-        <button nz-button nzType="primary" class="tracking-btn" (click)="trackOrderByCode()" [nzLoading]="isTracking">
+        <button nz-button nzType="default" class="tracking-btn" (click)="trackOrderByCode()" [nzLoading]="isTracking">
           <nz-icon nzType="search" /> Tra cứu
         </button>
       </div>

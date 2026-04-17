@@ -77,17 +77,17 @@
 }
 
 .industrial-steps ::ng-deep .ant-steps-item-active .ant-steps-item-icon {
-  background-color: #06b6d4 !important;
-  border-color: #06b6d4 !important;
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
 }
 
 .industrial-steps ::ng-deep .ant-steps-item-finish .ant-steps-item-icon {
   background-color: transparent !important;
-  border-color: #06b6d4 !important;
+  border-color: var(--primary-color) !important;
 }
 
 .industrial-steps ::ng-deep .ant-steps-item-finish .ant-steps-item-icon .ant-steps-icon {
-  color: #06b6d4 !important;
+  color: var(--primary-color) !important;
 }
 
 .industrial-steps ::ng-deep .ant-steps-item-tail::after {
@@ -95,7 +95,7 @@
 }
 
 .industrial-steps ::ng-deep .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
-  background-color: #06b6d4 !important;
+  background-color: var(--primary-color) !important;
 }
 
 /* ─── Layout ─── */
@@ -127,7 +127,7 @@
   width: 56px;
   height: 56px;
   background: #f0f9ff;
-  color: #0ea5e9;
+  color: var(--primary-color);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -627,13 +627,32 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;
   color: white;
 }
 
 .btn-back-modern:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 35px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 15px 35px rgba(239, 68, 68, 0.3);
+  color: white;
+}
+
+.btn-back-home {
+  height: 56px;
+  padding: 0 32px;
+  border-radius: 16px;
+  font-weight: 700;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #0ee90e 0%, #057a05 100%) !important;
+  color: white;
+}
+
+.btn-back-home:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0, 255, 0, 0.3);
   color: white;
 }
 
@@ -678,7 +697,21 @@
 
 .trust-item nz-icon {
   font-size: 20px;
-  color: #0ea5e9;
+  color: #0db432;
+}
+
+.refund-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.refund-item nz-icon {
+  font-size: 20px;
+  color: #2563eb;
 }
 
 /* ─── Animations ─── */

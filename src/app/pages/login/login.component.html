@@ -1,44 +1,24 @@
-<div class="auth-page">
-
-  <!-- ===== LEFT PANEL – Brand Panel ===== -->
-  <div class="brand-panel">
-    <a routerLink="/" class="brand-back-link">
-      <nz-icon nzType="arrow-left" /> Về trang chủ
-    </a>
-
-    <div class="brand-content">
-      <div class="brand-logo">
-        <img src="Logo.ico" alt="Logo" class="brand-logo-img" />
-        <span class="brand-tool">Tool</span><span class="brand-cnc">CNC</span>
+<div class="login-container">
+  <button
+    nz-button
+    class="back-button"
+    nzType="default"
+    nzShape="circle"
+    routerLink="/"
+  >
+    <nz-icon nzType="arrow-left" />
+  </button>
+  <div class="login-box">
+    <div class="brand-logo-container">
+      <img src="Logo.ico" alt="Logo" class="auth-logo" />
+      <div class="brand-text">
+        <span class="text-primary">Tool</span><span class="text-danger">CNC</span>
       </div>
-      <h1 class="brand-headline">
-        Công cụ cắt gọt<br />
-        <span class="brand-highlight">chuyên nghiệp</span>
-      </h1>
-      <p class="brand-desc">
-        Nền tảng mua sắm dao phay, chip tiện, mũi khoan CNC hàng đầu Việt Nam — chính hãng, uy tín, giao hàng nhanh.
-      </p>
-
-      <div class="brand-features">
-        <div class="brand-feature">
-          <div class="feature-icon">
-            <nz-icon nzType="safety-certificate" />
-          </div>
-          <span>Hàng chính hãng 100%</span>
-        </div>
-        <div class="brand-feature">
-          <div class="feature-icon">
-            <nz-icon nzType="thunderbolt" />
-          </div>
-          <span>Giao hàng toàn quốc</span>
-        </div>
-        <div class="brand-feature">
-          <div class="feature-icon">
-            <nz-icon nzType="customer-service" />
-          </div>
-          <span>Hỗ trợ kỹ thuật 24/7</span>
-        </div>
-      </div>
+    </div>
+    
+    <div class="login-header">
+      <h2>Đăng nhập Hệ thống</h2>
+      <p>Nhập tên tài khoản và mật khẩu để tiếp tục</p>
     </div>
 
     <div class="brand-decoration">

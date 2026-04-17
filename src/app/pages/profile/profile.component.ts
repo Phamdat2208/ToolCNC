@@ -18,11 +18,12 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
   selector: 'app-profile',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     RouterLink,
-    NzDescriptionsModule, 
-    NzIconModule,
     NzButtonModule,
+    NzIconModule,
+    NzFormModule,
+    NzSpinModule,
     ReactiveFormsModule,
     CustomInputComponent,
     LoadingComponent
