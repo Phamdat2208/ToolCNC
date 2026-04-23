@@ -341,11 +341,11 @@
               type="submit"
               [nzLoading]="isSubmitting"
               class="add-btn w-200"
+              (click)="submitSingle()"
             >
               {{ isEditMode ? "Cập nhật" : "Lưu sản phẩm" }}
             </button>
             <button
-              *ngIf="isEditMode"
               nz-button
               type="button"
               nzType="primary"
@@ -354,7 +354,7 @@
               class="w-200"
               (click)="back()"
             >
-              Hủy bỏ
+              {{ isEditMode ? "Hủy" : "Quay lại"}}
             </button>
           </div>
         </nz-form-control>

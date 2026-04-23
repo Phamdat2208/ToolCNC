@@ -22,16 +22,16 @@ import { UrlUtils } from '../../shared/utils/url-utils';
   selector: 'app-home',
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterLink, 
-    NzCarouselModule, 
-    NzCardModule, 
-    NzGridModule, 
-    NzButtonModule, 
-    NzIconModule, 
-    NzSpinModule, 
-    NzBackTopModule, 
-    ProductCardComponent, 
+    CommonModule,
+    RouterLink,
+    NzCarouselModule,
+    NzCardModule,
+    NzGridModule,
+    NzButtonModule,
+    NzIconModule,
+    NzSpinModule,
+    NzBackTopModule,
+    ProductCardComponent,
     ScrollRevealDirective,
     LoadingComponent
   ],
@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
   addToCart(product: any) {
     this.toastService.showSuccess(`Đã thêm ${product.name} vào giỏ hàng`);
   }
-  
+
   categories: Category[] = [];
   banners = [
     {
@@ -120,13 +120,15 @@ export class HomeComponent implements OnInit {
 
   loadFeaturedProducts() {
     this.loading = true;
-    this.productService.getProducts(0, 12, 'Mới nhất').subscribe({
+    this.productService.getProducts(0, 12, 'Mới nhất', undefined, undefined, undefined, undefined, undefined, true).subscribe({
       next: (res) => {
         const data = (res && Array.isArray(res.content)) ? res.content : [];
-        this.featuredProducts = data.map((p: any) => ({
-          ...p,
-          img: p.imageUrl || `https://placehold.co/300x200?text=${encodeURIComponent(p.name)}`
-        }));
+        this.featuredProducts = data.map((p: any) => {
+          return {
+            ...p,
+            img: p.imageUrl || `https://placehold.co/300x200?text=${encodeURIComponent(p.name)}`
+          };
+        });
         this.loading = false;
       },
       error: (err) => {

@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerComponent } from "ng-zorro-antd/divider";
@@ -12,11 +14,11 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzUploadChangeParam, NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
 import { forkJoin, lastValueFrom } from 'rxjs';
 import * as XLSX from 'xlsx';
-import { BrandService } from '../../../../services/brand.service';
-import { CategoryService } from '../../../../services/category.service';
-import { CloudinaryService } from '../../../../services/cloudinary.service';
-import { ProductService } from '../../../../services/product.service';
-import { ToastService } from '../../../../shared/services/toast.service';
+import { BrandService } from '../../../services/brand.service';
+import { CategoryService } from '../../../services/category.service';
+import { CloudinaryService } from '../../../services/cloudinary.service';
+import { ProductService } from '../../../services/product.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-admin-bulk-import',
@@ -33,6 +35,8 @@ export class AdminBulkImportComponent {
   private brandService = inject(BrandService);
   private cloudinaryService = inject(CloudinaryService);
   private toastService = inject(ToastService);
+  private router = inject(Router);
+  private location = inject(Location);
 
   productsPreview: any[] = [];
   selectedImages: Map<string, { file: File, url: string }> = new Map();
@@ -100,6 +104,10 @@ export class AdminBulkImportComponent {
       URL.revokeObjectURL(this.selectedImages.get(filename)!.url);
       this.selectedImages.delete(filename);
     }
+  }
+
+  back() {
+    this.location.back();
   }
 
   clearUnmatchedImages() {
@@ -444,8 +452,10 @@ export class AdminBulkImportComponent {
             next: () => {
               this.toastService.showSuccess(`Đã nạp thành công ${listToSave.length} sản phẩm mới!`);
               this.isSaving = false;
+              this.isSaving = false;
               this.clearPreview();
               this.onComplete.emit();
+              this.router.navigate(['/admin/products']);
             },
             error: (err) => {
               this.isSaving = false;

@@ -50,6 +50,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'products', component: AdminProductsComponent },
       { path: 'products/new', component: ProductAddComponent },
+      { path: 'products/bulk', loadComponent: () => import('./pages/admin/bulk-import/admin-bulk-import.component').then(m => m.AdminBulkImportComponent) },
       { path: 'products/:id/edit', component: ProductAddComponent },
       { path: 'categories', component: AdminCategoriesComponent },
       { path: 'brands', loadComponent: () => import('./pages/admin/admin-brands/admin-brands.component').then(m => m.AdminBrandsComponent) },

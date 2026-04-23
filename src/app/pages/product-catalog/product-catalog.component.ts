@@ -42,6 +42,7 @@ export class ProductCatalogComponent implements OnInit {
   pageSize = 12;
   pageIndex = 1;
   pageSizeOptions = [12, 24, 48, 96];
+  onlyInStock = false;
 
   priceRange: number[] = [0, 10000000];
   readonly MAX_PRICE = 10000000;
@@ -70,7 +71,7 @@ export class ProductCatalogComponent implements OnInit {
       this.activeCategory = params['category'] || '';
       this.searchKeyword = params['keyword'] || '';
       this.currentSort = params['sort'] || 'Mới nhất';
-      
+
       const minP = params['minPrice'] ? Number(params['minPrice']) : 0;
       const maxP = params['maxPrice'] ? Number(params['maxPrice']) : this.MAX_PRICE;
       this.priceRange = [minP, maxP];
@@ -89,11 +90,11 @@ export class ProductCatalogComponent implements OnInit {
 
       // 3. Load Data
       this.loadProducts();
-      
+
       if (this.activeCategory && this.categories.length > 0) {
         this.expandToActiveCategory(this.categories, this.activeCategory);
       }
-      
+
       this.initialized = true;
     });
   }
@@ -104,7 +105,7 @@ export class ProductCatalogComponent implements OnInit {
         // We keep the tree structure for the collapsible UI
         this.totalAllProducts = this.calculateCountsRecursively(tree);
         this.categories = tree;
-        
+
         if (this.searchKeyword && !this.activeCategory) {
           this.matchKeywordToCategory();
         }
@@ -162,14 +163,15 @@ export class ProductCatalogComponent implements OnInit {
     const brands = this.selectedBrands.size > 0 ? [...this.selectedBrands].join(',') : undefined;
 
     this.productService.getProducts(
-      apiPage, 
-      this.pageSize, 
-      this.currentSort, 
-      this.searchKeyword || undefined, 
-      this.activeCategory || undefined, 
-      this.priceRange[0], 
-      this.priceRange[1], 
-      brands
+      apiPage,
+      this.pageSize,
+      this.currentSort,
+      this.searchKeyword || undefined,
+      this.activeCategory || undefined,
+      this.priceRange[0],
+      this.priceRange[1],
+      brands,
+      this.onlyInStock
     ).subscribe({
       next: (res) => {
         const data = (res && Array.isArray(res.content)) ? res.content : [];
@@ -239,11 +241,12 @@ export class ProductCatalogComponent implements OnInit {
   }
 
   changeSort(sort: string) {
+    this.onlyInStock = sort === 'Hàng có sẵn';
     this.currentSort = sort;
     this.syncStateToUrl(true);
   }
 
-  selectCategory(catName: string) {
+  selectCategory(catName: string, currentActive?: string) {
     this.activeCategory = catName;
     this.syncStateToUrl(true);
   }
@@ -265,7 +268,7 @@ export class ProductCatalogComponent implements OnInit {
 
   private matchKeywordToCategory() {
     if (this.activeCategory) return;
-    const matchedCat = this.categories.find(c => 
+    const matchedCat = this.categories.find(c =>
       c.name.toLowerCase() === this.searchKeyword.trim().toLowerCase()
     );
     if (matchedCat) {

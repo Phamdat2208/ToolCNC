@@ -74,6 +74,7 @@
     [nzOkText]="isEditMode ? 'Cập nhật' : 'Tạo mới'"
     [nzCancelText]="'Hủy'"
     [nzWidth]="600"
+    [nzOkLoading]="isLoadingModal"
   >
     <div *nzModalContent>
       <form nz-form [formGroup]="brandForm" nzLayout="vertical">

@@ -45,6 +45,7 @@ export class AdminCategoriesComponent implements OnInit {
   displayCategories: any[] = [];
   parentOptions: any[] = [];
   loading = true;
+  isLoadingModal = false;
   
   // Modal state
   isModalVisible = false;
@@ -169,6 +170,7 @@ export class AdminCategoriesComponent implements OnInit {
 
   handleOk() {
     if (this.categoryForm.valid) {
+      this.isLoadingModal = true;
       const data = this.categoryForm.value;
       if (this.isEditMode && this.currentCategoryId) {
         this.categoryService.updateCategory(this.currentCategoryId, data).subscribe({
@@ -185,6 +187,7 @@ export class AdminCategoriesComponent implements OnInit {
             this.toastService.showSuccess('Thêm thành công');
             this.handleCancel();
             this.loadCategories();
+            this.isLoadingModal = false;
           },
           error: (err: any) => this.toastService.showError(err.error?.message || 'Lỗi khi thêm mới')
         });

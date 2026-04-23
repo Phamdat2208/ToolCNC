@@ -13,10 +13,11 @@ export class ProductService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
 
-  getProducts(page: number = 0, size: number = 12, sort?: string, keyword?: string, category?: string, minPrice?: number, maxPrice?: number, brand?: string): Observable<any> {
+  getProducts(page: number = 0, size: number = 12, sort?: string, keyword?: string, category?: string, minPrice?: number, maxPrice?: number, brand?: string, onlyInStock: boolean = false): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('size', size.toString());
+      .set('size', size.toString())
+      .set('onlyInStock', onlyInStock.toString());
 
     if (sort) {
       if (sort === 'Giá: Thấp đến Cao') {

@@ -45,6 +45,7 @@ export class AdminBrandsComponent implements OnInit {
   private cloudinaryService = inject(CloudinaryService);
   private message = inject(NzMessageService);
   private toastService = inject(ToastService);
+  public isLoadingModal = false;
 
   brands: Brand[] = [];
   loading = true;
@@ -173,6 +174,7 @@ export class AdminBrandsComponent implements OnInit {
   }
 
   handleOk() {
+    this.isLoadingModal = true;
     if (this.brandForm.valid) {
       const submit = (finalLogoUrl?: string) => {
         const data = { ...this.brandForm.value };

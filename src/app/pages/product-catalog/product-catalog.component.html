@@ -19,7 +19,7 @@
             <li
               class="tree-node-item root-node"
               [class.active]="activeCategory === ''"
-              (click)="selectCategory('')"
+              (click)="selectCategory('', activeCategory)"
             >
               <span class="cat-name" title="Tất cả sản phẩm">Tất cả sản phẩm</span>
               <span class="count-badge">{{ totalAllProducts }}</span>
@@ -132,6 +132,7 @@
               <li nz-menu-item (click)="changeSort('Giá: Thấp đến Cao')">Giá: Thấp đến Cao</li>
               <li nz-menu-item (click)="changeSort('Giá: Cao đến Thấp')">Giá: Cao đến Thấp</li>
               <li nz-menu-item (click)="changeSort('Bán chạy nhất')">Bán chạy nhất</li>
+              <li nz-menu-item (click)="changeSort('Hàng có sẵn')">Hàng có sẵn</li>
             </ul>
           </nz-dropdown-menu>
         </div>

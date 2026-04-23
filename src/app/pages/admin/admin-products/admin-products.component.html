@@ -2,7 +2,7 @@
       <div class="page-header">
         <h2>Quản lý sản phẩm</h2>
         <div class="header-actions">
-          <button nz-button nzType="default" (click)="showImportModal()" class="import-btn mr-8">
+          <button nz-button nzType="default" routerLink="/admin/products/bulk" class="import-btn mr-8">
             <nz-icon nzType="file-excel" /> Nhập hàng loạt
           </button>
           <button nz-button nzType="primary" routerLink="/admin/products/new" class="add-btn">
@@ -11,18 +11,6 @@
         </div>
       </div>
 
-      <!-- Bulk Import Modal -->
-      <nz-modal
-        [(nzVisible)]="isImportModalVisible"
-        nzTitle="Nhập sản phẩm hàng loạt từ Excel"
-        (nzOnCancel)="isImportModalVisible = false"
-        [nzFooter]="null"
-        nzWidth="1000px"
-      >
-        <ng-container *nzModalContent>
-          <app-admin-bulk-import (onComplete)="handleImportComplete()"></app-admin-bulk-import>
-        </ng-container>
-      </nz-modal>
 
       <div class="search-bar">
         <nz-input-group [nzPrefix]="prefixIconSearch">
@@ -46,11 +34,11 @@
           <tr>
             <th nzWidth="80px">ID</th>
             <th nzWidth="100px">Ảnh</th>
-            <th>Tên sản phẩm</th>
-            <th>Danh mục</th>
-            <th>Thương hiệu</th>
+            <th nzWidth="300px">Tên sản phẩm</th>
+            <th nzWidth="180px">Danh mục</th>
+            <th nzWidth="150px">Thương hiệu</th>
             <th nzWidth="120px">Tồn kho</th>
-            <th>Giá</th>
+            <th nzWidth="140px">Giá</th>
             <th nzWidth="100px">Thao tác</th>
           </tr>
         </thead>
@@ -63,9 +51,11 @@
                 <div class="out-of-stock-banner" *ngIf="data.totalStock === 0" style="font-size: 6px; padding: 1px 4px; border: 1px solid white;">HẾT</div>
               </div>
             </td>
-            <td class="font-bold">{{ data.name }}</td>
-            <td><nz-tag>{{ data.categoryName || '-' }}</nz-tag></td>
-            <td>{{ data.brandName || '-' }}</td>
+            <td class="font-bold" nzEllipsis nz-tooltip [nzTooltipTitle]="data.name">{{ data.name }}</td>
+            <td nzEllipsis nz-tooltip [nzTooltipTitle]="data.categoryName">
+              <nz-tag class="category-tag">{{ data.categoryName || '-' }}</nz-tag>
+            </td>
+            <td nzEllipsis nz-tooltip [nzTooltipTitle]="data.brandName">{{ data.brandName || '-' }}</td>
             <td>
               <nz-tag [nzColor]="data.totalStock > 0 ? 'green' : 'red'">{{ data.totalStock }}</nz-tag>
             </td>

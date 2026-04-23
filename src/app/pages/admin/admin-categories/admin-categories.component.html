@@ -109,6 +109,7 @@
     (nzOnOk)="handleOk()"
     [nzOkText]="isEditMode ? 'Cập nhật' : 'Tạo mới'"
     [nzCancelText]="'Hủy'"
+    [nzOkLoading]="isLoadingModal"
   >
     <div *nzModalContent>
       <form nz-form [formGroup]="categoryForm" nzLayout="vertical">

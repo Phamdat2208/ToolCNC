@@ -14,7 +14,8 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { UrlUtils } from '../../../shared/utils/url-utils';
-import { AdminBulkImportComponent } from './bulk-import/admin-bulk-import.component';
+import { lastValueFrom } from 'rxjs';
+import { AdminBulkImportComponent } from '../bulk-import/admin-bulk-import.component';
 
 @Component({
   selector: 'app-admin-products',
@@ -30,9 +31,8 @@ import { AdminBulkImportComponent } from './bulk-import/admin-bulk-import.compon
     NzModalModule,
     NzToolTipModule,
     FormsModule,
-    AdminBulkImportComponent,
     PaginationComponent,
-    LoadingComponent
+    LoadingComponent,
   ],
   templateUrl: './admin-products.component.html',
   styleUrl: './admin-products.component.css'
@@ -48,20 +48,11 @@ export class AdminProductsComponent implements OnInit {
   page = 1;
   size = 10;
   searchKeyword = '';
-  isImportModalVisible = false;
 
   ngOnInit() {
     this.loadProducts();
   }
 
-  showImportModal() {
-    this.isImportModalVisible = true;
-  }
-
-  handleImportComplete() {
-    this.isImportModalVisible = false;
-    this.loadProducts(true);
-  }
 
   loadProducts(reset: boolean = false) {
     if (reset) this.page = 1;
@@ -101,14 +92,14 @@ export class AdminProductsComponent implements OnInit {
       nzOkType: 'primary',
       nzOkDanger: true,
       nzCancelText: 'Hủy',
-      nzOnOk: () => {
-        this.productService.deleteProduct(id).subscribe({
-          next: () => {
-            this.toastService.showSuccess('Đã xóa sản phẩm thành công');
-            this.loadProducts();
-          },
-          error: () => this.toastService.showError('Lỗi khi xóa sản phẩm')
-        });
+      nzOnOk: async () => {
+        try {
+          await lastValueFrom(this.productService.deleteProduct(id));
+          this.toastService.showSuccess('Đã xóa sản phẩm thành công');
+          this.loadProducts();
+        } catch (error) {
+          this.toastService.showError('Lỗi khi xóa sản phẩm');
+        }
       }
     });
   }

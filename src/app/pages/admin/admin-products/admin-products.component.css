@@ -61,3 +61,12 @@
   font-size: 1.1rem;
   color: #2563eb;
 }
+
+.category-tag {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
+}
