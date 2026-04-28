@@ -17,6 +17,7 @@ export interface CartItem {
   img: string;
   variantId?: number;
   variantName?: string;
+  isActive: boolean;
 }
 
 @Injectable({
@@ -71,7 +72,8 @@ export class CartService {
           quantity: bItem.quantity,
           img: bItem.product.imageUrl || 'https://placehold.co/80x80?text=No+Image',
           variantId: bItem.variant?.id,
-          variantName: bItem.variant?.variantName
+          variantName: bItem.variant?.variantName,
+          isActive: bItem.product.isActive
         }));
         this.cartItems.set(items);
       }

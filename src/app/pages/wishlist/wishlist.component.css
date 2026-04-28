@@ -141,7 +141,6 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-30deg);
-  background-color: rgba(239, 68, 68, 0.85); /* Red overlay */
   color: white;
   padding: 6px 20px;
   font-size: 8px;
@@ -153,6 +152,15 @@
   z-index: 10;
   pointer-events: none;
   white-space: nowrap;
+}
+
+.stock-badge-overlay.out-of-stock {
+  background-color: rgba(239, 68, 68, 0.85); /* Red for out of stock */
+}
+
+.stock-badge-overlay.discontinued {
+  background-color: rgba(100, 116, 139, 0.85); /* Slate gray for discontinued */
+  font-size: 7px;
 }
 
 /* Middle Segment */

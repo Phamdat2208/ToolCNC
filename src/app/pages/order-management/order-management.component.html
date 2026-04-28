@@ -104,6 +104,17 @@
             </div>
           </div>
         </div>
+        
+        <div class="pagination-container mt-16" *ngIf="totalElements > 0">
+          <app-pagination
+            [total]="totalElements"
+            [pageIndex]="page"
+            [pageSize]="size"
+            [pageSizeOptions]="[5, 10, 20]"
+            (pageIndexChange)="onPageChange($event)"
+            (pageSizeChange)="onPageSizeChange($event)"
+          ></app-pagination>
+        </div>
 
       </ng-container>
     </app-loading>

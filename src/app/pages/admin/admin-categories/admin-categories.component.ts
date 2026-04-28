@@ -46,12 +46,13 @@ export class AdminCategoriesComponent implements OnInit {
   parentOptions: any[] = [];
   loading = true;
   isLoadingModal = false;
-  
+  isDeleteCategory: { [key: number]: boolean } = {};
+
   // Modal state
   isModalVisible = false;
   isEditMode = false;
   currentCategoryId: number | null = null;
-  
+
   categoryForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     parentId: [null]
@@ -147,7 +148,7 @@ export class AdminCategoriesComponent implements OnInit {
 
     // Find the original category object to get parentId
     // Actually our displayCategories has the data, but for parentId we need to check if it's top level
-    
+
     this.categoryForm.patchValue({
       name: category.name,
       parentId: category.parentId || (this.findParentId(category.id, this.categories))
@@ -214,14 +215,17 @@ export class AdminCategoriesComponent implements OnInit {
       cancelText: 'Hủy',
       type: 'danger'
     }, () => {
+      this.isDeleteCategory[id] = true;
       this.categoryService.deleteCategory(id).subscribe({
         next: () => {
+          delete this.isDeleteCategory[id];
           this.toastService.showSuccess('Xóa thành công');
           this.loadCategories();
         },
         error: (err: any) => {
-           const msg = err.error?.message || 'Lỗi khi xóa';
-           this.toastService.showError(msg);
+          delete this.isDeleteCategory[id];
+          const msg = err.error?.message || 'Lỗi khi xóa';
+          this.toastService.showError(msg);
         }
       });
     });

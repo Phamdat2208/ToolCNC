@@ -21,68 +21,124 @@
       <!-- Main Cart Content -->
       <div nz-col nzXs="24" nzLg="16" class="cart-main-body">
         <div class="cart-table-wrapper">
-          <nz-table
-            #cartTable
-            [nzData]="cartItems"
-            [nzShowPagination]="false"
-            [nzScroll]="{ x: '750px' }"
-            class="premium-table"
-          >
-            <thead>
-              <tr>
-                <th nzLeft>Sản phẩm</th>
-                <th nzWidth="140px">Đơn giá</th>
-                <th nzWidth="150px">Số lượng</th>
-                <th nzWidth="140px" nzRight>Thành tiền</th>
-                <th nzWidth="80px" nzRight></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let data of cartTable.data; trackBy: trackById" class="cart-item-row">
-                <td nzLeft>
-                  <div class="product-cell-modern">
-                    <div class="product-img-box" (click)="goToProduct(data.productId)">
-                      <img [src]="data.img" alt="{{ data.name }}" />
-                    </div>
-                    <div class="product-info-box">
-                      <span class="item-name" (click)="goToProduct(data.productId)">{{ data.name }}</span>
-                      <div class="item-variant" *ngIf="data.variantName">
-                        <nz-tag nzColor="default">{{ data.variantName }}</nz-tag>
+          <!-- Desktop Table View -->
+          <div class="cart-desktop-view">
+            <nz-table
+              #cartTable
+              [nzData]="cartItems"
+              [nzShowPagination]="false"
+              [nzScroll]="{ x: '750px' }"
+              class="premium-table"
+            >
+              <thead>
+                <tr>
+                  <th nzLeft nzWidth="280px">Sản phẩm</th>
+                  <th nzWidth="140px">Đơn giá</th>
+                  <th nzWidth="150px">Số lượng</th>
+                  <th nzWidth="140px" nzRight>Thành tiền</th>
+                  <th nzWidth="80px" nzRight></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of cartTable.data; trackBy: trackById" class="cart-item-row">
+                  <td nzLeft>
+                    <div class="product-cell-modern">
+                      <div class="product-img-box" (click)="goToProduct(data.productId)">
+                        <img [src]="data.img" alt="{{ data.name }}" />
+                      </div>
+                      <div class="product-info-box">
+                        <span class="item-name" (click)="goToProduct(data.productId)">{{ data.name }}</span>
+                        <div class="item-variant" *ngIf="data.variantName">
+                          <nz-tag nzColor="default">{{ data.variantName }}</nz-tag>
+                        </div>
+                        <div class="discontinued-badge" *ngIf="data.isActive === false">
+                          <nz-tag nzColor="red">Tạm ngưng kinh doanh</nz-tag>
+                        </div>
                       </div>
                     </div>
+                  </td>
+                  <td class="price-cell">
+                    <span class="unit-price-label">Đơn giá:</span>
+                    {{ data.price | currency: "VND" : "symbol" : "1.0-0" }}
+                  </td>
+                  <td>
+                    <div class="quantity-control-wrapper">
+                      <app-quantity-input
+                        [(quantity)]="data.quantity"
+                        (quantityChange)="updateQuantity(data, $event)"
+                        [maxStock]="100"
+                      ></app-quantity-input>
+                    </div>
+                  </td>
+                  <td nzRight class="total-cell">
+                    {{ data.price * data.quantity | currency: "VND" : "symbol" : "1.0-0" }}
+                  </td>
+                  <td nzRight>
+                    <button
+                      nz-button
+                      nzType="text"
+                      nzDanger
+                      class="remove-btn"
+                      (click)="removeItem(data.id)"
+                      [nzLoading]="isRemoving[data.id]"
+                    >
+                      <nz-icon nzType="delete" />
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+
+          <!-- Mobile Cards View -->
+          <div class="cart-mobile-view">
+            <div *ngFor="let data of cartItems; trackBy: trackById" class="cart-mobile-card">
+              <div class="cmc-header">
+                <div class="cmc-img" (click)="goToProduct(data.productId)">
+                  <img [src]="data.img" alt="{{ data.name }}" />
+                </div>
+                <div class="cmc-info">
+                  <span class="cmc-name" (click)="goToProduct(data.productId)">{{ data.name }}</span>
+                  <div class="cmc-variant" *ngIf="data.variantName">
+                    <nz-tag nzColor="default">{{ data.variantName }}</nz-tag>
                   </div>
-                </td>
-                <td class="price-cell">
-                  <span class="unit-price-label">Đơn giá:</span>
-                  {{ data.price | currency: "VND" : "symbol" : "1.0-0" }}
-                </td>
-                <td>
-                  <div class="quantity-control-wrapper">
+                  <div class="cmc-badge" *ngIf="data.isActive === false">
+                    <nz-tag nzColor="red">Tạm ngưng kinh doanh</nz-tag>
+                  </div>
+                </div>
+                <button
+                  nz-button
+                  nzType="text"
+                  nzDanger
+                  class="cmc-remove"
+                  (click)="removeItem(data.id)"
+                  [nzLoading]="isRemoving[data.id]"
+                >
+                  <nz-icon nzType="delete" />
+                </button>
+              </div>
+              <div class="cmc-body">
+                <div class="cmc-row">
+                  <span class="cmc-label">Đơn giá:</span>
+                  <span class="cmc-value">{{ data.price | currency: "VND" : "symbol" : "1.0-0" }}</span>
+                </div>
+                <div class="cmc-row">
+                  <span class="cmc-label">Số lượng:</span>
+                  <div class="cmc-quantity">
                     <app-quantity-input
                       [(quantity)]="data.quantity"
                       (quantityChange)="updateQuantity(data, $event)"
                       [maxStock]="100"
                     ></app-quantity-input>
                   </div>
-                </td>
-                <td nzRight class="total-cell">
-                  {{ data.price * data.quantity | currency: "VND" : "symbol" : "1.0-0" }}
-                </td>
-                <td nzRight>
-                  <button
-                    nz-button
-                    nzType="text"
-                    nzDanger
-                    class="remove-btn"
-                    (click)="removeItem(data.id)"
-                    [nzLoading]="isRemoving[data.id]"
-                  >
-                    <nz-icon nzType="delete" />
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </nz-table>
+                </div>
+                <div class="cmc-row cmc-total-row">
+                  <span class="cmc-label">Thành tiền:</span>
+                  <span class="cmc-total">{{ data.price * data.quantity | currency: "VND" : "symbol" : "1.0-0" }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -128,10 +184,13 @@
               nzBlock
               class="premium-checkout-btn"
               routerLink="/checkout"
+              [disabled]="hasDiscontinuedItems()"
             >
-              TIẾN HÀNH THANH TOÁN
-              <nz-icon nzType="arrow-right" />
+              <span class="text-pay">TIẾN HÀNH THANH TOÁN <nz-icon nzType="arrow-right" /></span>
             </button>
+            <div class="error-text" *ngIf="hasDiscontinuedItems()" style="color: #ff4d4f; font-size: 12px; margin-top: 8px; text-align: center;">
+              Vui lòng xóa các sản phẩm ngừng kinh doanh để tiếp tục
+            </div>
             
             <div class="payment-trust-badges">
               <span class="badge-text"><nz-icon nzType="safety" /> Thanh toán an toàn 100%</span>

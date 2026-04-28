@@ -15,6 +15,7 @@ import { OrderService } from '../../services/order.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 import { LoadingComponent } from "../../shared/components/loading/loading.component";
 import { ToastService } from '../../shared/services/toast.service';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-order-management',
@@ -32,7 +33,8 @@ import { ToastService } from '../../shared/services/toast.service';
     NzSelectModule,
     NzIconModule,
     CustomInputComponent,
-    LoadingComponent
+    LoadingComponent,
+    PaginationComponent
 ],
   templateUrl: './order-management.component.html',
   styleUrl: './order-management.component.css'
@@ -44,6 +46,9 @@ export class OrderManagementComponent implements OnInit {
   private toastService = inject(ToastService);
 
   orders: any[] = [];
+  totalElements = 0;
+  page = 1;
+  size = 10;
   isLoadingOrders = true;
 
   isVisibleOrderModal = false;
@@ -63,11 +68,12 @@ export class OrderManagementComponent implements OnInit {
 
   loadOrders() {
     this.isLoadingOrders = true;
-    const request = this.orderService.getMyOrders();
+    const request = this.orderService.getMyOrders(this.page - 1, this.size);
     
     request.subscribe({
       next: (data) => {
-        this.orders = data;
+        this.orders = data.content;
+        this.totalElements = data.totalElements;
         this.isLoadingOrders = false;
       },
       error: (err) => {
@@ -75,6 +81,18 @@ export class OrderManagementComponent implements OnInit {
         this.isLoadingOrders = false;
       }
     });
+  }
+
+  onPageChange(index: number) {
+    this.page = index;
+    this.loadOrders();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onPageSizeChange(size: number) {
+    this.size = size;
+    this.page = 1;
+    this.loadOrders();
   }
 
   getStatusColor(status: string): string {

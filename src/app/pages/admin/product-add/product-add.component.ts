@@ -446,6 +446,7 @@ export class ProductAddComponent implements OnInit {
   }
 
   submitSingle(): void {
+    if (this.isSubmitting) return;
     if (this.productForm.valid) {
       this.isSubmitting = true;
       const productName = this.productForm.get('name')?.value;

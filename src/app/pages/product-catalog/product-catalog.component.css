@@ -107,7 +107,6 @@
 
 .tree-node-item.active {
   background: rgba(249, 115, 22, 0.15);
-  color: var(--primary-color);
   font-weight: 600;
 }
 

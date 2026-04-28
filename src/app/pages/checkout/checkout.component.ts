@@ -177,6 +177,7 @@ export class CheckoutComponent implements OnInit {
     phone: [
       null,
       [
+        Validators.required,
         Validators.pattern((/^(0|\+84)\d+$/)),
         Validators.minLength(10), Validators.maxLength(11)
       ]

@@ -4,7 +4,7 @@
   <app-loading [isLoading]="loading">
     <nz-table
       #ordersTable
-      [nzData]="orders.slice((page - 1) * size, page * size)"
+      [nzData]="orders"
       [nzScroll]="{ x: '1000px' }"
       [nzFrontPagination]="false"
       [nzShowPagination]="false"
@@ -74,9 +74,9 @@
       </tbody>
     </nz-table>
 
-    <div class="pagination-container mt-16" *ngIf="orders.length > 0">
+    <div class="pagination-container mt-16" *ngIf="totalElements > 0">
       <app-pagination
-        [total]="orders.length"
+        [total]="totalElements"
         [pageIndex]="page"
         [pageSize]="size"
         [pageSizeOptions]="[10, 20, 50, 100]"
@@ -254,14 +254,7 @@
         >.<br />
         Số lượng hàng hóa trong đơn này sẽ được tự động hoàn trả vào kho chung.
       </p>
-      <div
-        class="p-16"
-        style="
-          background: #f9f9f9;
-          border-radius: 8px;
-          border: 1px solid #f0f0f0;
-        "
-      >
+      <div class="p-16">
         <label class="cancel-reason-label"
           >Lý do báo hủy cho Khách hàng
           <span class="text-danger">*</span></label

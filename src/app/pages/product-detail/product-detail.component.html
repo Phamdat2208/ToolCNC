@@ -18,6 +18,7 @@
                 />
               </div>
               <div class="out-of-stock-banner" *ngIf="displayStock === 0">HẾT HÀNG</div>
+              <div class="out-of-stock-banner" *ngIf="product.isActive === false">TẠM NGƯNG</div>
             </div>
             
             <div class="thumbnail-grid" *ngIf="product.images && product.images.length > 1">

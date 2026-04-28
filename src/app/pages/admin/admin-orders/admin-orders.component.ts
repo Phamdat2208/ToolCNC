@@ -41,6 +41,7 @@ export class AdminOrdersComponent implements OnInit {
   private toastService = inject(ToastService);
 
   orders: any[] = [];
+  totalElements = 0;
   loading = true;
   page = 1;
   size = 10;
@@ -59,9 +60,10 @@ export class AdminOrdersComponent implements OnInit {
 
   loadOrders() {
     this.loading = true;
-    this.orderService.getAllOrders().subscribe({
+    this.orderService.getAllOrders(this.page - 1, this.size).subscribe({
       next: (res) => {
-        this.orders = res;
+        this.orders = res.content;
+        this.totalElements = res.totalElements;
         this.orders.forEach(o => this.previousStatusMap[o.id] = o.status);
         this.loading = false;
       },
@@ -145,11 +147,13 @@ export class AdminOrdersComponent implements OnInit {
 
   onPageChange(index: number) {
     this.page = index;
+    this.loadOrders();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   onPageSizeChange(size: number) {
     this.size = size;
     this.page = 1;
+    this.loadOrders();
   }
 }

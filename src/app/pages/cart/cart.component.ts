@@ -130,4 +130,8 @@ export class CartComponent implements OnDestroy {
   trackById(index: number, item: any): number {
     return item.id;
   }
+
+  hasDiscontinuedItems(): boolean {
+    return this.cartItems.some(item => item.isActive === false);
+  }
 }

@@ -35,6 +35,17 @@ export class ProductService {
 
     return this.http.get<any>(this.apiUrl, { params });
   }
+  
+  getAdminProducts(page: number = 0, size: number = 10, keyword?: string, isActive?: boolean): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    
+    if (keyword) params = params.set('keyword', keyword);
+    if (isActive !== undefined) params = params.set('isActive', isActive.toString());
+    
+    return this.http.get<any>(this.adminApiUrl, { params, ...this.getAuthHeaders() });
+  }
 
   getProductById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
@@ -67,5 +78,9 @@ export class ProductService {
 
   deleteProduct(id: number): Observable<any> {
     return this.http.delete<any>(`${this.adminApiUrl}/${id}`, this.getAuthHeaders());
+  }
+
+  restoreProduct(id: number): Observable<any> {
+    return this.http.put<any>(`${this.adminApiUrl}/${id}/restore`, {}, this.getAuthHeaders());
   }
 }

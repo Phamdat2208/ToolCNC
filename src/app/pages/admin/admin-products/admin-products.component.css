@@ -12,8 +12,30 @@
   font-weight: 600;
 }
 .search-bar {
-  margin-bottom: 20px;
-  max-width: 400px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.search-input {
+  flex: 1;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-label {
+  font-weight: 500;
+  color: #475569;
+  white-space: nowrap;
 }
 
 .header-actions {

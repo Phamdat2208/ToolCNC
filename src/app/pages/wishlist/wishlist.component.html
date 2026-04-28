@@ -34,9 +34,10 @@
             <img 
               [src]="product.img || product.imageUrl || 'https://placehold.co/300x300?text=ToolCNC'" 
               [alt]="product.name" 
-              [class.img-dimmed]="product.totalStock === 0"
+              [class.img-dimmed]="product.totalStock === 0 || product.isActive === false"
             />
-            <div class="stock-badge-overlay" *ngIf="product.totalStock === 0">Hết hàng</div>
+            <div class="stock-badge-overlay out-of-stock" *ngIf="product.totalStock === 0 && product.isActive !== false">Hết hàng</div>
+            <div class="stock-badge-overlay discontinued" *ngIf="product.isActive === false">TẠM NGƯNG</div>
           </a>
 
           <div class="product-info-segment">
@@ -57,11 +58,13 @@
                 class="btn-quick-add-cart"
                 [nzLoading]="isAddingToCart[product.id]"
                 (click)="addToCart(product)"
+                [disabled]="product.isActive === false"
+                *ngIf="product.isActive === true && product.totalStock > 0"
               >
                 <nz-icon nzType="shopping-cart" /> 
                 <span class="btn-text">Thêm vào giỏ</span>
               </button>
-              
+
               <button 
                 nz-button 
                 nzType="text" 

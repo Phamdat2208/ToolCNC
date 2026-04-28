@@ -14,7 +14,7 @@
     <button class="btn-cancel" (click)="handleCancel()">
       {{ data.cancelText || 'Hủy' }}
     </button>
-    <button class="btn-confirm" 
+    <button class="btn-confirm" nzbu
             [ngClass]="data.type === 'danger' ? 'btn-danger' : 'btn-primary'"
             (click)="handleOk()">
       {{ data.okText || 'Xác nhận' }}

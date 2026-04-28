@@ -74,9 +74,11 @@ import {
   ProfileOutline,
   QuestionCircleOutline,
   ReconciliationOutline,
+  ReloadOutline,
   RestOutline,
   RightOutline,
   RocketOutline,
+  RollbackOutline,
   SafetyCertificateOutline,
   SafetyOutline,
   SaveOutline,
@@ -195,6 +197,8 @@ const icons = [
   RocketOutline,
   RestOutline,
   LoadingOutline,
+  ReloadOutline,
+  RollbackOutline
 ];
 
 registerLocaleData(vi);

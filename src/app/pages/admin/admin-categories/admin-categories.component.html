@@ -90,6 +90,7 @@
                   (click)="deleteCategory(data.id)"
                   nz-tooltip
                   nzTooltipTitle="Xóa"
+                  [nzLoading]="isDeleteCategory[data.id]"
                 >
                   <nz-icon nzType="delete" />
                 </button>

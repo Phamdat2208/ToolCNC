@@ -7,6 +7,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { ProductService } from '../../../services/product.service';
@@ -15,6 +16,7 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 import { ToastService } from '../../../shared/services/toast.service';
 import { UrlUtils } from '../../../shared/utils/url-utils';
 import { lastValueFrom } from 'rxjs';
+import { ConfirmModalService } from '../../../shared/services/confirm-modal.service';
 import { AdminBulkImportComponent } from '../bulk-import/admin-bulk-import.component';
 
 @Component({
@@ -28,6 +30,7 @@ import { AdminBulkImportComponent } from '../bulk-import/admin-bulk-import.compo
     NzIconModule,
     NzInputModule,
     NzTagModule,
+    NzSelectModule,
     NzModalModule,
     NzToolTipModule,
     FormsModule,
@@ -41,6 +44,7 @@ export class AdminProductsComponent implements OnInit {
   private productService = inject(ProductService);
   private modal = inject(NzModalService);
   private toastService = inject(ToastService);
+  private confirmModalService = inject(ConfirmModalService);
 
   products: any[] = [];
   loading = true;
@@ -48,6 +52,9 @@ export class AdminProductsComponent implements OnInit {
   page = 1;
   size = 10;
   searchKeyword = '';
+  statusFilter: boolean | undefined = true; // Default to active products
+  isDeleteProduct: { [key: number]: boolean } = {};
+  isRestoreProduct: { [key: number]: boolean } = {};
 
   ngOnInit() {
     this.loadProducts();
@@ -57,13 +64,13 @@ export class AdminProductsComponent implements OnInit {
   loadProducts(reset: boolean = false) {
     if (reset) this.page = 1;
     this.loading = true;
-    this.productService.getProducts(this.page - 1, this.size, undefined, this.searchKeyword).subscribe({
+    this.productService.getAdminProducts(this.page - 1, this.size, this.searchKeyword, this.statusFilter).subscribe({
       next: (res) => {
         this.products = res.content.map((p: any) => ({
           ...p,
           imageUrl: UrlUtils.getFullUrl(p.imageUrl)
         }));
-        this.total = res.totalElements;
+        this.total = res.totalElements;                                                                                                                                                                                                                                           
         this.loading = false;
       },
       error: () => {
@@ -85,21 +92,39 @@ export class AdminProductsComponent implements OnInit {
   }
 
   deleteProduct(id: number) {
-    this.modal.confirm({
-      nzTitle: 'Xác nhận xóa',
-      nzContent: 'Bạn có chắc chắn muốn xóa sản phẩm này không? Hành động này không thể hoàn tác.',
-      nzOkText: 'Xóa',
-      nzOkType: 'primary',
-      nzOkDanger: true,
-      nzCancelText: 'Hủy',
-      nzOnOk: async () => {
-        try {
-          await lastValueFrom(this.productService.deleteProduct(id));
+    this.confirmModalService.confirm({
+      title: 'Xác nhận xóa',
+      content: 'Bạn có chắc chắn muốn xóa sản phẩm này không? Sản phẩm sẽ bị ẩn khỏi cửa hàng nhưng vẫn được giữ lại trong lịch sử hệ thống.',
+      okText: 'Xóa',
+      cancelText: 'Hủy',
+      type: 'danger'
+    }, () => {
+      this.isDeleteProduct[id] = true;
+      this.productService.deleteProduct(id).subscribe({
+        next: () => {
+          delete this.isDeleteProduct[id];
           this.toastService.showSuccess('Đã xóa sản phẩm thành công');
           this.loadProducts();
-        } catch (error) {
+        },
+        error: () => {
+          delete this.isDeleteProduct[id];
           this.toastService.showError('Lỗi khi xóa sản phẩm');
         }
+      });
+    });
+  }
+
+  restoreProduct(id: number) {
+    this.isRestoreProduct[id] = true;
+    this.productService.restoreProduct(id).subscribe({
+      next: () => {
+        delete this.isRestoreProduct[id];
+        this.toastService.showSuccess('Đã khôi phục sản phẩm thành công');
+        this.loadProducts();
+      },
+      error: () => {
+        delete this.isRestoreProduct[id];
+        this.toastService.showError('Lỗi khi khôi phục sản phẩm');
       }
     });
   }
