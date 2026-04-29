@@ -79,6 +79,7 @@
 }
 
 .btn-cancel {
+  border: none !important;
   background: var(--bg-gray);
   color: var(--text-secondary);
 }

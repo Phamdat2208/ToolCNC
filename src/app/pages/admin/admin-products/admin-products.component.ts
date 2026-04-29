@@ -5,19 +5,17 @@ import { RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { ProductService } from '../../../services/product.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { ConfirmModalService } from '../../../shared/services/confirm-modal.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { UrlUtils } from '../../../shared/utils/url-utils';
-import { lastValueFrom } from 'rxjs';
-import { ConfirmModalService } from '../../../shared/services/confirm-modal.service';
-import { AdminBulkImportComponent } from '../bulk-import/admin-bulk-import.component';
 
 @Component({
   selector: 'app-admin-products',
@@ -42,7 +40,6 @@ import { AdminBulkImportComponent } from '../bulk-import/admin-bulk-import.compo
 })
 export class AdminProductsComponent implements OnInit {
   private productService = inject(ProductService);
-  private modal = inject(NzModalService);
   private toastService = inject(ToastService);
   private confirmModalService = inject(ConfirmModalService);
 

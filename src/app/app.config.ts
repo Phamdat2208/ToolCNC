@@ -104,6 +104,7 @@ import {
   WarningOutline
 } from '@ant-design/icons-angular/icons';
 import { maskingInterceptor } from './shared/interceptors/masking.interceptor';
+import { authInterceptor } from './shared/interceptors/auth.interceptor';
 
 const icons = [
   CheckCircleOutline,
@@ -211,6 +212,6 @@ export const appConfig: ApplicationConfig = {
     provideNzI18n(vi_VN),
     provideNzIcons(icons),
     importProvidersFrom(NzModalModule),
-    provideHttpClient(withInterceptors([maskingInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, maskingInterceptor])),
   ]
 };

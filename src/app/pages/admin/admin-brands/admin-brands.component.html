@@ -8,15 +8,22 @@
 
   <app-loading [isLoading]="loading">
     <div class="table-card">
-      <app-loading [isLoading]="loading">
-      <nz-table #basicTable [nzData]="brands" [nzPageSize]="100">
+      <nz-table 
+        #basicTable 
+        [nzData]="brands" 
+        [nzTotal]="total"
+        [nzPageIndex]="page"
+        [nzPageSize]="size"
+        [nzFrontPagination]="false"
+        [nzShowPagination]="false"
+        [nzScroll]="{ x: '600px' }">
         <thead>
           <tr>
-            <th nzWidth="80px">ID</th>
-            <th nzWidth="100px">Logo</th>
-            <th>Tên Thương hiệu</th>
-            <th>Mô tả</th>
-            <th nzWidth="120px" nzRight>Thao tác</th>
+            <th nzWidth="50px">ID</th>
+            <th nzWidth="120px">Logo</th>
+            <th nzWidth="120px">Tên Thương hiệu</th>
+            <th nzWidth="100px">Mô tả</th>
+            <th nzWidth="100px">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -35,7 +42,7 @@
               <strong>{{ data.name }}</strong>
             </td>
             <td class="text-secondary">{{ data.description }}</td>
-            <td nzRight>
+            <td>
               <div class="action-buttons">
                 <button
                   nz-button
@@ -61,7 +68,17 @@
           </tr>
         </tbody>
       </nz-table>
-      </app-loading>
+    </div>
+
+    <div class="pagination-container mt-16" *ngIf="total > 0">
+      <app-pagination
+        [total]="total"
+        [pageIndex]="page"
+        [pageSize]="size"
+        [pageSizeOptions]="[10, 20, 50, 100]"
+        (pageIndexChange)="onPageIndexChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
     </div>
   </app-loading>
 

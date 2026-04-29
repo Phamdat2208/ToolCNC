@@ -16,6 +16,7 @@ import { CloudinaryService } from '../../../services/cloudinary.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { ConfirmModalService } from '../../../shared/services/confirm-modal.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { PaginationComponent } from "../../../shared/components/pagination/pagination.component";
 
 @Component({
   selector: 'app-admin-brands',
@@ -33,8 +34,9 @@ import { ToastService } from '../../../shared/services/toast.service';
     FormsModule,
     ReactiveFormsModule,
     ImageCropperComponent,
-    LoadingComponent
-  ],
+    LoadingComponent,
+    PaginationComponent
+],
   templateUrl: './admin-brands.component.html',
   styleUrl: './admin-brands.component.css'
 })
@@ -49,6 +51,9 @@ export class AdminBrandsComponent implements OnInit {
 
   brands: Brand[] = [];
   loading = true;
+  total = 0;
+  page = 1;
+  size = 10;
   
   // Modal state
   isModalVisible = false;
@@ -76,9 +81,15 @@ export class AdminBrandsComponent implements OnInit {
 
   loadBrands() {
     this.loading = true;
-    this.brandService.adminGetBrands().subscribe({
+    this.brandService.adminGetBrands(this.page - 1, this.size).subscribe({
       next: (res) => {
-        this.brands = res;
+        if (res && res.content) {
+          this.brands = res.content;
+          this.total = res.totalElements;
+        } else if (Array.isArray(res)) {
+          this.brands = res;
+          this.total = res.length;
+        }
         this.loading = false;
       },
       error: () => {
@@ -112,6 +123,17 @@ export class AdminBrandsComponent implements OnInit {
 
   handleCancel() {
     this.isModalVisible = false;
+  }
+
+  onPageIndexChange(index: number) {
+    this.page = index;
+    this.loadBrands();
+  }
+
+  onPageSizeChange(size: number) {
+    this.size = size;
+    this.page = 1;
+    this.loadBrands();
   }
 
   onFileSelected(event: any) {

@@ -34,6 +34,7 @@ import { UrlUtils } from '../../shared/utils/url-utils';
 export class ProductCatalogComponent implements OnInit {
   activeCategory: string = '';
   currentSort: string = 'Mới nhất';
+  isFilterOpen = false;
 
   products: any[] = [];
   loading = true;
@@ -211,6 +212,7 @@ export class ProductCatalogComponent implements OnInit {
 
   applyFilters() {
     this.syncStateToUrl(true);
+    this.isFilterOpen = false;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -248,6 +250,7 @@ export class ProductCatalogComponent implements OnInit {
 
   selectCategory(catName: string, currentActive?: string) {
     this.activeCategory = catName;
+    this.isFilterOpen = false; // Auto close mobile filter on category select
     this.syncStateToUrl(true);
   }
 

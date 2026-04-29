@@ -801,6 +801,67 @@
   }
 }
 
+@media (max-width: 480px) {
+  .header-container {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .logo-text {
+    display: none; /* Hide ToolCNC text on very small screens */
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-actions {
+    gap: 4px;
+  }
+
+  .action-pill {
+    padding: 0 10px;
+    height: 36px;
+    gap: 4px;
+  }
+
+  .pill-icon {
+    font-size: 16px;
+  }
+
+  .pill-count {
+    font-size: 10px;
+    min-width: 18px;
+    height: 18px;
+  }
+
+  .login-btn {
+    padding: 0 12px;
+    height: 36px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  /* Hide text content within login button, only keep icon */
+  .login-btn {
+    width: 36px;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  .login-btn-text-content {
+    display: none;
+  }
+  
+  .mobile-menu-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+}
+
+
 /* ============================================================
    OVERRIDE NG-ZORRO DROPDOWN PANEL for dark menu
    ============================================================ */

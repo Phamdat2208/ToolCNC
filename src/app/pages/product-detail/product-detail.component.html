@@ -163,6 +163,8 @@
                   nz-button nzSize="large"
                   class="cta-btn btn-danger-gradient"
                   [disabled]="displayStock === 0"
+                  (click)="buyNow()"
+                  [nzLoading]="isBuyingNow"
                 >
                   MUA NGAY
                 </button>

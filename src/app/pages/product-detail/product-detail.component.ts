@@ -55,6 +55,7 @@ export class ProductDetailComponent implements OnInit {
   quantity = 1;
   isLoading = true;
   isAddingToCart = false;
+  isBuyingNow = false;
   isTogglingWishlist = false;
   parsedSpecs: any[] = [];
   selectedVariant: any = null;
@@ -202,6 +203,30 @@ export class ProductDetailComponent implements OnInit {
           msg = `Đã thêm ${this.quantity} sản phẩm (${this.selectedVariant.variantName}) vào giỏ hàng`;
         }
         this.toastService.showSuccess(msg);
+      }
+    });
+  }
+
+  buyNow() {
+    if (!this.product) return;
+    if (this.product.hasVariants && !this.selectedVariant) {
+      this.toastService.showWarning('Vui lòng chọn kích thước/mã hàng');
+      return;
+    }
+
+    this.isBuyingNow = true;
+    
+    const cartProduct = { ...this.product };
+    if (this.selectedVariant) {
+      cartProduct.price = this.selectedVariant.price;
+      cartProduct.variantId = this.selectedVariant.id;
+      cartProduct.variantName = this.selectedVariant.variantName;
+    }
+
+    this.cartService.addToCart(cartProduct, this.quantity, this.mainImage).subscribe(success => {
+      this.isBuyingNow = false;
+      if (success) {
+        this.router.navigate(['/cart']);
       }
     });
   }

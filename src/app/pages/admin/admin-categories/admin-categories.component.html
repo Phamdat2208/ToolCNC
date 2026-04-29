@@ -13,13 +13,14 @@
         [nzData]="filteredCategories"
         [nzFrontPagination]="false"
         [nzShowPagination]="false"
+        [nzScroll]="{ x: '200px'}"
       >
         <thead>
           <tr>
-            <th nzWidth="80px">ID</th>
-            <th>Tên danh mục</th>
+            <th nzWidth="50px">ID</th>
+            <th nzWidth="300px">Tên danh mục</th>
             <th nzWidth="150px">Số lượng SP</th>
-            <th nzWidth="120px" nzRight>Thao tác</th>
+            <th nzWidth="100px">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -28,7 +29,7 @@
             <td>
               <div
                 class="category-name-cell"
-                [style.padding-left.px]="data.level * 28"
+                [style.padding-left]="'calc(' + data.level + ' * var(--indent-unit))'"
               >
                 <!-- Expand/Collapse toggle for parents -->
                 <span
@@ -72,7 +73,7 @@
                 {{ data.totalProductCount }} sản phẩm
               </span>
             </td>
-            <td nzRight>
+            <td>
               <div class="action-buttons">
                 <button
                   nz-button

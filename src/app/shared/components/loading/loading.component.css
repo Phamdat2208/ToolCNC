@@ -18,11 +18,21 @@
   z-index: 1000;
   background: rgba(255, 255, 255, 0.1); /* Subtle light overlay */
   backdrop-filter: blur(8px) saturate(120%);
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: block !important; /* Changed from flex to block for sticky children */
   pointer-events: auto !important;
   animation: fadeIn 0.2s ease-out;
+}
+
+/* Make spinner follow viewport */
+.spinner-sticky-container {
+  position: sticky;
+  top: 50vh; /* Center in the current viewport */
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 0; /* Prevent adding extra height to the overlay */
 }
 
 /* Blur only the local content */

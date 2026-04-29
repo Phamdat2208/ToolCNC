@@ -487,3 +487,93 @@
     font-size: 28px;
   }
 }
+
+@media (max-width: 480px) {
+  .product-detail-page {
+    padding: 16px 12px;
+  }
+
+  .detail-main-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .product-meta-pill-bar {
+    width: 100%;
+    border-radius: 12px;
+    flex-wrap: wrap;
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .pill-divider {
+    display: none;
+  }
+
+  .meta-pill {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  .product-trust-badges {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .detail-action-hub {
+    gap: 16px;
+  }
+
+  .quantity-controller {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .main-cta-group {
+    flex-direction: column;
+  }
+
+  .cta-btn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .detail-info-tabs-wrapper {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* Optimize tabs for mobile - no scroll, equal width */
+  ::ng-deep .premium-tabs .ant-tabs-nav-list {
+    width: 100%;
+    display: flex;
+  }
+
+  ::ng-deep .premium-tabs .ant-tabs-tab {
+    flex: 1;
+    justify-content: center;
+    margin-right: 0 !important;
+    padding: 12px 4px !important;
+    text-align: center;
+    font-size: 12px !important;
+  }
+
+  .tab-pane-content {
+    padding: 20px 0 0;
+  }
+
+  .industrial-spec-table {
+    font-size: 13px;
+  }
+
+  .spec-key {
+    width: 40%;
+    padding: 12px 16px;
+  }
+
+  .spec-val {
+    padding: 12px 16px;
+  }
+}
+

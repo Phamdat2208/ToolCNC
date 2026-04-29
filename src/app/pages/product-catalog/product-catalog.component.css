@@ -397,12 +397,145 @@
   padding-bottom: 50px;
 }
 
+/* Mobile Filter Toggle Button - hidden on desktop */
+.mobile-filter-toggle {
+  display: none;
+}
+
+.mobile-filter-close {
+  display: none;
+}
+
+.filter-overlay {
+  display: none;
+}
+
+/* Mobile filter bottom sheet - hidden on desktop */
+.mobile-filter-sheet {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .catalog-container {
     padding: 16px;
   }
-  .filters-card {
-    position: static;
-    margin-bottom: 24px;
+
+  /* Toggle button - fixed at bottom of screen */
+  .mobile-filter-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: white;
+    border: none;
+    border-radius: 100px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(249, 115, 22, 0.45);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-filter-toggle:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 12px 30px rgba(249, 115, 22, 0.55);
+  }
+
+  /* Dark overlay behind the filter panel */
+  .filter-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 298;
+    backdrop-filter: blur(2px);
+  }
+
+  /* Close button visible only on mobile */
+  .mobile-filter-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+
+  .mobile-filter-close:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+  }
+
+  /* Bottom sheet filter panel */
+  .mobile-filter-sheet {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 80vh;
+    z-index: 299;
+    background: #0f172a;
+    border-radius: 24px 24px 0 0;
+    padding: 8px 20px 32px;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow-y: auto;
+    color: #f8fafc;
+    /* Custom scrollbar */
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+
+  .mobile-filter-sheet.mobile-open {
+    transform: translateY(0);
+  }
+
+  /* Drag handle indicator */
+  .mobile-filter-sheet::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    margin: 12px auto 16px;
+  }
+
+  /* Collapse the sidebar column space without hiding it */
+  [nz-col] {
+    position: static !important;
+  }
+
+  .sticky-sidebar {
+    height: auto;
+  }
+
+  .catalog-display-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .display-title {
+    font-size: 16px;
+  }
+
+  .sort-dropdown-btn {
+    min-width: 140px;
   }
 }
+

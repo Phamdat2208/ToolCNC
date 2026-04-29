@@ -17,6 +17,7 @@ import { CustomInputComponent } from '../../shared/components/custom-input/custo
 import { CustomTextareaComponent } from '../../shared/components/custom-textarea/custom-textarea.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ToastService } from '../../shared/services/toast.service';
+import { HelperService } from '../../services/helper.service';
 
 interface FAQ {
   question: string;
@@ -54,6 +55,7 @@ export class SupportComponent implements OnInit {
   private orderService = inject(OrderService);
   private fb = inject(FormBuilder);
   private toastService = inject(ToastService);
+  private helperService = inject(HelperService);
 
   // Order tracking state
   trackingCode: string = '';
@@ -178,6 +180,11 @@ export class SupportComponent implements OnInit {
   }
 
   submitForm(): void {
+    this.contactForm.markAllAsTouched();
+    if (this.contactForm.invalid) {
+      this.helperService.scrollToInvalidControl();
+      return;
+    }
     if (this.contactForm.valid) {
       this.toastService.showSuccess('Cảm ơn bạn! Yêu cầu của bạn đã được gửi thành công. Chúng tôi sẽ phản hồi sớm nhất.');
       this.contactForm.reset();

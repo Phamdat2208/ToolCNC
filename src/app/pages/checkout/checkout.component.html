@@ -19,6 +19,14 @@
     </div>
   </header>
 
+  <div class="cart-header">
+    <div class="cart-header-actions">
+      <button nz-button nzType="link" routerLink="/cart" class="back-cart">
+        <nz-icon nzType="arrow-left" /> Quay lại giỏ hàng
+      </button>
+    </div>
+  </div>
+
   <div class="checkout-content-container py-xl">
     <div nz-row [nzGutter]="[40, 32]">
       <!-- Main Content (Left) -->
@@ -295,7 +303,7 @@
         </div>
 
         <!-- Float Actions for desktop/tablet -->
-        <div class="checkout-footer-actions mt-32" *ngIf="currentStep < 2">
+        <div class="checkout-footer-actions desktop-actions mt-32" *ngIf="currentStep < 2">
           <button
             nz-button
             class="btn-back-modern"
@@ -377,6 +385,28 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Float Actions for mobile -->
+    <div class="checkout-footer-actions mobile-actions mt-32" *ngIf="currentStep < 2">
+      <button
+        nz-button
+        class="btn-back-modern"
+        (click)="prevStep()"
+        *ngIf="currentStep > 0"
+      >
+        <nz-icon nzType="left" /> QUAY LẠI
+      </button>
+      
+      <button
+        nz-button
+        class="btn-next-modern"
+        (click)="nextStep()"
+        [nzLoading]="isSubmitting"
+      >
+        {{ currentStep === 1 && !isTransfer ? "XÁC NHẬN ĐẶT HÀNG" : "TIẾP TỤC" }}
+        <nz-icon [nzType]="currentStep === 1 && !isTransfer ? 'check' : 'right'" />
+      </button>
     </div>
   </div>
 </div>

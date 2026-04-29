@@ -23,6 +23,7 @@ import { CustomInputComponent } from '../../../shared/components/custom-input/cu
 import { CustomSelectComponent, SelectOption } from '../../../shared/components/custom-select/custom-select.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { UrlUtils } from '../../../shared/utils/url-utils';
+import { HelperService } from '../../../services/helper.service';
 
 @Component({
   selector: 'app-product-add',
@@ -46,7 +47,7 @@ export class ProductAddComponent implements OnInit {
   isResizing = false;
   private _mainSelectedFile: File | null = null;
   private _mainResizedBlob: Blob | null = null;
-  
+
   // --- Cropper state (MAIN) ---
   imageChangedEvent: Event | null = null;
   croppedImage: string = '';
@@ -82,6 +83,7 @@ export class ProductAddComponent implements OnInit {
   private location = inject(Location);
   private cloudinaryService = inject(CloudinaryService);
   private toastService = inject(ToastService);
+  private helperService = inject(HelperService);
 
   isSubmitting = false;
   categories: any[] = [];
@@ -207,7 +209,7 @@ export class ProductAddComponent implements OnInit {
     const target = input.getAttribute('data-target') || 'main';
     const file = input.files?.[0];
     if (!file) return;
-    
+
     if (!file.type.startsWith('image/')) {
       this.toastService.showError('Vui lòng chọn file hình ảnh (JPG, PNG, WEBP)');
       return;
@@ -318,7 +320,7 @@ export class ProductAddComponent implements OnInit {
 
     this.isGalleryUploading = true;
     this.toastService.showInfo('Đang tải ảnh bổ sung lên hệ thống...');
-    
+
     this.uploadResizedImage(this._galleryResizedBlob, this._gallerySelectedFile)
       .then((url) => {
         this.galleryUrls.push(url);
@@ -387,9 +389,9 @@ export class ProductAddComponent implements OnInit {
     this.showCropper = false;
     this._mainSelectedFile = null;
     this._mainResizedBlob = null;
-    
+
     this.productForm.patchValue({ imageUrl: '' });
-    
+
     if (this.fileInputRef) {
       this.fileInputRef.nativeElement.value = '';
     }
@@ -439,7 +441,7 @@ export class ProductAddComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.toastService.showError('Không thể tải thông tin sản phẩm'); 
+        this.toastService.showError('Không thể tải thông tin sản phẩm');
         console.error(err);
       }
     });
@@ -447,18 +449,25 @@ export class ProductAddComponent implements OnInit {
 
   submitSingle(): void {
     if (this.isSubmitting) return;
+
+    this.productForm.markAllAsTouched();
+    if (this.productForm.invalid) {
+      this.helperService.scrollToInvalidControl();
+      return;
+    }
+
     if (this.productForm.valid) {
       this.isSubmitting = true;
       const productName = this.productForm.get('name')?.value;
 
       const finishSubmit = (imageUrl?: string) => {
         const formValue = this.productForm.value;
-        const productData = { 
+        const productData = {
           ...formValue,
           specifications: JSON.stringify(formValue.specifications),
           imageGallery: this.galleryUrls
         };
-        
+
         if (imageUrl) productData.imageUrl = imageUrl;
 
         const request$ = (this.isEditMode && this.productId)

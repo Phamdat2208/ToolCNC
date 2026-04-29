@@ -276,6 +276,18 @@
 }
 
 @media (max-width: 768px) {
+  .wishlist-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .wishlist-main-title {
+    margin-left: 20px;
+    font-size: 26px;
+  }
+  .btn-back-to-shop {
+    margin-left: 20px;
+  }
   .row-inner {
     flex-direction: column;
     align-items: flex-start;

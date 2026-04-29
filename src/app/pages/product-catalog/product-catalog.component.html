@@ -1,11 +1,111 @@
 <div class="catalog-container">
+  <!-- Mobile Filter Toggle Button (fixed floating pill) -->
+  <button class="mobile-filter-toggle" (click)="isFilterOpen = !isFilterOpen">
+    <nz-icon nzType="filter" />
+    Bộ lọc
+    <nz-icon [nzType]="isFilterOpen ? 'up' : 'down'" style="font-size: 11px; margin-left: 4px" />
+  </button>
+
+  <!-- Overlay for mobile filter (click to dismiss) -->
+  <div class="filter-overlay" *ngIf="isFilterOpen" (click)="isFilterOpen = false"></div>
+
+  <!-- Mobile Filter Bottom Sheet (outside nz-row so position:fixed works) -->
+  <div class="mobile-filter-sheet" [class.mobile-open]="isFilterOpen">
+    <div class="filter-card-header">
+      <span class="filter-title"><nz-icon nzType="filter" /> Bộ lọc sản phẩm</span>
+      <div style="display: flex; gap: 8px; align-items: center">
+        <button nz-button nzType="text" nzDanger size="small" (click)="clearFilters()">Xóa hết</button>
+        <button class="mobile-filter-close" (click)="isFilterOpen = false"><nz-icon nzType="close" /></button>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="filter-section">
+      <h4 class="section-label">Danh mục</h4>
+      <ul class="category-tree-list">
+        <li
+          class="tree-node-item root-node"
+          [class.active]="activeCategory === ''"
+          (click)="selectCategory('', activeCategory)"
+        >
+          <span class="cat-name" title="Tất cả sản phẩm">Tất cả sản phẩm</span>
+          <span class="count-badge">{{ totalAllProducts }}</span>
+        </li>
+        <ng-container *ngTemplateOutlet="recursiveTreeMobile; context: { $implicit: categories, level: 0 }"></ng-container>
+      </ul>
+
+      <ng-template #recursiveTreeMobile let-nodes let-level="level">
+        <li *ngFor="let node of nodes" class="tree-node-wrapper">
+          <div
+            class="tree-node-item"
+            [class.active]="node.name === activeCategory"
+            [style.padding-left.px]="level * 12 + 12"
+            (click)="selectCategory(node.name)"
+          >
+            <span class="toggle-icon" *ngIf="node.children && node.children.length > 0" (click)="toggleExpand($event, node.id)">
+               <nz-icon [nzType]="isExpanded(node.id) ? 'down' : 'right'" />
+            </span>
+            <span class="dot-indicator" *ngIf="!node.children || node.children.length === 0"></span>
+            <span class="cat-name" [title]="node.name">{{ node.name }}</span>
+            <span class="count-badge">{{ node.displayCount }}</span>
+          </div>
+          <ul class="child-list" *ngIf="isExpanded(node.id) && node.children && node.children.length > 0">
+            <ng-container *ngTemplateOutlet="recursiveTreeMobile; context: { $implicit: node.children, level: level + 1 }"></ng-container>
+          </ul>
+        </li>
+      </ng-template>
+    </div>
+
+    <!-- Price Range -->
+    <div class="filter-section">
+      <h4 class="section-label">Khoảng giá (VND)</h4>
+      <div class="price-slider-wrapper">
+        <nz-slider nzRange [nzMin]="0" [nzMax]="10000000" [nzStep]="500000" [(ngModel)]="priceRange"></nz-slider>
+        <div class="price-inputs-modern">
+           <div class="price-field">
+             <span class="currency">₫</span>
+             <input type="number" [(ngModel)]="priceRange[0]" />
+           </div>
+           <span class="separator">-</span>
+           <div class="price-field">
+             <span class="currency">₫</span>
+             <input type="number" [(ngModel)]="priceRange[1]" />
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brands -->
+    <div class="filter-section">
+      <h4 class="section-label">Thương hiệu</h4>
+      <div class="brand-grid">
+        <div
+          *ngFor="let brand of knownBrands"
+          class="brand-chip"
+          [class.selected]="selectedBrands.has(brand.name)"
+          (click)="toggleBrand(brand.name, !selectedBrands.has(brand.name))"
+          [title]="brand.name"
+        >
+          <span class="brand-name-text">{{ brand.name }}</span>
+          <nz-icon nzType="check" *ngIf="selectedBrands.has(brand.name)" />
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-actions-bottom">
+      <button nz-button class="btn-primary-gradient" nzBlock (click)="applyFilters()">
+        Áp dụng bộ lọc
+      </button>
+    </div>
+  </div>
+
   <div class="breadcrumb-section">
     <app-page-breadcrumb [items]="breadcrumbItems"></app-page-breadcrumb>
   </div>
 
   <div nz-row nzGutter="32">
-    <!-- Sidebar / Filters -->
-    <div nz-col nzXs="24" nzMd="6">
+    <!-- Sidebar / Filters (desktop only) -->
+    <div nz-col nzXs="0" nzMd="6" class="desktop-sidebar">
       <div class="filters-card sticky-sidebar">
         <div class="filter-card-header">
           <span class="filter-title"><nz-icon nzType="filter" /> Bộ lọc sản phẩm</span>
@@ -30,8 +130,8 @@
 
           <ng-template #recursiveTree let-nodes let-level="level">
             <li *ngFor="let node of nodes" class="tree-node-wrapper">
-              <div 
-                class="tree-node-item" 
+              <div
+                class="tree-node-item"
                 [class.active]="node.name === activeCategory"
                 [style.padding-left.px]="level * 12 + 12"
                 (click)="selectCategory(node.name)"
@@ -80,9 +180,9 @@
         <div class="filter-section">
           <h4 class="section-label">Thương hiệu</h4>
           <div class="brand-grid">
-            <div 
-              *ngFor="let brand of knownBrands" 
-              class="brand-chip" 
+            <div
+              *ngFor="let brand of knownBrands"
+              class="brand-chip"
               [class.selected]="selectedBrands.has(brand.name)"
               (click)="toggleBrand(brand.name, !selectedBrands.has(brand.name))"
               [title]="brand.name"

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -23,6 +23,7 @@ import { CustomSelectComponent, SelectOption } from '../../shared/components/cus
 import { CustomTextareaComponent } from '../../shared/components/custom-textarea/custom-textarea.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ToastService } from '../../shared/services/toast.service';
+import { HelperService } from '../../services/helper.service';
 
 @Component({
   selector: 'app-checkout',
@@ -45,7 +46,8 @@ import { ToastService } from '../../shared/services/toast.service';
     CustomInputComponent,
     CustomSelectComponent,
     CustomTextareaComponent,
-    LoadingComponent
+    LoadingComponent,
+    RouterLink
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
@@ -67,11 +69,12 @@ export class CheckoutComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  cartService = inject(CartService);
+  public cartService = inject(CartService);
   private orderService = inject(OrderService);
   private authService = inject(AuthService);
   private locationService = inject(LocationService);
   private toastService = inject(ToastService);
+  private helperService = inject(HelperService);
 
   ngOnInit(): void {
     this.loadProvinces();
@@ -252,6 +255,12 @@ export class CheckoutComponent implements OnInit {
   }
 
   nextStep(): void {
+    this.validateForm.markAllAsTouched();
+    if (this.validateForm.invalid) {
+      this.helperService.scrollToInvalidControl();
+      return;
+    }
+    
     if (this.currentStep === 0) {
       if (this.validateForm.valid) {
         this.currentStep += 1;

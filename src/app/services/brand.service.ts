@@ -38,8 +38,8 @@ export class BrandService {
   }
 
   // Admin APIs
-  adminGetBrands(): Observable<Brand[]> {
-    return this.http.get<Brand[]>(`${this.apiUrl}/admin/brands`, this.getAuthHeaders());
+  adminGetBrands(page: number, size: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/admin/brands?page=${page}&size=${size}`, this.getAuthHeaders());
   }
 
   createBrand(brand: Brand): Observable<Brand> {
