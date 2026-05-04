@@ -114,6 +114,10 @@
 }
 
 @media (max-width: 992px) {
+  .home-container {
+    margin-left: 0;
+    margin-right: 0;
+  }
   .banner-slide { 
     height: auto; 
     padding: 60px 40px; 

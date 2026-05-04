@@ -1,0 +1,92 @@
+.admin-layout {
+  min-height: 100vh;
+}
+.admin-sider {
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+}
+.logo-wrapper {
+  height: 64px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  margin-bottom: 8px;
+}
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--primary-color);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.logo-text {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+.admin-header {
+  background: #fff;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+  position: sticky;
+  top: 0;
+}
+.user-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text-main);
+}
+.admin-avatar {
+  background-color: var(--primary-color);
+}
+.admin-content {
+  padding: 24px;
+  background: #f0f2f5;
+  overflow-x: hidden;
+}
+.inner-content {
+  background: transparent;
+  min-height: 280px;
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    padding: 0 12px;
+  }
+  .admin-content {
+    padding: 12px;
+  }
+  .hide-mobile {
+    display: none;
+  }
+}
+
+::ng-deep .ant-menu-dark.ant-menu-inline .ant-menu-item-selected {
+  background-color: var(--primary-color) !important;
+}
+
+/* Handle zero width sider overlay on mobile */
+::ng-deep .ant-layout-sider-zero-width-trigger {
+  display: none; /* Hide default trigger as we use custom button */
+}

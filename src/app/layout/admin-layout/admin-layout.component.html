@@ -1,0 +1,82 @@
+<nz-layout class="admin-layout">
+  <nz-sider
+    nzCollapsible
+    [(nzCollapsed)]="isCollapsed"
+    [nzWidth]="260"
+    [nzCollapsedWidth]="0"
+    nzBreakpoint="lg"
+    nzTheme="dark"
+    class="admin-sider"
+  >
+    <div class="logo-wrapper">
+      <span class="logo-icon">T</span>
+      <span class="logo-text" *ngIf="!isCollapsed">ToolCNC Admin</span>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li
+        nz-menu-item
+        routerLink="/admin"
+        routerLinkActive="ant-menu-item-selected"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <nz-icon nzType="dashboard" />
+        <span>Thống kê</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/admin/products">
+        <nz-icon nzType="appstore" />
+        <span>Quản lý sản phẩm</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/admin/categories">
+        <nz-icon nzType="tags" />
+        <span>Quản lý danh mục</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/admin/brands">
+        <nz-icon nzType="trademark" />
+        <span>Quản lý thương hiệu</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/admin/orders">
+        <nz-icon nzType="shopping-cart" />
+        <span>Quản lý đơn hàng</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/admin/users">
+        <nz-icon nzType="team" />
+        <span>Người dùng</span>
+      </li>
+      <li nz-menu-divider></li>
+      <li nz-menu-item routerLink="/">
+        <nz-icon nzType="home" />
+        <span>Về trang chủ</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout class="main-content-layout">
+    <nz-header class="admin-header">
+      <div class="header-left">
+        <button nz-button nzType="text" (click)="isCollapsed = !isCollapsed">
+          <nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" />
+        </button>
+      </div>
+      <div class="header-right">
+        <a nz-dropdown [nzDropdownMenu]="userMenu" class="user-dropdown">
+          <nz-avatar nzIcon="user" class="admin-avatar"></nz-avatar>
+          <span class="username hide-mobile">{{
+            authService.currentUserValue?.username
+          }}</span>
+          <nz-icon nzType="down" />
+        </a>
+        <nz-dropdown-menu #userMenu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item (click)="logout()" nzDanger>
+              <nz-icon nzType="logout" /> Đăng xuất
+            </li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
+    </nz-header>
+    <nz-content class="admin-content">
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

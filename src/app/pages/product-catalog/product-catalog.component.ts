@@ -210,12 +210,6 @@ export class ProductCatalogComponent implements OnInit {
     });
   }
 
-  applyFilters() {
-    this.syncStateToUrl(true);
-    this.isFilterOpen = false;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
   clearKeyword() {
     this.searchKeyword = '';
     this.syncStateToUrl(true);
@@ -227,6 +221,8 @@ export class ProductCatalogComponent implements OnInit {
     } else {
       this.selectedBrands.delete(brand);
     }
+    this.isFilterOpen = false; // Auto close mobile filter on brand select
+    this.syncStateToUrl(true); // Gọi API ngay lập tức khi chọn/bỏ chọn thương hiệu
   }
 
   changePage(page: number) {
@@ -260,6 +256,7 @@ export class ProductCatalogComponent implements OnInit {
     this.searchKeyword = '';
     this.activeCategory = '';
     this.currentSort = 'Mới nhất';
+    this.isFilterOpen = false; // Auto close mobile filter on category select
     this.syncStateToUrl(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }

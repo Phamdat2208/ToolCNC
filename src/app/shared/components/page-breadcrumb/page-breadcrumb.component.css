@@ -36,7 +36,7 @@
 }
 
 .home-icon:hover {
-  color: #3b82f6; /* Blue-500 */
+  color: var(--primary-color) !important; /* Blue-500 */
 }
 
 /* ── Separator chevron ── */

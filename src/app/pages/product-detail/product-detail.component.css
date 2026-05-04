@@ -476,6 +476,10 @@
   margin-bottom: 12px;
 }
 
+::ng-deep .ant-tabs-tab:hover {
+  color: var(--primary-color) !important;
+}
+
 @media (max-width: 768px) {
   .detail-main-card {
     padding: 24px;

@@ -169,8 +169,7 @@ export class HeaderComponent {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    const scroll = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    this.isScrolled = scroll > 20;
+    this.isScrolled = window.scrollY > 20;
   }
 
   logout() {

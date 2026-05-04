@@ -1,4 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 
 :root {
   /* Brand Colors - Industrial Orange/Tech Palette */
@@ -864,3 +872,10 @@ body {
   background-color: rgba(15, 23, 42, 0.45) !important;
 }
 
+/* ---- Disable Tooltips on Touch Devices ---- */
+/* Tooltips are meant for hover. On touch devices, they appear on tap and get stuck. */
+@media (hover: none) and (pointer: coarse) {
+  .ant-tooltip {
+    display: none !important;
+  }
+}

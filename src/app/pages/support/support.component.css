@@ -580,7 +580,7 @@
 }
 
 .contact-info-panel h2 {
-  font-size: 2.5rem;
+  font-size: 2.25rem;
 }
 
 .section-desc {
@@ -667,6 +667,13 @@
   }
   .contact-form-panel {
     padding: 24px;
+    width: 100%;
+  }
+  .section-title {
+    font-size: 2rem;
+  }
+  .contact-info-panel h2 {
+    font-size: 2rem;
   }
 }
 
