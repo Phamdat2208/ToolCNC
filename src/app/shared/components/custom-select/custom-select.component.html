@@ -9,6 +9,8 @@
       (ngModelChange)="handleSelectChange($event)"
       (nzBlur)="handleBlur()"
       style="width: 100%"
+      [nzDropdownMatchSelectWidth]="true"
+      nzPlacement="bottomLeft"
     >
       <nz-option
         *ngFor="let opt of options"

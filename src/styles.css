@@ -185,6 +185,17 @@ body {
   border-radius: 6px !important;
 }
 
+/* Prevent auto-zoom on iOS by ensuring inputs have at least 16px font-size */
+@media (max-width: 768px) {
+  .ant-input, 
+  .ant-select-selection-item,
+  .ant-select-selection-placeholder,
+  .ant-picker-input > input,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
 .ant-card {
   border-radius: 12px !important;
   overflow: hidden;
