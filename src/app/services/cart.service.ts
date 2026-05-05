@@ -160,15 +160,24 @@ export class CartService {
     });
   }
 
-  clearCart() {
+  clearCart(): Observable<any> {
     if (!this.authService.isLoggedIn()) {
       this.cartItems.set([]);
-      return;
+      return of(null);
     }
 
-    this.http.delete(`${this.apiUrl}/clear`, this.getAuthHeaders()).subscribe({
-      next: () => this.cartItems.set([]),
-      error: err => console.error('Lỗi khi xóa toàn bộ giỏ hàng', err)
+    return new Observable<any>(observer => {
+      this.http.delete(`${this.apiUrl}/clear`, this.getAuthHeaders()).subscribe({
+        next: (res) => {
+          this.cartItems.set([]);
+          observer.next(res);
+          observer.complete();
+        },
+        error: err => {
+          console.error('Lỗi khi xóa toàn bộ giỏ hàng', err);
+          observer.error(err);
+        }
+      });
     });
   }
 

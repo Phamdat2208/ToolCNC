@@ -12,6 +12,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 })
 export class LoadingComponent {
   @Input() isLoading: boolean = false;
+  @Input() isSticky: boolean = false; // New property to toggle sticky behavior
   @Input() size: 'small' | 'default' | 'large' = 'large';
   @Input() tip: string = '';
 }

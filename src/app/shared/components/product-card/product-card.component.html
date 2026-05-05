@@ -1,17 +1,43 @@
-<div class="modern-product-card" [routerLink]="['/products', product.id]" appScrollReveal>
+<div
+  class="modern-product-card"
+  [routerLink]="['/products', product.id]"
+  appScrollReveal
+>
   <!-- Image Box -->
   <div class="product-img-box img-wrapper-relative">
-    <img [alt]="product.name" [src]="imageUrl" [class.img-out-of-stock]="product.totalStock === 0" loading="lazy" />
-    <div class="out-of-stock-banner" *ngIf="product.totalStock === 0">Hết Hàng</div>
-    
+    <img
+      [alt]="product.name"
+      [src]="imageUrl"
+      [class.img-out-of-stock]="product.totalStock === 0"
+      loading="lazy"
+    />
+    <div class="out-of-stock-banner" *ngIf="product.totalStock === 0">
+      Hết Hàng
+    </div>
+
     <!-- Hover Actions Overlay -->
     <div class="card-overlay-actions">
       <!-- Heart Button -->
-      <button nz-button nzShape="circle" class="btn-overlay-wishlist"
-              [class.wishlisted]="wishlistService.isWishlisted(product.id)"
-              (click)="$event.stopPropagation(); toggleWishlist(product)"
-              nz-tooltip [nzTooltipTitle]="wishlistService.isWishlisted(product.id) ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'">
-         <nz-icon [nzType]="'heart'" [nzTheme]="wishlistService.isWishlisted(product.id) ? 'fill' : 'outline'" />
+      <button
+        nz-button
+        nzShape="circle"
+        class="btn-overlay-wishlist"
+        [class.wishlisted]="wishlistService.isWishlisted(product.id)"
+        (click)="$event.stopPropagation(); toggleWishlist(product)"
+        nz-tooltip
+        [nzTooltipTitle]="
+          wishlistService.isWishlisted(product.id)
+            ? 'Xóa khỏi yêu thích'
+            : 'Thêm vào yêu thích'
+        "
+        [nzLoading]="isTogglingWishlist"
+      >
+        <nz-icon
+          [nzType]="'heart'"
+          [nzTheme]="
+            wishlistService.isWishlisted(product.id) ? 'fill' : 'outline'
+          "
+        />
       </button>
     </div>
   </div>
@@ -19,19 +45,27 @@
   <!-- Content Box -->
   <div class="product-info-box">
     <h3 class="product-title" [title]="product.name">{{ product.name }}</h3>
-    
+
     <div class="product-price-row">
       <div class="price-display-wrapper">
-        <ng-container *ngIf="product.hasVariants && product.minPrice !== product.maxPrice; else singlePrice">
+        <ng-container
+          *ngIf="
+            product.hasVariants && product.minPrice !== product.maxPrice;
+            else singlePrice
+          "
+        >
           <span class="product-price range-price">
-            {{ product.minPrice | currency: "VND" : "" }} - {{ product.maxPrice | currency: "VND" : "symbol" }}
+            {{ product.minPrice | currency: "VND" : "" }} -
+            {{ product.maxPrice | currency: "VND" : "symbol" }}
           </span>
         </ng-container>
         <ng-template #singlePrice>
-          <span class="product-price">{{ product.price | currency: "VND" : "symbol" }}</span>
+          <span class="product-price">{{
+            product.price | currency: "VND" : "symbol"
+          }}</span>
         </ng-template>
       </div>
-      
+
       <!-- Cart Button Bottom Right -->
       <button
         nz-button

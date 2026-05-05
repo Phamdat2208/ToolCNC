@@ -32,6 +32,13 @@ export class AdminLayoutComponent {
   private router = inject(Router);
   isCollapsed = false;
 
+  closeSiderOnMobile() {
+    // 992px is the 'lg' breakpoint in Ant Design
+    if (window.innerWidth < 992) {
+      this.isCollapsed = true;
+    }
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);

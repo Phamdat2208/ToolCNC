@@ -1,22 +1,22 @@
-import { Component, inject, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router, RouterLinkActive, NavigationEnd } from '@angular/router';
+import { Component, ElementRef, HostListener, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
-import { CartService } from '../../services/cart.service';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
-import { WishlistService } from '../../services/wishlist.service';
+import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
+import { WishlistService } from '../../services/wishlist.service';
 import { ConfirmModalService } from '../../shared/services/confirm-modal.service';
  
 @Component({

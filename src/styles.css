@@ -8,6 +8,14 @@ body {
   overflow-x: hidden;
 }
 
+/* Hide floating UI elements when modal is open */
+body.ant-modal-open app-speed-dial {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  transition: opacity 0.2s ease;
+}
+
 :root {
   /* Brand Colors - Industrial Orange/Tech Palette */
   --primary-color: #f97316; /* Vibrant Orange */
@@ -870,6 +878,40 @@ body {
 .premium-confirm-modal + .ant-modal-mask {
   backdrop-filter: blur(8px) !important;
   background-color: rgba(15, 23, 42, 0.45) !important;
+}
+
+@media (max-width: 768px) {
+  .quick-select-modal-custom {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    top: auto !important;
+    transform: none !important; /* Force remove any default centering transform */
+  }
+  
+  /* Disable default Ant Design modal animations */
+  .quick-select-modal-custom.ant-modal {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .quick-select-modal-custom .ant-modal-content {
+    border-radius: 24px 24px 0 0 !important;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  .quick-select-modal-custom .ant-modal-body {
+    padding: 16px 12px 24px !important;
+  }
+}
+
+.quick-select-modal-custom + .ant-modal-mask {
+  backdrop-filter: blur(4px) !important;
+  background-color: rgba(0, 0, 0, 0.45) !important;
+  transition: all 0.4s cubic-bezier(0.32, 0.72, 0, 1) !important;
 }
 
 /* ---- Disable Tooltips on Touch Devices ---- */

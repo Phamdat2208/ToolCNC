@@ -12,7 +12,7 @@
       <span class="logo-icon">T</span>
       <span class="logo-text" *ngIf="!isCollapsed">ToolCNC Admin</span>
     </div>
-    <ul nz-menu nzTheme="dark" nzMode="inline">
+    <ul nz-menu nzTheme="dark" nzMode="inline" (click)="closeSiderOnMobile()">
       <li
         nz-menu-item
         routerLink="/admin"

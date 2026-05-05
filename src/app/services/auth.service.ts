@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { ConfirmModalService } from '../shared/services/confirm-modal.service';
+import { StorageSecurityService } from '../shared/services/storage-security.service';
 
 export interface User {
   username: string;
@@ -19,6 +20,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private confirmModal = inject(ConfirmModalService);
+  private storageSecurityService = inject(StorageSecurityService);
   private apiUrl = `${environment.apiUrl}/api/v1/auth`;
   private readonly TOKEN_KEY = 'tool_cnc_auth_token';
   private readonly USER_KEY = 'tool_cnc_user_data';
@@ -43,10 +45,10 @@ export class AuthService {
             username: response.username,
             roles: response.role ? [response.role] : (response.roles || ['CUSTOMER'])
           };
-          sessionStorage.setItem(this.TOKEN_KEY, response.token);
-          sessionStorage.setItem(this.USER_KEY, JSON.stringify(userObj));
+          this.storageSecurityService.setItem(this.TOKEN_KEY, response.token);
+          this.storageSecurityService.setItem(this.USER_KEY, JSON.stringify(userObj));
           this.currentUserSubject.next(userObj);
-          
+
           this.startSessionCheck();
 
           // Sau khi login, fetch lại profile đầy đủ
@@ -62,7 +64,7 @@ export class AuthService {
         const currentUser = this.currentUserSubject.value;
         if (currentUser) {
           const updatedUser = { ...currentUser, ...user };
-          sessionStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
+          this.storageSecurityService.setItem(this.USER_KEY, JSON.stringify(updatedUser));
           this.currentUserSubject.next(updatedUser);
         }
       })
@@ -75,7 +77,7 @@ export class AuthService {
         const currentUser = this.currentUserSubject.value;
         if (currentUser) {
           const updatedUser = { ...currentUser, fullName: res.fullName, phone: res.phone };
-          sessionStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
+          this.storageSecurityService.setItem(this.USER_KEY, JSON.stringify(updatedUser));
           this.currentUserSubject.next(updatedUser);
         }
       })
@@ -100,14 +102,14 @@ export class AuthService {
 
   public clearLocalSession() {
     this.stopSessionCheck();
-    sessionStorage.removeItem(this.TOKEN_KEY);
-    sessionStorage.removeItem(this.USER_KEY);
+    this.storageSecurityService.removeItem(this.TOKEN_KEY);
+    this.storageSecurityService.removeItem(this.USER_KEY);
     this.currentUserSubject.next(null);
   }
 
   private startSessionCheck() {
     this.stopSessionCheck();
-    
+
     const token = this.getToken();
     if (!token) return;
 
@@ -117,7 +119,7 @@ export class AuthService {
     this.eventSource.addEventListener('logout', (event: any) => {
       console.log('SSE Logout event received:', event.data);
       this.clearLocalSession();
-      
+
       this.confirmModal.confirm(
         {
           title: 'Thông báo đăng nhập',
@@ -150,7 +152,7 @@ export class AuthService {
   }
 
   public getToken(): string | null {
-    return sessionStorage.getItem(this.TOKEN_KEY);
+    return this.storageSecurityService.getItem(this.TOKEN_KEY);
   }
 
   public isLoggedIn(): boolean {
@@ -174,7 +176,7 @@ export class AuthService {
     const token = this.getToken();
     if (token) {
       try {
-        const userStr = sessionStorage.getItem(this.USER_KEY);
+        const userStr = this.storageSecurityService.getItem(this.USER_KEY);
         if (userStr) {
           this.currentUserSubject.next(JSON.parse(userStr));
           this.startSessionCheck();

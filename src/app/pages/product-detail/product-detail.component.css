@@ -105,8 +105,10 @@
   font-size: 32px;
   font-weight: 800;
   color: #0f172a;
-  line-height: 1.2;
+  line-height: 1.3;
   margin: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .admin-edit-action {
@@ -139,6 +141,7 @@
 
 .pill-value {
   color: #0f172a;
+  word-break: break-all;
 }
 
 .pill-value.highlight {
@@ -486,6 +489,11 @@
   }
   .product-display-name {
     font-size: 24px;
+    width: 100%;
+  }
+  .header-action-group {
+    flex-direction: column;
+    gap: 12px;
   }
   .active-price {
     font-size: 28px;

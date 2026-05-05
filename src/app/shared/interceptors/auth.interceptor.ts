@@ -4,14 +4,17 @@ import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { ConfirmModalService } from '../services/confirm-modal.service';
+import { StorageSecurityService } from '../services/storage-security.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const confirmModalService = inject(ConfirmModalService);
   const injector = inject(Injector);
+  const storage = inject(StorageSecurityService);
 
-  const token = sessionStorage.getItem('tool_cnc_auth_token');
-  
+  // Decrypt the token before attaching to the request header
+  const token = storage.getItem('tool_cnc_auth_token');
+
   // Clone the request to add the new header
   let authReq = req;
   if (token) {

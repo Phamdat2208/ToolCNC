@@ -800,33 +800,32 @@
     padding: 16px;
   }
   
-  /* Swipeable Steps for Mobile */
+  /* Focused Step for Mobile */
   .steps-wrapper {
     width: 100%;
-    max-width: 100vw;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 4px;
-    /* Avoid margin trick as it might break layout, use proper padding */
-    padding-right: 24px;
-    -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
-    /* Hide scrollbar */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .steps-wrapper::-webkit-scrollbar {
-    display: none;
+    padding: 0 16px;
   }
   .industrial-steps {
-    min-width: 600px; /* Ensure enough space so text doesn't wrap */
     display: flex;
-    flex-wrap: nowrap;
+    justify-content: center;
   }
   .industrial-steps ::ng-deep .ant-steps-item {
-    flex: 1 0 auto !important; /* Prevent items from shrinking */
+    display: none !important; /* Hide all steps */
+  }
+  .industrial-steps ::ng-deep .ant-steps-item-process {
+    display: block !important; /* Only show active step */
+    width: 100%;
+    text-align: center;
+  }
+  .industrial-steps ::ng-deep .ant-steps-item-icon {
+    margin-right: 8px !important;
+  }
+  .industrial-steps ::ng-deep .ant-steps-item-tail {
+    display: none !important; /* Hide the connecting line */
   }
   .industrial-steps ::ng-deep .ant-steps-item-title {
-    white-space: nowrap !important;
+    white-space: normal !important;
+    font-size: 16px !important;
   }
 }
 
@@ -846,6 +845,7 @@
 
   .btn-back-modern {
     padding: 0 16px;
+    flex: 1;
     justify-content: center;
     font-size: 13px;
   }

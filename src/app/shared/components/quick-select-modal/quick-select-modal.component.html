@@ -15,7 +15,8 @@
       </div>
     </div>
 
-    <div class="variant-info-table">
+    <!-- Desktop Table View (Hidden on Mobile) -->
+    <div class="variant-info-table desktop-only">
       <nz-table #basicTable [nzData]="product.variants" [nzSize]="'middle'" [nzScroll]="{ y: '300px' }" [nzFrontPagination]="false" [nzShowPagination]="false">
         <thead>
           <tr>
@@ -49,6 +50,35 @@
           </tr>
         </tbody>
       </nz-table>
+    </div>
+
+    <!-- Mobile Card View (Visible on Mobile) -->
+    <div class="variant-mobile-list mobile-only">
+      <div *ngFor="let data of product.variants" 
+           class="variant-mobile-card" 
+           [class.card-selected]="data.checked">
+        <div class="card-header">
+          <label nz-checkbox [(ngModel)]="data.checked" class="large-checkbox"></label>
+          <div class="card-title-group" (click)="data.checked = !data.checked">
+            <div class="v-name">{{ data.variantName }}</div>
+            <div class="v-sku text-secondary">{{ data.sku }}</div>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <div class="price-row">
+            <span class="price-label">Đơn giá:</span>
+            <span class="v-price">{{ data.price | currency:'VND':'symbol':'1.0-0' }}</span>
+          </div>
+          <div class="quantity-row">
+            <app-quantity-input [(quantity)]="data.selectedQuantity" [maxStock]="data.stock"></app-quantity-input>
+            <div class="subtotal-group">
+              <span class="subtotal-label">Thành tiền:</span>
+              <span class="v-subtotal">{{ (data.price * data.selectedQuantity) | currency:'VND':'symbol':'1.0-0' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Selection Footer Summary -->

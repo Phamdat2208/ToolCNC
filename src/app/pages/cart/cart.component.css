@@ -42,11 +42,34 @@
   align-items: center;
   gap: 8px;
   transition: all 0.3s;
+  padding: 4px 8px;
 }
 
 .continue-shopping:hover {
   color: #0ea5e9;
   transform: translateX(-4px);
+}
+
+.clear-cart-btn {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.clear-cart-btn:hover {
+  background-color: #fef2f2 !important;
+}
+
+.header-divider {
+  border-color: #e2e8f0;
+  margin: 0 8px;
+}
+
+.cart-header-actions {
+  display: flex;
+  align-items: center;
 }
 
 /* Table Wrapper */
@@ -379,8 +402,23 @@
   .cart-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 16px;
     margin-bottom: 20px;
+  }
+
+  .cart-header-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .header-divider {
+    display: none;
+  }
+
+  .continue-shopping, .clear-cart-btn {
+    font-size: 13px;
+    padding: 0;
   }
 
   .page-title {

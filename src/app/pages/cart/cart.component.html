@@ -13,11 +13,15 @@
       <button nz-button nzType="link" routerLink="/products" class="continue-shopping">
         <nz-icon nzType="arrow-left" /> Tiếp tục mua sắm
       </button>
+      <nz-divider nzType="vertical" class="header-divider"></nz-divider>
+    <button nz-button nzType="text" nzDanger class="clear-cart-btn" type="button" (click)="confirmClearCart($event)">
+        <nz-icon nzType="delete" /> Xóa sạch giỏ hàng
+      </button>
     </div>
   </div>
 
   <app-loading [isLoading]="isLoading || isUpdatingTotal">
-    <div nz-row [nzGutter]="32" *ngIf="cartItems.length > 0; else emptyCart" class="cart-content-row">
+    <div nz-row [nzGutter]="{ xs: 16, sm: 24, md: 32, lg: 32 }" *ngIf="cartItems.length > 0; else emptyCart" class="cart-content-row">
       <!-- Main Cart Content -->
       <div nz-col nzXs="24" nzLg="16" class="cart-main-body">
         <div class="cart-table-wrapper">

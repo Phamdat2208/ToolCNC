@@ -18,6 +18,8 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { QuantityInputComponent } from '../../shared/components/quantity-input/quantity-input.component';
 import { ToastService } from '../../shared/services/toast.service';
+import { ConfirmModalService } from '../../shared/services/confirm-modal.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -46,6 +48,8 @@ export class CartComponent implements OnDestroy {
   cartService = inject(CartService);
   private router = inject(Router);
   private toastService = inject(ToastService);
+  private confirmModalService = inject(ConfirmModalService);
+  authService = inject(AuthService);
   
   private destroy$ = new Subject<void>();
   private quantityUpdateSubject = new Subject<{ id: number, productId: number, variantId: number | undefined, quantity: number }>();
@@ -60,6 +64,9 @@ export class CartComponent implements OnDestroy {
 
   constructor() {
     // Tự động tắt loading sau khi khởi tạo dữ liệu giỏ hàng
+    if (this.authService.isLoggedIn()) {
+      this.cartService.loadCart();
+    }
     setTimeout(() => this.isLoading = false, 500);
 
     // Debounce quantity updates to reduce API calls
@@ -109,6 +116,33 @@ export class CartComponent implements OnDestroy {
       error: () => {
         delete this.isRemoving[id];
       }
+    });
+  }
+
+  confirmClearCart(event?: MouseEvent) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    this.confirmModalService.confirm({
+      title: 'Xóa toàn bộ giỏ hàng?',
+      content: 'Tất cả sản phẩm trong giỏ hàng sẽ bị gỡ bỏ. Bạn có chắc chắn muốn thực hiện?',
+      okText: 'Xác nhận xóa',
+      cancelText: 'Hủy',
+      type: 'danger'
+    }, () => {
+      this.isLoading = true;
+      this.cartService.clearCart().subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.toastService.showSuccess('Đã xóa sạch giỏ hàng.');
+        },
+        error: () => {
+          this.isLoading = false;
+          this.toastService.showError('Không thể xóa giỏ hàng lúc này. Vui lòng thử lại.');
+        }
+      });
     });
   }
 
