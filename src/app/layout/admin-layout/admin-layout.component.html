@@ -42,11 +42,6 @@
         <nz-icon nzType="team" />
         <span>Người dùng</span>
       </li>
-      <li nz-menu-divider></li>
-      <li nz-menu-item routerLink="/">
-        <nz-icon nzType="home" />
-        <span>Về trang chủ</span>
-      </li>
     </ul>
   </nz-sider>
   <nz-layout class="main-content-layout">
@@ -65,9 +60,23 @@
           <nz-icon nzType="down" />
         </a>
         <nz-dropdown-menu #userMenu="nzDropdownMenu">
-          <ul nz-menu>
-            <li nz-menu-item (click)="logout()" nzDanger>
-              <nz-icon nzType="logout" /> Đăng xuất
+          <ul nz-menu class="user-dropdown-menu">
+            <li class="menu-user-header">
+              <nz-avatar nzIcon="user" class="header-avatar"></nz-avatar>
+              <div class="user-info">
+                <div class="user-name">{{ authService.currentUserValue?.username }}</div>
+                <div class="user-role">Quản trị viên</div>
+              </div>
+            </li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item routerLink="/">
+              <nz-icon nzType="home" />
+              <span>Về trang chủ</span>
+            </li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item (click)="logout()" class="logout-item">
+              <nz-icon nzType="logout" />
+              <span>Đăng xuất</span>
             </li>
           </ul>
         </nz-dropdown-menu>

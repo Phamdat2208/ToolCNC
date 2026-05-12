@@ -10,6 +10,7 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzImageModule } from 'ng-zorro-antd/image';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
@@ -36,6 +37,7 @@ import { UrlUtils } from '../../shared/utils/url-utils';
     QuantityInputComponent, 
     LoadingComponent,
     NzToolTipModule,
+    NzImageModule,
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
@@ -114,6 +116,29 @@ export class ProductDetailComponent implements OnInit {
           }
         }
 
+        // Map description images
+        if (this.product.descriptionImages) {
+          try {
+            const descImages = typeof this.product.descriptionImages === 'string' 
+              ? JSON.parse(this.product.descriptionImages) 
+              : this.product.descriptionImages;
+              
+            if (Array.isArray(descImages)) {
+              this.product.descriptionImages = descImages.map((img: any) => {
+                const url = (img && typeof img === 'object') ? img.url : img;
+                return UrlUtils.getFullUrl(url);
+              });
+            } else {
+              this.product.descriptionImages = [];
+            }
+          } catch (e) {
+            console.error('Error parsing descriptionImages', e);
+            this.product.descriptionImages = [];
+          }
+        } else {
+          this.product.descriptionImages = [];
+        }
+
         // Setup features mock if description is plain
         this.product.features = this.product.description ? this.product.description.split('\n').filter((f: string) => f.trim().length > 0) : ['Sản phẩm chưa có đặc điểm nổi bật'];
 
@@ -155,6 +180,10 @@ export class ProductDetailComponent implements OnInit {
 
   selectVariant(variant: any) {
     this.selectedVariant = variant;
+  }
+
+  getFullUrl(url: string | null | undefined): string {
+    return UrlUtils.getFullUrl(url);
   }
 
   get displayPrice(): number {

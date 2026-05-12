@@ -67,6 +67,17 @@ export class ProductAddComponent implements OnInit {
   galleryShowCropper: boolean = false;
   galleryOriginalSrc: string | null = null;
 
+  // --- Description Images ---
+  descriptionImageUrls: string[] = [];
+  newDescriptionImageUrl: string = '';
+  readonly MAX_DESCRIPTION_IMAGES = 10;
+  isDescriptionUploading = false;
+
+  // --- Description Image Cropper state ---
+  descriptionChangedEvent: Event | null = null;
+  descriptionCroppedImage: string = '';
+  descriptionShowCropper: boolean = false;
+
   readonly presetSizes = [
     { label: 'Vuông 1:1 (800×800)', w: 800, h: 800 },
     { label: 'Ngang 4:3 (800×600)', w: 800, h: 600 },
@@ -195,7 +206,7 @@ export class ProductAddComponent implements OnInit {
     });
   }
 
-  triggerFileInput(target: 'main' | 'gallery' = 'main') {
+  triggerFileInput(target: 'main' | 'gallery' | 'description' = 'main') {
     // We can use a local flag to tell onFileSelected where to put the data
     const input = this.fileInputRef?.nativeElement;
     if (input) {
@@ -219,11 +230,100 @@ export class ProductAddComponent implements OnInit {
       this._gallerySelectedFile = file;
       this.galleryChangedEvent = event;
       this.galleryShowCropper = true;
+    } else if (target === 'description') {
+      this.descriptionChangedEvent = event;
+      this.descriptionShowCropper = true;
     } else {
       this._mainSelectedFile = file;
       this.imageChangedEvent = event;
       this.showCropper = true;
     }
+  }
+
+
+  addDescriptionImageByUrl() {
+    const url = this.newDescriptionImageUrl.trim();
+    if (!url) return;
+    if (this.descriptionImageUrls.length >= this.MAX_DESCRIPTION_IMAGES) {
+      this.toastService.showWarning(`Chỉ được thêm tối đa ${this.MAX_DESCRIPTION_IMAGES} ảnh mô tả`);
+      return;
+    }
+    this.descriptionImageUrls.push(url);
+    this.newDescriptionImageUrl = '';
+  }
+
+  removeDescriptionImage(index: number) {
+    this.descriptionImageUrls.splice(index, 1);
+  }
+
+  // Called by the DESCRIPTION image cropper
+  descriptionCropped(event: ImageCroppedEvent) {
+    if (event.base64) {
+      this.descriptionCroppedImage = event.base64;
+    } else if (event.objectUrl) {
+      this.descriptionCroppedImage = event.objectUrl;
+    }
+  }
+
+  // Confirm crop for DESCRIPTION image (resize max 1200x900 then upload)
+  confirmDescriptionCrop() {
+    if (this.descriptionImageUrls.length >= this.MAX_DESCRIPTION_IMAGES) {
+      this.toastService.showWarning(`Chỉ được thêm tối đa ${this.MAX_DESCRIPTION_IMAGES} ảnh mô tả`);
+      this.cancelDescriptionCrop();
+      return;
+    }
+
+    this.descriptionShowCropper = false;
+    this.isDescriptionUploading = true;
+    this.toastService.showInfo('Đang tải ảnh mô tả lên...');
+
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+      const maxWidth = 1200;
+      const maxHeight = 900;
+
+      if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
+      if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
+
+      canvas.width = Math.round(width);
+      canvas.height = Math.round(height);
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob((blob) => {
+        if (blob) {
+          this.cloudinaryService.uploadImage(blob).subscribe({
+            next: (res) => {
+              this.descriptionImageUrls.push(res.secure_url);
+              this.toastService.showSuccess('Đã thêm ảnh mô tả');
+              this.isDescriptionUploading = false;
+              this.descriptionChangedEvent = null;
+              this.descriptionCroppedImage = '';
+              if (this.fileInputRef) this.fileInputRef.nativeElement.value = '';
+            },
+            error: (err) => {
+              console.error('Lỗi upload ảnh mô tả:', err);
+              this.toastService.showError('Không thể tải ảnh lên. Vui lòng thử lại.');
+              this.isDescriptionUploading = false;
+            }
+          });
+        } else {
+          this.isDescriptionUploading = false;
+          this.toastService.showError('Lỗi khi xử lý hình ảnh');
+        }
+      }, 'image/jpeg', 0.87);
+    };
+    img.src = this.descriptionCroppedImage;
+  }
+
+  cancelDescriptionCrop() {
+    this.descriptionShowCropper = false;
+    this.descriptionChangedEvent = null;
+    this.descriptionCroppedImage = '';
+    if (this.fileInputRef) this.fileInputRef.nativeElement.value = '';
   }
 
   // Called by the MAIN image cropper
@@ -427,6 +527,20 @@ export class ProductAddComponent implements OnInit {
           this.galleryUrls = product.images.map((img: any) => img.url || img);
         }
 
+        // Load existing description images
+        if (product.descriptionImages) {
+          try {
+            const descImages = typeof product.descriptionImages === 'string' 
+              ? JSON.parse(product.descriptionImages) 
+              : product.descriptionImages;
+            if (Array.isArray(descImages)) {
+              this.descriptionImageUrls = descImages.map((img: any) => img.url || img);
+            }
+          } catch (e) {
+            console.error('Error parsing descriptionImages', e);
+          }
+        }
+
         // Handle specifications JSON
         this.specifications.clear();
         if (product.specifications) {
@@ -465,7 +579,8 @@ export class ProductAddComponent implements OnInit {
         const productData = {
           ...formValue,
           specifications: JSON.stringify(formValue.specifications),
-          imageGallery: this.galleryUrls
+          imageGallery: this.galleryUrls,
+          descriptionImages: this.descriptionImageUrls
         };
 
         if (imageUrl) productData.imageUrl = imageUrl;

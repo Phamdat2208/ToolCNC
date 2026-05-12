@@ -158,6 +158,79 @@
         ></textarea>
       </div>
 
+      <!-- RELATED IMAGES SECTION (DESCRIPTION IMAGES) -->
+      <nz-form-item class="mt-24">
+        <nz-form-label>
+          Hình ảnh liên quan
+          <span class="label-hint">({{ descriptionImageUrls.length }}/{{ MAX_DESCRIPTION_IMAGES }} ảnh · hiển thị trong phần mô tả)</span>
+        </nz-form-label>
+        <nz-form-control>
+
+          <!-- DESCRIPTION CROPPER -->
+          <div *ngIf="descriptionShowCropper" class="cropper-section p-16" style="border: 1px dashed #fa8c16; border-radius: 8px;">
+            <p class="editor-label mb-8">Cắt ảnh liên quan (tỉ lệ tự do · sẽ resize tối đa 1200×900)</p>
+            <image-cropper
+              [imageChangedEvent]="descriptionChangedEvent"
+              [maintainAspectRatio]="false"
+              output="base64"
+              format="jpeg"
+              (imageCropped)="descriptionCropped($event)"
+              style="max-height: 380px;"
+            ></image-cropper>
+            <div class="mt-16 flex-gap-12">
+              <button nz-button nzType="primary" type="button" (click)="confirmDescriptionCrop()" [nzLoading]="isDescriptionUploading">
+                <nz-icon nzType="check" /> Xác nhận & Thêm ảnh
+              </button>
+              <button nz-button type="button" nzDanger (click)="cancelDescriptionCrop()">Hủy</button>
+            </div>
+          </div>
+
+          <!-- Action Row -->
+          <div class="gallery-add-row" *ngIf="descriptionImageUrls.length < MAX_DESCRIPTION_IMAGES && !descriptionShowCropper">
+            <div class="img-action-row">
+              <nz-input-group [nzSuffix]="addDescBtn" class="img-url-input">
+                <input
+                  nz-input
+                  [(ngModel)]="newDescriptionImageUrl"
+                  [ngModelOptions]="{standalone: true}"
+                  placeholder="Nhập URL ảnh liên quan..."
+                  (keyup.enter)="addDescriptionImageByUrl()"
+                />
+              </nz-input-group>
+              <ng-template #addDescBtn>
+                <button nz-button nzType="primary" nzSize="small" type="button" (click)="addDescriptionImageByUrl()">
+                  <nz-icon nzType="plus" /> Thêm
+                </button>
+              </ng-template>
+
+              <button nz-button nzType="default" type="button" (click)="triggerFileInput('description')" [nzLoading]="isDescriptionUploading" class="img-upload-btn">
+                <nz-icon nzType="upload" /> Tải ảnh từ máy
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="descriptionImageUrls.length >= MAX_DESCRIPTION_IMAGES" class="gallery-limit-hint">
+            <nz-icon nzType="info-circle" /> Đã đạt giới hạn tối đa {{ MAX_DESCRIPTION_IMAGES }} ảnh mô tả
+          </div>
+
+          <!-- Description images preview grid -->
+          <div class="img-thumb-grid mt-16" *ngIf="descriptionImageUrls.length > 0">
+            <div *ngFor="let imgUrl of descriptionImageUrls; let i = index" class="img-thumb-card">
+              <img [src]="getFullUrl(imgUrl)" [alt]="'Description ' + (i + 1)" class="img-thumb-photo" />
+              <div class="img-thumb-overlay">
+                <button nz-button nzDanger nzSize="small" type="button" (click)="removeDescriptionImage(i)">
+                  <nz-icon nzType="delete" />
+                </button>
+              </div>
+              <div class="img-thumb-badge">{{ i + 1 }}</div>
+            </div>
+          </div>
+          <div *ngIf="descriptionImageUrls.length === 0 && !descriptionShowCropper" class="gallery-empty-hint">
+            <nz-icon nzType="picture" /> Chưa có ảnh liên quan. Thêm URL hoặc tải ảnh để minh họa cho phần mô tả.
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
       <nz-form-item>
         <nz-form-label>Hình ảnh sản phẩm</nz-form-label>
         <nz-form-control>
@@ -259,15 +332,14 @@
       <!-- GALLERY IMAGES SECTION -->
       <nz-form-item>
         <nz-form-label>
-          Thư viện ảnh sản phẩm
-          <span style="font-weight: 400; color: #888; margin-left: 8px;">({{ galleryUrls.length }}/{{ MAX_GALLERY }} ảnh)</span>
+          Ảnh bổ sung
+          <span class="label-hint">({{ galleryUrls.length }}/{{ MAX_GALLERY }} ảnh)</span>
         </nz-form-label>
         <nz-form-control>
           <!-- Gallery Actions -->
           <div class="gallery-add-row" *ngIf="galleryUrls.length < MAX_GALLERY && !galleryShowCropper">
-            <div class="flex-gap-12">
-              <!-- URL Input -->
-              <nz-input-group [nzSuffix]="addGalleryBtn" style="flex: 1;">
+            <div class="img-action-row">
+              <nz-input-group [nzSuffix]="addGalleryBtn" class="img-url-input">
                 <input
                   nz-input
                   [(ngModel)]="newGalleryUrl"
@@ -278,12 +350,11 @@
               </nz-input-group>
               <ng-template #addGalleryBtn>
                 <button nz-button nzType="primary" nzSize="small" type="button" (click)="addGalleryImage()">
-                  <nz-icon nzType="plus" /> Thêm URL
+                  <nz-icon nzType="plus" /> Thêm
                 </button>
               </ng-template>
 
-              <!-- Upload Button -->
-              <button nz-button nzType="default" type="button" (click)="triggerFileInput('gallery')" [nzLoading]="isGalleryUploading">
+              <button nz-button nzType="default" type="button" (click)="triggerFileInput('gallery')" [nzLoading]="isGalleryUploading" class="img-upload-btn">
                 <nz-icon nzType="upload" /> Tải ảnh từ máy
               </button>
             </div>
@@ -313,15 +384,15 @@
           </div>
 
           <!-- Gallery preview grid -->
-          <div class="gallery-grid" *ngIf="galleryUrls.length > 0">
-            <div *ngFor="let imgUrl of galleryUrls; let i = index" class="gallery-thumb-item">
-              <img [src]="getFullUrl(imgUrl)" [alt]="'Gallery ' + (i + 1)" class="gallery-thumb-img" />
-              <div class="gallery-thumb-overlay">
-                <button nz-button nzDanger nzSize="small" type="button" (click)="removeGalleryImage(i)" class="gallery-remove-btn">
+          <div class="img-thumb-grid mt-16" *ngIf="galleryUrls.length > 0">
+            <div *ngFor="let imgUrl of galleryUrls; let i = index" class="img-thumb-card">
+              <img [src]="getFullUrl(imgUrl)" [alt]="'Gallery ' + (i + 1)" class="img-thumb-photo" />
+              <div class="img-thumb-overlay">
+                <button nz-button nzDanger nzSize="small" type="button" (click)="removeGalleryImage(i)">
                   <nz-icon nzType="delete" />
                 </button>
               </div>
-              <div class="gallery-thumb-index">{{ i + 1 }}</div>
+              <div class="img-thumb-badge">{{ i + 1 }}</div>
             </div>
           </div>
           <div *ngIf="galleryUrls.length === 0" class="gallery-empty-hint">

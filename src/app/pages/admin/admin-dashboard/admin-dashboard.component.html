@@ -2,63 +2,115 @@
   <h2 class="page-title">Bảng điều khiển quản trị</h2>
 
   <app-loading [isLoading]="isLoading">
-    <div nz-row [nzGutter]="24">
-      <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6" class="mb-16">
-        <nz-card>
-          <nz-statistic
-            [nzValue]="(totalSales | number)!"
-            [nzTitle]="'Tổng doanh thu (VNĐ)'"
-            [nzPrefix]="prefixSales"
-            [nzValueStyle]="{ color: '#3f8600' }"
-          ></nz-statistic>
-          <ng-template #prefixSales><nz-icon nzType="dollar" /></ng-template>
-        </nz-card>
+    <!-- Stat Grid -->
+    <div nz-row [nzGutter]="[24, 24]">
+      <!-- Total Sales -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzXl]="6">
+        <div class="stat-card theme-blue">
+          <div class="stat-card-content">
+            <div class="stat-icon-wrapper theme-blue">
+              <nz-icon nzType="dollar" />
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Tổng doanh thu</span>
+              <span class="stat-value">{{ totalSales | number }}đ</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6" class="mb-16">
-        <nz-card>
-          <nz-statistic
-            [nzValue]="(totalOrders | number)!"
-            [nzTitle]="'Tổng đơn hàng'"
-            [nzPrefix]="prefixOrders"
-          ></nz-statistic>
-          <ng-template #prefixOrders
-            ><nz-icon nzType="shopping-cart"
-          /></ng-template>
-        </nz-card>
+
+      <!-- Total Orders -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzXl]="6">
+        <div class="stat-card theme-green">
+          <div class="stat-card-content">
+            <div class="stat-icon-wrapper theme-green">
+              <nz-icon nzType="shopping-cart" />
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Tổng đơn hàng</span>
+              <span class="stat-value">{{ totalOrders }}</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6" class="mb-16">
-        <nz-card>
-          <nz-statistic
-            [nzValue]="(totalProducts | number)!"
-            [nzTitle]="'Tổng sản phẩm'"
-            [nzPrefix]="prefixProducts"
-          ></nz-statistic>
-          <ng-template #prefixProducts
-            ><nz-icon nzType="appstore"
-          /></ng-template>
-        </nz-card>
+
+      <!-- Total Products -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzXl]="6">
+        <div class="stat-card theme-orange">
+          <div class="stat-card-content">
+            <div class="stat-icon-wrapper theme-orange">
+              <nz-icon nzType="appstore" />
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Tổng sản phẩm</span>
+              <span class="stat-value">{{ totalProducts }}</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6" class="mb-16">
-        <nz-card>
-          <nz-statistic
-            [nzValue]="(activeUsers | number)!"
-            [nzTitle]="'Người dùng hoạt động'"
-            [nzPrefix]="prefixUsers"
-          ></nz-statistic>
-          <ng-template #prefixUsers><nz-icon nzType="team" /></ng-template>
-        </nz-card>
+
+      <!-- Active Users -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzXl]="6">
+        <div class="stat-card theme-purple">
+          <div class="stat-card-content">
+            <div class="stat-icon-wrapper theme-purple">
+              <nz-icon nzType="team" />
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Người dùng hoạt động</span>
+              <span class="stat-value">{{ activeUsers }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- Secondary Grid -->
     <div nz-row [nzGutter]="24" class="mt-24">
-      <div nz-col [nzXs]="24" [nzLg]="12" class="mb-16">
-        <nz-card nzTitle="Cảnh báo hàng sắp hết">
-          <p>Tính năng đang phát triển...</p>
+      <!-- Recent Orders -->
+      <div nz-col [nzXs]="24" [nzLg]="14" class="mb-16">
+        <nz-card nzTitle="Đơn hàng gần đây" class="section-card">
+          <div class="dashboard-list">
+            <div class="list-item" *ngFor="let order of recentOrders">
+              <div class="item-icon">
+                <nz-icon nzType="file-text" style="color: #64748b;" />
+              </div>
+              <div class="item-body">
+                <div class="item-title">Đơn hàng {{ order.id }} - {{ order.customer }}</div>
+                <div class="item-desc">{{ order.date }}</div>
+              </div>
+              <div class="item-action">
+                <div class="mb-4" style="text-align: right; font-weight: 700;">{{ order.amount | number }}đ</div>
+                <span class="status-badge" [ngClass]="'status-' + order.status">
+                  {{ order.status === 'pending' ? 'Chờ xử lý' : 'Đã giao' }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <button nz-button nzType="primary" routerLink="/admin/order" class="btn-view-orders mt-16">Xem tất cả
+            đơn hàng</button>
         </nz-card>
       </div>
-      <div nz-col [nzXs]="24" [nzLg]="12" class="mb-16">
-        <nz-card nzTitle="Đơn hàng gần đây">
-          <p>Tính năng đang phát triển...</p>
+
+      <!-- Inventory Alerts -->
+      <div nz-col [nzXs]="24" [nzLg]="10" class="mb-16">
+        <nz-card nzTitle="Cảnh báo hàng sắp hết" class="section-card">
+          <div class="dashboard-list">
+            <div class="list-item" *ngFor="let item of lowStockProducts">
+              <div class="item-icon" style="background: #fff1f0;">
+                <nz-icon nzType="warning" style="color: #f5222d;" />
+              </div>
+              <div class="item-body">
+                <div class="item-title">{{ item.name }}</div>
+                <div class="item-desc">Mã SKU: {{ item.sku }}</div>
+              </div>
+              <div class="item-action">
+                <span class="status-badge status-warning">Còn {{ item.stock }} cái</span>
+              </div>
+            </div>
+          </div>
+          <button nz-button nzType="primary" routerLink="/admin/product" class="btn-view-products mt-16">Quản lý
+            kho hàng</button>
         </nz-card>
       </div>
     </div>

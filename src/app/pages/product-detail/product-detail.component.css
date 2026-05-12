@@ -589,3 +589,34 @@
   }
 }
 
+/* Related Images in Description – centered list layout */
+.description-images-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.desc-img-item {
+  width: 100%;
+  max-width: 680px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  transition: box-shadow 0.3s ease;
+  cursor: zoom-in;
+}
+
+.desc-img-item:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.desc-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.mt-24 {
+  margin-top: 24px;
+}

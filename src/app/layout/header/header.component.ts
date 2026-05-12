@@ -38,6 +38,7 @@ export class HeaderComponent {
   searchResults: any[] = [];
   isSearching = false;
   showDropdown = false;
+  isUserMenuVisible = false;
   isScrolled = false;
   isDrawerVisible = false;
 
@@ -170,6 +171,9 @@ export class HeaderComponent {
   @HostListener('window:scroll', [])
   onWindowScroll() {
     this.isScrolled = window.scrollY > 20;
+    // Hide all dropdowns on scroll to improve mobile experience
+    this.showDropdown = false;
+    this.isUserMenuVisible = false;
   }
 
   logout() {

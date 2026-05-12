@@ -94,6 +94,8 @@
         [nzDropdownMenu]="userMenu"
         nzPlacement="bottomRight"
         class="user-avatar-btn"
+        [(nzVisible)]="isUserMenuVisible"
+        nzTrigger="click"
       >
         <div class="user-avatar-circle">{{ user.username.charAt(0).toUpperCase() }}</div>
         <span *ngIf="!isScrolled" class="user-name-text">{{ user.username }}</span>

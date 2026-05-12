@@ -11,7 +11,8 @@
             <div class="main-image-container img-wrapper-relative">
               <div class="zoom-box">
                 <img
-                  [src]="mainImage"
+                  nz-image
+                  [nzSrc]="mainImage"
                   alt="Hình ảnh sản phẩm"
                   [class.img-out-of-stock]="displayStock === 0"
                   class="display-image"
@@ -179,7 +180,14 @@
       <nz-tabset [nzAnimated]="false" class="premium-tabs">
         <nz-tab nzTitle="MÔ TẢ CHI TIẾT">
           <div class="tab-pane-content text-content">
-            <p>{{ product?.description }}</p>
+            <p class="description-text">{{ product?.description }}</p>
+            
+            <!-- RELATED IMAGES -->
+            <div class="description-images-list mt-24" *ngIf="product?.descriptionImages?.length > 0">
+              <div class="desc-img-item" *ngFor="let imgUrl of product.descriptionImages">
+                <img nz-image [nzSrc]="imgUrl" alt="Ảnh minh họa" class="desc-img" (click)="setMainImage(imgUrl)" />
+              </div>
+            </div>
           </div>
         </nz-tab>
         <nz-tab nzTitle="THÔNG SỐ KỸ THUẬT">
