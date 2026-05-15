@@ -17,7 +17,7 @@ import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
 import { WishlistService } from '../../services/wishlist.service';
-import { ConfirmModalService } from '../../shared/services/confirm-modal.service';
+import { ConfirmModalService } from '../../services/confirm-modal.service';
  
 @Component({
   selector: 'app-header',

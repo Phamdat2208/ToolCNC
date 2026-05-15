@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { ConfirmModalComponent, ConfirmModalData } from '../components/confirm-modal/confirm-modal.component';
+import { ConfirmModalComponent, ConfirmModalData } from '../shared/components/confirm-modal/confirm-modal.component';
 
 @Injectable({
   providedIn: 'root'

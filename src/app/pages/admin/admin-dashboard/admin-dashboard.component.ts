@@ -1,13 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzGridModule } from 'ng-zorro-antd/grid';
+import { Component, inject, OnInit } from '@angular/core';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { LoadingComponent } from '../../../shared/components/loading/loading.component';
-import { ProductService } from '../../../services/product.service';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { OrderService } from '../../../services/order.service';
+import { ProductService } from '../../../services/product.service';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-admin-dashboard',

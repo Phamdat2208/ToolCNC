@@ -18,11 +18,11 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { Brand, BrandService } from '../../services/brand.service';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
+import { ToastService } from '../../services/toast.service';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
-import { ToastService } from '../../shared/services/toast.service';
 import { UrlUtils } from '../../shared/utils/url-utils';
 
 @Component({

@@ -1,3 +1,4 @@
+<div [class.has-compare-bar]="(compareService.compareList$ | async)?.length && !isAdminRoute && !isLoginRoute">
 <router-outlet></router-outlet>
 <app-speed-dial *ngIf="!isLoginRoute && !isAdminRoute && !isModalOpen"></app-speed-dial>
 
@@ -10,3 +11,4 @@
   </ng-template>
 </nz-back-top>
 <app-custom-toast></app-custom-toast>
+</div>

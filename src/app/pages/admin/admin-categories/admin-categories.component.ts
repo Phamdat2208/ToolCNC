@@ -11,10 +11,9 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { Category } from '../../../models/category.model';
 import { CategoryService } from '../../../services/category.service';
+import { ConfirmModalService } from '../../../services/confirm-modal.service';
+import { ToastService } from '../../../services/toast.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
-import { ConfirmModalService } from '../../../shared/services/confirm-modal.service';
-import { ToastService } from '../../../shared/services/toast.service';
-import { HelperService } from '../../../services/helper.service';
 
 @Component({
   selector: 'app-admin-categories',
@@ -41,7 +40,6 @@ export class AdminCategoriesComponent implements OnInit {
   private confirmModalService = inject(ConfirmModalService);
   private fb = inject(FormBuilder);
   private toastService = inject(ToastService);
-  private helperService = inject(HelperService);
 
   categories: Category[] = [];
   displayCategories: any[] = [];

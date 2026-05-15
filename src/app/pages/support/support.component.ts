@@ -1,23 +1,24 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NzInputModule } from 'ng-zorro-antd/input';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { HelperService } from '../../services/helper.service';
 import { OrderService } from '../../services/order.service';
+import { ToastService } from '../../services/toast.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 import { CustomTextareaComponent } from '../../shared/components/custom-textarea/custom-textarea.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
-import { ToastService } from '../../shared/services/toast.service';
-import { HelperService } from '../../services/helper.service';
+import { StatusTagComponent } from '../../shared/components/status-tag/status-tag.component';
+import { ORDER_STATUS_MAP } from '../../shared/constants/status-maps';
 
 interface FAQ {
   question: string;
@@ -44,7 +45,8 @@ interface FAQ {
     NzDividerModule,
     CustomInputComponent,
     CustomTextareaComponent,
-    LoadingComponent
+    LoadingComponent,
+    StatusTagComponent
   ],
   templateUrl: './support.component.html',
   styleUrls: ['./support.component.css']
@@ -106,6 +108,7 @@ export class SupportComponent implements OnInit {
     { status: 'SHIPPED',   label: 'Đang vận chuyển',  icon: 'car' },
     { status: 'DELIVERED', label: 'Đã giao hàng',     icon: 'home' },
   ];
+  readonly ORDER_STATUS_MAP = ORDER_STATUS_MAP;
 
   ngOnInit(): void {
     this.contactForm = this.fb.group({
@@ -157,22 +160,6 @@ export class SupportComponent implements OnInit {
     if (stepIdx < currentIdx) return 'finish';
     if (stepIdx === currentIdx) return 'process';
     return 'wait';
-  }
-
-  getStatusLabel(status: string): string {
-    const map: Record<string, string> = {
-      'PENDING': 'Chờ xác nhận', 'CONFIRMED': 'Đã xác nhận',
-      'SHIPPED': 'Đang giao', 'DELIVERED': 'Đã giao', 'CANCELLED': 'Đã hủy'
-    };
-    return map[status?.toUpperCase()] || status;
-  }
-
-  getStatusColor(status: string): string {
-    const map: Record<string, string> = {
-      'PENDING': 'orange', 'CONFIRMED': 'geekblue',
-      'SHIPPED': 'blue', 'DELIVERED': 'green', 'CANCELLED': 'red'
-    };
-    return map[status?.toUpperCase()] || 'default';
   }
 
   isCancelled(): boolean {

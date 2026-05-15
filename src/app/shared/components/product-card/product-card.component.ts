@@ -8,9 +8,10 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { AuthService } from '../../../services/auth.service';
 import { CartService } from '../../../services/cart.service';
+import { CompareService } from '../../../services/compare.service';
+import { ToastService } from '../../../services/toast.service';
 import { WishlistService } from '../../../services/wishlist.service';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
-import { ToastService } from '../../services/toast.service';
 import { UrlUtils } from '../../utils/url-utils';
 import { QuickSelectModalComponent } from '../quick-select-modal/quick-select-modal.component';
 
@@ -36,6 +37,7 @@ export class ProductCardComponent {
   cartService = inject(CartService);
   authService = inject(AuthService);
   wishlistService = inject(WishlistService);
+  compareService = inject(CompareService);
   private router = inject(Router);
   private modal = inject(NzModalService);
   private toastService = inject(ToastService);
@@ -90,5 +92,25 @@ export class ProductCardComponent {
 
   editProduct(product: any) {
     this.router.navigate(['/products', product.id, 'edit']);
+  }
+
+  toggleCompare(product: any) {
+    const compareProduct = {
+      id: product.id,
+      name: product.name,
+      imageUrl: product.imageUrl || product.img,
+      price: product.price || 0,
+      minPrice: product.minPrice,
+      maxPrice: product.maxPrice,
+      brand: product.brand || product.brandName,
+      category: product.category || product.categoryName,
+      specs: product.specifications || product.specs,
+      stock: product.totalStock ?? product.stock ?? 0
+    };
+    if (this.compareService.isInCompare(product.id)) {
+      this.compareService.removeFromCompare(product.id);
+    } else {
+      this.compareService.addToCompare(compareProduct);
+    }
   }
 }

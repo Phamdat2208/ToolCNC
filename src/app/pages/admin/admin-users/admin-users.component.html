@@ -29,9 +29,7 @@
           </td>
           <td>{{ user.fullName || "---" }}</td>
           <td>
-            <nz-tag [nzColor]="user.role === 'ADMIN' ? 'gold' : 'blue'">
-              {{ user.role }}
-            </nz-tag>
+            <app-status-tag [status]="user.role" [statusMap]="USER_STATUS_MAP"></app-status-tag>
           </td>
           <td>
             <nz-tag [nzColor]="'success'">Hoạt động</nz-tag>

@@ -8,9 +8,9 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { AuthService } from '../../services/auth.service';
+import { ConfirmModalService } from '../../services/confirm-modal.service';
+import { ToastService } from '../../services/toast.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
-import { ToastService } from '../../shared/services/toast.service';
-import { ConfirmModalService } from '../../shared/services/confirm-modal.service';
 
 @Component({
   selector: 'app-login',

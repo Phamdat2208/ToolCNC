@@ -123,6 +123,9 @@
             <li nz-menu-item routerLink="/orders" class="dropdown-nav-item">
               <nz-icon nzType="history" /> Đơn hàng của tôi
             </li>
+            <li nz-menu-item routerLink="/profile/quotations" class="dropdown-nav-item">
+              <nz-icon nzType="file-text" /> Yêu cầu báo giá
+            </li>
             <li nz-menu-divider></li>
             <li nz-menu-item (click)="logout()" class="dropdown-nav-item danger-item">
               <nz-icon nzType="logout" /> Đăng xuất
@@ -190,6 +193,9 @@
         </a>
         <a class="mobile-nav-link" routerLink="/orders" (click)="closeDrawer()">
           <nz-icon nzType="history" /> Đơn hàng của tôi
+        </a>
+        <a class="mobile-nav-link" routerLink="/profile/quotations" (click)="closeDrawer()">
+          <nz-icon nzType="file-text" /> Yêu cầu báo giá
         </a>
         <a *ngIf="authService.isAdmin()" class="mobile-nav-link admin-mobile" routerLink="/admin" (click)="closeDrawer()">
           <nz-icon nzType="dashboard" /> Trang quản trị

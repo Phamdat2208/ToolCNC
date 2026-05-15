@@ -62,9 +62,7 @@
                   <span class="qty-badge">{{ order.totalQuantity }}</span>
                 </td>
                 <td>
-                  <span class="status-pill" [ngClass]="'status-' + order.status.toLowerCase()">
-                    {{ getStatusLabel(order.status) }}
-                  </span>
+                  <app-status-tag [status]="order.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
                 </td>
                 <td>
                   <button class="btn-detail" (click)="viewOrderDetails(order)">
@@ -81,9 +79,7 @@
           <div *ngFor="let order of orders" class="order-card-mobile" (click)="viewOrderDetails(order)">
             <div class="ocm-header">
               <span class="tracking-number">#{{ order.trackingNumber }}</span>
-              <span class="status-pill" [ngClass]="'status-' + order.status.toLowerCase()">
-                {{ getStatusLabel(order.status) }}
-              </span>
+              <app-status-tag [status]="order.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
             </div>
             <div class="ocm-body">
               <div class="ocm-row">
@@ -140,9 +136,7 @@
           <h3>Thông tin đơn hàng <span class="text-primary">{{ selectedOrder.trackingNumber }}</span></h3>
           <div class="flex-between align-center">
             <span class="text-secondary"><nz-icon nzType="calendar" /> {{ selectedOrder.dateCreated | date:'dd/MM/yyyy HH:mm' }}</span>
-            <span class="status-pill" [ngClass]="'status-' + selectedOrder.status.toLowerCase()">
-              {{ getStatusLabel(selectedOrder.status) }}
-            </span>
+            <app-status-tag [status]="selectedOrder.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
           </div>
         </div>
 

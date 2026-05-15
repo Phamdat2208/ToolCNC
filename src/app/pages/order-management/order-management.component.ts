@@ -12,10 +12,12 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { AuthService } from '../../services/auth.service';
 import { OrderService } from '../../services/order.service';
+import { ToastService } from '../../services/toast.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 import { LoadingComponent } from "../../shared/components/loading/loading.component";
-import { ToastService } from '../../shared/services/toast.service';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { StatusTagComponent } from '../../shared/components/status-tag/status-tag.component';
+import { ORDER_STATUS_MAP } from '../../shared/constants/status-maps';
 
 @Component({
   selector: 'app-order-management',
@@ -34,7 +36,8 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
     NzIconModule,
     CustomInputComponent,
     LoadingComponent,
-    PaginationComponent
+    PaginationComponent,
+    StatusTagComponent
 ],
   templateUrl: './order-management.component.html',
   styleUrl: './order-management.component.css'
@@ -50,6 +53,7 @@ export class OrderManagementComponent implements OnInit {
   page = 1;
   size = 10;
   isLoadingOrders = true;
+  readonly ORDER_STATUS_MAP = ORDER_STATUS_MAP;
 
   isVisibleOrderModal = false;
   selectedOrder: any = null;
@@ -93,26 +97,6 @@ export class OrderManagementComponent implements OnInit {
     this.size = size;
     this.page = 1;
     this.loadOrders();
-  }
-
-  getStatusColor(status: string): string {
-    switch (status?.toUpperCase()) {
-      case 'PENDING': return '#f59e0b';   // Amber 500
-      case 'SHIPPING': return '#0ea5e9';  // Cyan 500
-      case 'COMPLETED': return '#10b981'; // Emerald 500
-      case 'CANCELLED': return '#ef4444'; // Red 500
-      default: return '#94a3b8';          // Slate 400
-    }
-  }
-
-  getStatusLabel(status: string): string {
-    switch (status?.toUpperCase()) {
-      case 'PENDING': return 'Đang xử lý';
-      case 'SHIPPING': return 'Đang giao hàng';
-      case 'COMPLETED': return 'Đã hoàn thành';
-      case 'CANCELLED': return 'Đã hủy';
-      default: return status;
-    }
   }
 
   viewOrderDetails(order: any) {

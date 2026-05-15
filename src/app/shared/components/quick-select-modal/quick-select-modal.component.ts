@@ -12,7 +12,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { finalize, forkJoin, Observable } from 'rxjs';
 import { CartService } from '../../../services/cart.service';
 import { ProductService } from '../../../services/product.service';
-import { ToastService } from '../../services/toast.service';
+import { ToastService } from '../../../services/toast.service';
 import { UrlUtils } from '../../utils/url-utils';
 import { LoadingComponent } from '../loading/loading.component';
 import { QuantityInputComponent } from '../quantity-input/quantity-input.component';

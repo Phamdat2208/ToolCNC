@@ -15,6 +15,8 @@ import {
   ArrowLeftOutline,
   ArrowRightOutline,
   ArrowUpOutline,
+  BankOutline,
+  BarChartOutline,
   BarcodeOutline,
   BlockOutline,
   BorderInnerOutline,
@@ -199,7 +201,9 @@ const icons = [
   RestOutline,
   LoadingOutline,
   ReloadOutline,
-  RollbackOutline
+  RollbackOutline,
+  BarChartOutline,
+  BankOutline
 ];
 
 registerLocaleData(vi);

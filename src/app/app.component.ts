@@ -1,13 +1,15 @@
-import { Component, inject, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SpeedDialComponent } from './shared/components/speed-dial/speed-dial.component';
 
+import { CommonModule } from '@angular/common';
+import { NavigationEnd, Router } from '@angular/router';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { Router, NavigationEnd } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { CompareService } from './services/compare.service';
+import { SeoService } from './services/seo.service';
 import { CustomToastComponent } from './shared/components/custom-toast/custom-toast.component';
 
 @Component({
@@ -19,6 +21,8 @@ import { CustomToastComponent } from './shared/components/custom-toast/custom-to
 export class AppComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private seoService = inject(SeoService);
+  public compareService = inject(CompareService);
   private subscriptions = new Subscription();
   private modalObserver?: MutationObserver;
 
@@ -40,6 +44,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.seoService.init();
     // Use MutationObserver to detect when Ng-Zorro adds/removes modal masks in the DOM.
     // This avoids NG0100 by updating state outside Angular's change detection cycle,
     // then calling detectChanges() manually.

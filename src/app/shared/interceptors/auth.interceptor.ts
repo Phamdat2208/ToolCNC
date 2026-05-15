@@ -3,8 +3,8 @@ import { inject, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { ConfirmModalService } from '../services/confirm-modal.service';
-import { StorageSecurityService } from '../services/storage-security.service';
+import { ConfirmModalService } from '../../services/confirm-modal.service';
+import { StorageSecurityService } from '../../services/storage-security.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);

@@ -107,9 +107,7 @@
           <div class="track-code-badge">
             <nz-icon nzType="barcode" /> {{ trackedOrder.trackingNumber }}
           </div>
-          <nz-tag [nzColor]="getStatusColor(trackedOrder.status)" class="status-tag">
-            {{ getStatusLabel(trackedOrder.status) }}
-          </nz-tag>
+          <app-status-tag [status]="trackedOrder.status" [statusMap]="ORDER_STATUS_MAP" class="status-tag"></app-status-tag>
         </div>
 
         <div *ngIf="!isCancelled()" class="order-timeline">

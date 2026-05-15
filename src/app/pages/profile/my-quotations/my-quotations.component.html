@@ -1,0 +1,107 @@
+<div class="quotations-container">
+  <div class="page-header">
+    <h1 class="page-title">
+      <nz-icon nzType="file-text" /> Yêu cầu báo giá của tôi
+    </h1>
+  </div>
+
+  <app-loading [isLoading]="isLoading">
+    <div class="quotations-content" *ngIf="quotations.length > 0; else emptyState">
+      <div class="quotations-table-wrapper">
+        <!-- Desktop Table View -->
+        <div class="quotations-desktop-view">
+          <nz-table
+            #quotationTable
+            [nzData]="quotations"
+            [nzShowPagination]="false"
+            [nzScroll]="{ x: '1000px' }"
+            class="premium-table"
+          >
+            <thead>
+              <tr>
+                <th nzLeft nzWidth="300px">Sản phẩm</th>
+                <th nzWidth="100px">Số lượng</th>
+                <th nzWidth="180px">Ngày gửi</th>
+                <th nzWidth="150px">Trạng thái</th>
+                <th nzWidth="250px">Ghi chú</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of quotationTable.data" class="quotation-item-row">
+                <td nzLeft>
+                  <div class="product-cell-modern">
+                    <div class="product-info-box">
+                      <span class="item-name">{{ data.productName }}</span>
+                      <div class="item-id">ID: #{{ data.productId }}</div>
+                      <div class="item-variant" *ngIf="data.variantId">
+                        <nz-tag nzColor="default">Variant: {{ data.variantId }}</nz-tag>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="quantity-cell">
+                  <span class="quantity-value">{{ data.quantity }}</span>
+                </td>
+                <td>
+                  <span class="date-value">{{ data.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+                </td>
+                <td>
+                  <app-status-tag [status]="data.status" [statusMap]="QUOTATION_STATUS_MAP" class="status-tag"></app-status-tag>
+                </td>
+                <td class="note-cell">
+                  <div class="note-wrapper" [nz-tooltip]="data.note">
+                    {{ data.note || '—' }}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+
+        <!-- Mobile Cards View -->
+        <div class="quotations-mobile-view">
+          <div *ngFor="let data of quotations" class="quotation-mobile-card">
+            <div class="qmc-header">
+              <div class="qmc-info">
+                <span class="qmc-name">{{ data.productName }}</span>
+                <div class="qmc-meta">
+                  <span class="qmc-id">ID: #{{ data.productId }}</span>
+                  <app-status-tag [status]="data.status" [statusMap]="QUOTATION_STATUS_MAP" class="status-tag-mini"></app-status-tag>
+                </div>
+              </div>
+            </div>
+            <div class="qmc-body">
+              <div class="qmc-row">
+                <span class="qmc-label">Số lượng:</span>
+                <span class="qmc-value highlight">{{ data.quantity }}</span>
+              </div>
+              <div class="qmc-row">
+                <span class="qmc-label">Ngày gửi:</span>
+                <span class="qmc-value">{{ data.createdAt | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="qmc-divider"></div>
+              <div class="qmc-note-section" *ngIf="data.note">
+                <span class="qmc-label">Ghi chú:</span>
+                <p class="qmc-note-text">{{ data.note }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <ng-template #emptyState>
+      <div class="premium-empty-state">
+        <div class="empty-icon-wrapper">
+          <nz-icon nzType="file-text" class="large-empty-icon" />
+        </div>
+        <h2>Bạn chưa có yêu cầu báo giá nào</h2>
+        <p>Các yêu cầu báo giá sản phẩm B2B của bạn sẽ xuất hiện tại đây sau khi được gửi đi.</p>
+        <button nz-button class="btn-primary-gradient mt-24" nzSize="large" routerLink="/products">
+          KHÁM PHÁ SẢN PHẨM
+        </button>
+      </div>
+    </ng-template>
+  </app-loading>
+</div>

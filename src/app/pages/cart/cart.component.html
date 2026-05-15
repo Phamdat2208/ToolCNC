@@ -36,11 +36,11 @@
             >
               <thead>
                 <tr>
-                  <th nzLeft nzWidth="280px">Sản phẩm</th>
-                  <th nzWidth="140px">Đơn giá</th>
-                  <th nzWidth="150px">Số lượng</th>
-                  <th nzWidth="140px" nzRight>Thành tiền</th>
-                  <th nzWidth="80px" nzRight></th>
+                  <th class="flex-center-all" nzLeft nzWidth="320px">Sản phẩm</th>
+                  <th class="flex-center-all" nzWidth="130px">Đơn giá</th>
+                  <th class="flex-center-all" nzWidth="130px">Số lượng</th>
+                  <th class="flex-center-all" nzWidth="150px" nzRight>Thành tiền</th>
+                  <th class="flex-center-all" nzWidth="100px" nzRight>Thao tác</th>
                 </tr>
               </thead>
               <tbody>
@@ -61,11 +61,11 @@
                       </div>
                     </div>
                   </td>
-                  <td class="price-cell">
+                  <td class="price-cell flex-center-all">
                     <span class="unit-price-label">Đơn giá:</span>
                     {{ data.price | currency: "VND" : "symbol" : "1.0-0" }}
                   </td>
-                  <td>
+                  <td class="flex-center-all">
                     <div class="quantity-control-wrapper">
                       <app-quantity-input
                         [(quantity)]="data.quantity"
@@ -74,10 +74,10 @@
                       ></app-quantity-input>
                     </div>
                   </td>
-                  <td nzRight class="total-cell">
+                  <td nzRight class="total-cell flex-center-all">
                     {{ data.price * data.quantity | currency: "VND" : "symbol" : "1.0-0" }}
                   </td>
-                  <td nzRight>
+                  <td nzRight class="flex-center-all">
                     <button
                       nz-button
                       nzType="text"

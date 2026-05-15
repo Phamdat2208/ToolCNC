@@ -39,10 +39,7 @@
                 order.status === 'COMPLETED' || order.status === 'CANCELLED'
               "
             >
-              <nz-tag 
-                [nzColor]="getStatusColor(order.status)"
-                style="border-radius: 100px; padding: 2px 12px; font-weight: 700; border: none;"
-              >{{ getStatusLabel(order.status) }}</nz-tag>
+              <app-status-tag [status]="order.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
             </ng-container>
             <nz-select
               *ngIf="
@@ -66,8 +63,8 @@
             </nz-select>
           </td>
           <td>
-            <button nz-button nzType="link" (click)="viewOrderDetails(order)">
-              Xem chi tiết
+            <button class="btn-detail" (click)="viewOrderDetails(order)">
+              <nz-icon nzType="eye" /> Xem chi tiết
             </button>
           </td>
         </tr>
@@ -108,10 +105,7 @@
               ><nz-icon nzType="calendar" />
               {{ selectedOrder.dateCreated | date: "dd/MM/yyyy HH:mm" }}</span
             >
-            <nz-tag
-              [nzColor]="getStatusColor(selectedOrder.status)"
-              style="border-radius: 100px; padding: 4px 16px; font-weight: 800; border: none; font-size: 13px;"
-            >{{ getStatusLabel(selectedOrder.status) }}</nz-tag>
+            <app-status-tag [status]="selectedOrder.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
           </div>
         </div>
 

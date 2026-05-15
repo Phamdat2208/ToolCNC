@@ -10,10 +10,12 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { OrderService } from '../../../services/order.service';
+import { ToastService } from '../../../services/toast.service';
 import { CustomInputComponent } from '../../../shared/components/custom-input/custom-input.component';
 import { LoadingComponent } from "../../../shared/components/loading/loading.component";
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-import { ToastService } from '../../../shared/services/toast.service';
+import { StatusTagComponent } from '../../../shared/components/status-tag/status-tag.component';
+import { ORDER_STATUS_MAP } from '../../../shared/constants/status-maps';
 
 @Component({
   selector: 'app-admin-orders',
@@ -31,14 +33,16 @@ import { ToastService } from '../../../shared/services/toast.service';
     NzIconModule,
     CustomInputComponent,
     PaginationComponent,
-    LoadingComponent
-],
+    LoadingComponent,
+    StatusTagComponent
+  ],
   templateUrl: './admin-orders.component.html',
   styleUrl: './admin-orders.component.css'
 })
 export class AdminOrdersComponent implements OnInit {
   private orderService = inject(OrderService);
   private toastService = inject(ToastService);
+  readonly ORDER_STATUS_MAP = ORDER_STATUS_MAP;
 
   orders: any[] = [];
   totalElements = 0;
@@ -74,33 +78,13 @@ export class AdminOrdersComponent implements OnInit {
     });
   }
 
-  getStatusColor(status: string): string {
-    switch (status?.toUpperCase()) {
-      case 'PENDING': return '#f59e0b';   // Amber 500
-      case 'SHIPPING': return '#0ea5e9';  // Cyan 500
-      case 'COMPLETED': return '#10b981'; // Emerald 500
-      case 'CANCELLED': return '#ef4444'; // Red 500
-      default: return '#94a3b8';          // Slate 400
-    }
-  }
-
-  getStatusLabel(status: string): string {
-    switch (status) {
-      case 'PENDING': return 'Đang xử lý';
-      case 'SHIPPING': return 'Đang giao hàng';
-      case 'COMPLETED': return 'Đã hoàn thành';
-      case 'CANCELLED': return 'Đã hủy';
-      default: return status;
-    }
-  }
-
   onStatusChange(newStatus: string, order: any) {
     if (newStatus === 'CANCELLED') {
-       this.orderBeingCancelled = order;
-       this.adminCancelReasonText = '';
-       this.isVisibleAdminCancelModal = true;
+      this.orderBeingCancelled = order;
+      this.adminCancelReasonText = '';
+      this.isVisibleAdminCancelModal = true;
     } else {
-       this.performStatusUpdate(order.id, newStatus);
+      this.performStatusUpdate(order.id, newStatus);
     }
   }
 
@@ -126,11 +110,11 @@ export class AdminOrdersComponent implements OnInit {
       next: () => {
         this.toastService.showSuccess(`Đã cập nhật trạng thái đơn hàng #${orderId}`);
         this.previousStatusMap[orderId] = status;
-        this.loadOrders(); 
+        this.loadOrders();
       },
       error: () => {
         this.toastService.showError('Lỗi khi cập nhật trạng thái');
-        this.loadOrders(); 
+        this.loadOrders();
       }
     });
   }
@@ -156,4 +140,5 @@ export class AdminOrdersComponent implements OnInit {
     this.page = 1;
     this.loadOrders();
   }
+
 }

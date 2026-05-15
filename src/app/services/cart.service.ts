@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { ConfirmModalService } from '../shared/services/confirm-modal.service';
+import { ConfirmModalService } from './confirm-modal.service';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
 import { catchError, distinctUntilChanged } from 'rxjs/operators';

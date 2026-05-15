@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
-import { ConfirmModalService } from '../shared/services/confirm-modal.service';
-import { StorageSecurityService } from '../shared/services/storage-security.service';
+import { ConfirmModalService } from './confirm-modal.service';
+import { StorageSecurityService } from './storage-security.service';
 
 export interface User {
   username: string;

@@ -175,6 +175,36 @@
   border-color: var(--danger-color) !important;
 }
 
+.card-overlay-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btn-overlay-compare {
+  background: white !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  transition: all 0.3s ease;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-overlay-compare.in-compare {
+  color: #6366f1 !important;
+  background: rgba(99, 102, 241, 0.1) !important;
+}
+
+@media (hover: hover) {
+  .btn-overlay-compare:hover {
+    color: #6366f1 !important;
+    transform: scale(1.1);
+  }
+}
+
 /* Content Box (Khu vực thông tin Giá và Chữ) */
 .product-info-box {
   padding: 16px;

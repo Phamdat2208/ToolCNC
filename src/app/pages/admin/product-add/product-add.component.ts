@@ -19,11 +19,11 @@ import { CategoryService } from '../../../services/category.service';
 import { CloudinaryService } from '../../../services/cloudinary.service';
 import { ProductService } from '../../../services/product.service';
 
+import { HelperService } from '../../../services/helper.service';
+import { ToastService } from '../../../services/toast.service';
 import { CustomInputComponent } from '../../../shared/components/custom-input/custom-input.component';
 import { CustomSelectComponent, SelectOption } from '../../../shared/components/custom-select/custom-select.component';
-import { ToastService } from '../../../shared/services/toast.service';
 import { UrlUtils } from '../../../shared/utils/url-utils';
-import { HelperService } from '../../../services/helper.service';
 
 @Component({
   selector: 'app-product-add',

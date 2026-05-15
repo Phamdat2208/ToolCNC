@@ -10,11 +10,13 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { ConfirmModalService } from '../../../services/confirm-modal.service';
 import { ProductService } from '../../../services/product.service';
+import { ToastService } from '../../../services/toast.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-import { ConfirmModalService } from '../../../shared/services/confirm-modal.service';
-import { ToastService } from '../../../shared/services/toast.service';
+import { StatusTagComponent } from '../../../shared/components/status-tag/status-tag.component';
+import { PRODUCT_STATUS_MAP } from '../../../shared/constants/status-maps';
 import { UrlUtils } from '../../../shared/utils/url-utils';
 
 @Component({
@@ -34,6 +36,7 @@ import { UrlUtils } from '../../../shared/utils/url-utils';
     FormsModule,
     PaginationComponent,
     LoadingComponent,
+    StatusTagComponent
   ],
   templateUrl: './admin-products.component.html',
   styleUrl: './admin-products.component.css'
@@ -46,6 +49,7 @@ export class AdminProductsComponent implements OnInit {
   products: any[] = [];
   loading = true;
   total = 0;
+  readonly PRODUCT_STATUS_MAP = PRODUCT_STATUS_MAP;
   page = 1;
   size = 10;
   searchKeyword = '';

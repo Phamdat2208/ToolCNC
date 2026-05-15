@@ -620,3 +620,50 @@
 .mt-24 {
   margin-top: 24px;
 }
+
+/* Secondary CTA Group */
+.secondary-cta-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cta-secondary-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  padding: 0 20px !important;
+  transition: all 0.25s ease !important;
+  flex: 1;
+  min-width: 150px;
+}
+
+.quotation-btn {
+  border-color: #f59e0b !important;
+  color: #ea580c !important;
+}
+
+.quotation-btn:hover {
+  background: #fff7ed !important;
+  border-color: #ea580c !important;
+}
+
+.compare-btn {
+  border-color: #6366f1 !important;
+  color: #6366f1 !important;
+}
+
+.compare-btn:hover {
+  background: rgba(99, 102, 241, 0.06) !important;
+}
+
+.compare-btn.compare-active {
+  background: rgba(99, 102, 241, 0.12) !important;
+  border-color: #6366f1 !important;
+  color: #4f46e5 !important;
+  font-weight: 700 !important;
+}

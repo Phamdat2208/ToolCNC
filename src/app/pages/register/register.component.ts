@@ -6,8 +6,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
-import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-register',

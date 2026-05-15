@@ -1,8 +1,8 @@
-import { Component, Input, Optional, Self, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ControlValueAccessor, NgControl, ReactiveFormsModule } from '@angular/forms';
-import { NzInputModule } from 'ng-zorro-antd/input';
+import { Component, HostBinding, Input, Optional, Self } from '@angular/core';
+import { ControlValueAccessor, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 @Component({
   selector: 'app-custom-textarea',

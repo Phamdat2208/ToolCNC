@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { catchError, distinctUntilChanged } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { ConfirmModalService } from '../shared/services/confirm-modal.service';
+import { ConfirmModalService } from './confirm-modal.service';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 

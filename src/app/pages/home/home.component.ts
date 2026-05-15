@@ -12,10 +12,10 @@ import { Category } from '../../models/category.model';
 import { Brand, BrandService } from '../../services/brand.service';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
+import { ToastService } from '../../services/toast.service';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
-import { ToastService } from '../../shared/services/toast.service';
 import { UrlUtils } from '../../shared/utils/url-utils';
 
 @Component({

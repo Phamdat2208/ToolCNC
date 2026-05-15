@@ -1,8 +1,8 @@
-import { Component, Input, Optional, Self, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ControlValueAccessor, NgControl, ReactiveFormsModule } from '@angular/forms';
-import { NzSelectModule } from 'ng-zorro-antd/select';
+import { Component, HostBinding, Input, Optional, Self } from '@angular/core';
+import { ControlValueAccessor, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 export interface SelectOption {
   label: string;

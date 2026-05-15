@@ -1,7 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerComponent } from "ng-zorro-antd/divider";
@@ -18,7 +17,7 @@ import { BrandService } from '../../../services/brand.service';
 import { CategoryService } from '../../../services/category.service';
 import { CloudinaryService } from '../../../services/cloudinary.service';
 import { ProductService } from '../../../services/product.service';
-import { ToastService } from '../../../shared/services/toast.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-admin-bulk-import',

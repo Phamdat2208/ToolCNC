@@ -135,9 +135,7 @@
             </td>
           </ng-template>
           <td>
-            <nz-tag [nzColor]="data.isActive ? 'blue' : 'default'">
-              {{ data.isActive ? 'Đang bán' : 'Đã xóa' }}
-            </nz-tag>
+            <app-status-tag [status]="data.isActive ? 'ACTIVE' : 'INACTIVE'" [statusMap]="PRODUCT_STATUS_MAP"></app-status-tag>
           </td>
           <td>
             <button

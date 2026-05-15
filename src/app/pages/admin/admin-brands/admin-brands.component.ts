@@ -13,9 +13,9 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { Brand, BrandService } from '../../../services/brand.service';
 import { CloudinaryService } from '../../../services/cloudinary.service';
+import { ConfirmModalService } from '../../../services/confirm-modal.service';
+import { ToastService } from '../../../services/toast.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
-import { ConfirmModalService } from '../../../shared/services/confirm-modal.service';
-import { ToastService } from '../../../shared/services/toast.service';
 import { PaginationComponent } from "../../../shared/components/pagination/pagination.component";
 
 @Component({

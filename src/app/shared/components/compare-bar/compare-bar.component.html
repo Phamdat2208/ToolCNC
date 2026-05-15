@@ -1,0 +1,46 @@
+<div class="compare-bar" *ngIf="(compareService.compareList$ | async) as list" [class.visible]="list.length > 0">
+  <div class="compare-bar-inner" *ngIf="list.length > 0">
+    <div class="compare-label">
+      <nz-icon nzType="swap" />
+      <span>So sánh sản phẩm</span>
+    </div>
+
+    <div class="compare-slots">
+      <div class="compare-slot" *ngFor="let i of placeholders">
+        <ng-container *ngIf="getProductAtSlot(i) as product; else emptySlot">
+          <div class="slot-filled">
+            <img [src]="product.imageUrl || 'assets/images/no-image.png'" [alt]="product.name" class="slot-img" />
+            <span class="slot-name" [title]="product.name">{{ product.name }}</span>
+            <button class="slot-remove" (click)="remove(product.id)" nz-tooltip nzTooltipTitle="Xóa khỏi danh sách">
+              <nz-icon nzType="close" />
+            </button>
+          </div>
+        </ng-container>
+        <ng-template #emptySlot>
+          <div class="slot-empty">
+            <nz-icon nzType="plus" />
+            <span>Thêm SP</span>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="compare-actions">
+      <button
+        nz-button
+        nzType="primary"
+        class="compare-btn"
+        [disabled]="!canCompare"
+        (click)="goToCompare()"
+        nz-tooltip
+        [nzTooltipTitle]="canCompare ? '' : 'Chọn ít nhất 2 sản phẩm để so sánh'"
+      >
+        <nz-icon nzType="bar-chart" />
+        So sánh ngay
+      </button>
+      <button nz-button nzType="text" class="clear-btn" (click)="clear()">
+        <nz-icon nzType="delete" /> Xóa tất cả
+      </button>
+    </div>
+  </div>
+</div>

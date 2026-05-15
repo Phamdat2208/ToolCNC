@@ -39,6 +39,18 @@
           "
         />
       </button>
+      <!-- Compare Button -->
+      <button
+        nz-button
+        nzShape="circle"
+        class="btn-overlay-compare"
+        [class.in-compare]="compareService.isInCompare(product.id)"
+        (click)="$event.stopPropagation(); toggleCompare(product)"
+        nz-tooltip
+        [nzTooltipTitle]="compareService.isInCompare(product.id) ? 'Xóa khỏi so sánh' : 'So sánh'"
+      >
+        <nz-icon nzType="swap" />
+      </button>
     </div>
   </div>
 

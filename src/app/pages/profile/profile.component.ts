@@ -8,9 +8,9 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
-import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-profile',

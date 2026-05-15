@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzModalRef, NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
-import { NzIconModule } from 'ng-zorro-antd/icon';
+import { Component, inject } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 
 export interface ConfirmModalData {
   title: string;

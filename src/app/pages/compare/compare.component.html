@@ -1,0 +1,196 @@
+<div class="compare-page">
+  <div class="compare-container">
+    <div class="page-header">
+      <a routerLink="/products" class="back-link">
+        <nz-icon nzType="arrow-left" /> Tiếp tục mua hàng
+      </a>
+      <h1 class="page-title">So sánh sản phẩm</h1>
+      <span class="product-count">{{ products.length }} sản phẩm</span>
+    </div>
+
+    <!-- <div *ngIf="products.length === 0" class="empty-state">
+      <nz-empty nzNotFoundContent="Không có sản phẩm để so sánh"></nz-empty>
+      <button nz-button nzType="primary" routerLink="/products">Xem sản phẩm</button>
+    </div> -->
+
+    <div
+      *ngIf="products.length > 0; else emptyCompare"
+      class="compare-table-wrapper"
+    >
+      <table class="compare-table">
+        <!-- Product Header Row -->
+        <thead>
+          <tr>
+            <th class="attr-col">Thông số</th>
+            <th class="product-col" *ngFor="let product of products">
+              <div class="product-header">
+                <button
+                  class="remove-product-btn"
+                  (click)="removeProduct(product.id)"
+                  nz-tooltip
+                  nzTooltipTitle="Gỡ khỏi so sánh"
+                >
+                  <nz-icon nzType="close" />
+                </button>
+                <div class="product-thumb-container">
+                  <a [routerLink]="['/products', product.id]">
+                    <img
+                      [src]="product.imageUrl || 'assets/images/no-image.png'"
+                      [alt]="product.name"
+                      class="product-thumb"
+                    />
+                  </a>
+                </div>
+                <a
+                  [routerLink]="['/products', product.id]"
+                  class="product-name"
+                  [title]="product.name"
+                  >{{ product.name }}</a
+                >
+              </div>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- Price Row -->
+          <tr class="highlight-row">
+            <td class="attr-col">Giá thành</td>
+            <td
+              class="product-col"
+              *ngFor="let product of products"
+              [class.best-value]="isBestPrice(product)"
+            >
+              <div class="price-cell">
+                <span class="price"
+                  >{{
+                    product.price || product.minPrice || 0 | number: "1.0-0"
+                  }}đ</span
+                >
+                <nz-tag
+                  *ngIf="isBestPrice(product)"
+                  nzColor="success"
+                  class="best-tag"
+                  >Giá tốt nhất</nz-tag
+                >
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="attr-col">Thương hiệu</td>
+            <td class="product-col" *ngFor="let product of products">
+              <span class="brand-name">{{
+                product.brand?.name || product.brand || "—"
+              }}</span>
+            </td>
+          </tr>
+
+          <!-- Stock Row -->
+          <tr>
+            <td class="attr-col">Tình trạng</td>
+            <td
+              class="product-col"
+              *ngFor="let product of products"
+              [class.best-value]="isBestStock(product)"
+            >
+              <div class="stock-cell">
+                <span
+                  [class.in-stock]="(product.stock ?? 0) > 0"
+                  [class.out-of-stock]="(product.stock ?? 0) === 0"
+                >
+                  <nz-icon
+                    *ngIf="(product.stock ?? 0) > 0"
+                    nzType="check-circle"
+                    nzTheme="fill"
+                  />
+                  <nz-icon
+                    *ngIf="(product.stock ?? 0) === 0"
+                    nzType="close-circle"
+                    nzTheme="fill"
+                  />
+                  {{
+                    (product.stock ?? 0) > 0
+                      ? "Sẵn hàng (" + product.stock + ")"
+                      : "Hết hàng"
+                  }}
+                </span>
+                <div *ngIf="isBestStock(product)" class="mt-4">
+                  <nz-tag nzColor="processing" class="best-tag"
+                    >Tồn kho nhiều nhất</nz-tag
+                  >
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Specs Rows -->
+          <ng-container *ngFor="let key of getAllSpecKeys()">
+            <tr>
+              <td class="attr-col spec-key">{{ key }}</td>
+              <td class="product-col" *ngFor="let product of products">
+                {{ getSpecValue(product, key) }}
+              </td>
+            </tr>
+          </ng-container>
+
+          <!-- No specs fallback -->
+          <tr *ngIf="getAllSpecKeys().length === 0">
+            <td class="attr-col">Thông số khác</td>
+            <td class="product-col no-specs" *ngFor="let product of products">
+              Chưa cập nhật
+            </td>
+          </tr>
+
+          <!-- Actions Row -->
+          <tr class="actions-row">
+            <td class="attr-col">Mua hàng</td>
+            <td class="product-col" *ngFor="let product of products">
+              <div class="product-actions">
+                <button
+                  nz-button
+                  nzType="primary"
+                  class="cart-btn"
+                  (click)="addToCart(product)"
+                  [disabled]="(product.stock ?? 0) === 0"
+                >
+                  <nz-icon nzType="shopping-cart" /> Thêm vào giỏ
+                </button>
+                <a
+                  nz-button
+                  nzType="default"
+                  [routerLink]="['/products', product.id]"
+                  class="detail-btn"
+                >
+                  Chi tiết sản phẩm
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #emptyCompare>
+      <div class="premium-empty-compare">
+        <!-- <div class="empty-animation-container">
+          <div class="empty-cart-icon-wrapper">
+            <nz-icon nzType="shopping-cart" class="large-empty-icon" />
+          </div>
+        </div> -->
+        <h2>Không có sản phẩm nào để so sánh</h2>
+        <p>
+          Hãy khám phá và chọn cho mình những món đồ ưng ý!
+        </p>
+        <button
+          nz-button
+          class="btn-primary-gradient mt-24"
+          nzSize="large"
+          routerLink="/products"
+        >
+          XEM THÊM SẢN PHẨM
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>

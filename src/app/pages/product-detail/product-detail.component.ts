@@ -6,19 +6,23 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { NzImageModule } from 'ng-zorro-antd/image';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
+import { CompareService } from '../../services/compare.service';
 import { ProductService } from '../../services/product.service';
+import { SeoService } from '../../services/seo.service';
+import { ToastService } from '../../services/toast.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { QuantityInputComponent } from '../../shared/components/quantity-input/quantity-input.component';
-import { ToastService } from '../../shared/services/toast.service';
+import { QuotationModalComponent } from '../../shared/components/quotation-modal/quotation-modal.component';
 import { UrlUtils } from '../../shared/utils/url-utils';
 
 @Component({
@@ -33,6 +37,7 @@ import { UrlUtils } from '../../shared/utils/url-utils';
     NzInputNumberModule, 
     NzDividerModule, 
     NzSpinModule, 
+    NzModalModule,
     PageBreadcrumbComponent, 
     QuantityInputComponent, 
     LoadingComponent,
@@ -47,9 +52,12 @@ export class ProductDetailComponent implements OnInit {
   wishlistService = inject(WishlistService);
   productService = inject(ProductService);
   authService = inject(AuthService);
+  compareService = inject(CompareService);
   route = inject(ActivatedRoute);
   private router = inject(Router);
   private toastService = inject(ToastService);
+  private seoService = inject(SeoService);
+  private modalService = inject(NzModalService);
 
   product: any = null;
   breadcrumbItems: any[] = [];
@@ -159,6 +167,7 @@ export class ProductDetailComponent implements OnInit {
         this.breadcrumbItems.push({ label: this.product.name });
 
         this.isLoading = false;
+        this.seoService.setProductMeta(this.product);
 
         // Removed auto-select variant to show the price range initially (min - max)
         /*
@@ -277,6 +286,42 @@ export class ProductDetailComponent implements OnInit {
   editProduct() {
     if (this.product) {
       this.router.navigate(['/products', this.product.id, 'edit']);
+    }
+  }
+
+  openQuotationModal(): void {
+    if (!this.product) return;
+    this.modalService.create({
+      nzTitle: 'Yêu cầu báo giá',
+      nzContent: QuotationModalComponent,
+      nzData: {
+        productId: this.product.id,
+        productName: this.product.name,
+        variantId: this.selectedVariant?.id
+      },
+      nzFooter: null,
+      nzWidth: 680
+    });
+  }
+
+  toggleCompare(): void {
+    if (!this.product) return;
+    const compareProduct = {
+      id: this.product.id,
+      name: this.product.name,
+      imageUrl: this.mainImage || this.product.imageUrl,
+      price: this.displayPrice,
+      minPrice: this.product.minPrice,
+      maxPrice: this.product.maxPrice,
+      brand: this.product.brand || this.product.brandName,
+      category: this.product.category || this.product.categoryName,
+      specs: this.product.specifications || this.product.specs,
+      stock: this.displayStock
+    };
+    if (this.compareService.isInCompare(this.product.id)) {
+      this.compareService.removeFromCompare(this.product.id);
+    } else {
+      this.compareService.addToCompare(compareProduct);
     }
   }
 }

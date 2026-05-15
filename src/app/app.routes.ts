@@ -28,7 +28,17 @@ export const routes: Routes = [
     path: '',
     component: MainLayoutComponent,
     children: [
-      { path: '', component: HomeComponent },
+      { 
+        path: '', 
+        component: HomeComponent,
+        data: {
+          seo: {
+            title: 'Trang chủ',
+            description: 'Chào mừng bạn đến với ToolCNC - Hệ thống cung cấp Dao cụ Cắt gọt và Phụ kiện CNC Kỹ thuật cao chính hãng.',
+            keywords: 'toolcnc, dao phay, chip tiện, phụ kiện cnc, dao cụ cắt gọt'
+          }
+        }
+      },
       { path: 'products', component: ProductCatalogComponent },
       { path: 'products/new', component: ProductAddComponent },
       { path: 'products/:id/edit', component: ProductAddComponent },
@@ -36,9 +46,11 @@ export const routes: Routes = [
       { path: 'cart', component: CartComponent },
       { path: 'checkout', component: CheckoutComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'profile/quotations', loadComponent: () => import('./pages/profile/my-quotations/my-quotations.component').then(m => m.MyQuotationsComponent) },
       { path: 'orders', component: OrderManagementComponent },
       { path: 'wishlist', component: WishlistComponent },
-      { path: 'support', component: SupportComponent }
+      { path: 'support', component: SupportComponent },
+      { path: 'compare', loadComponent: () => import('./pages/compare/compare.component').then(m => m.CompareComponent) }
     ]
   },
   {
@@ -56,6 +68,7 @@ export const routes: Routes = [
       { path: 'brands', loadComponent: () => import('./pages/admin/admin-brands/admin-brands.component').then(m => m.AdminBrandsComponent) },
       { path: 'orders', component: AdminOrdersComponent },
       { path: 'users', component: AdminUsersComponent },
+      { path: 'quotations', loadComponent: () => import('./pages/admin/admin-quotations/admin-quotations.component').then(m => m.AdminQuotationsComponent) },
     ]
   }
 ];

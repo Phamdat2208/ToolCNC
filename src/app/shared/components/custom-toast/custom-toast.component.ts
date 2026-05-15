@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { ToastService } from '../../services/toast.service';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { filter } from 'rxjs';
-import { NavigationEnd, Router } from '@angular/router';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-custom-toast',

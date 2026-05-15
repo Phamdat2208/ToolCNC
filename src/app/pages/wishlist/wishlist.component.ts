@@ -6,8 +6,8 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { CartService } from '../../services/cart.service';
+import { ToastService } from '../../services/toast.service';
 import { WishlistService } from '../../services/wishlist.service';
-import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   standalone: true,

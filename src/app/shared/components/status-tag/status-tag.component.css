@@ -1,0 +1,64 @@
+.st-tag {
+  border-radius: 20px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border: none;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.st-tag:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* Base colors using existing palette */
+::ng-deep .ant-tag-warning.st-tag {
+  background-color: #fff7ed;
+  color: #f59e0b;
+}
+
+::ng-deep .ant-tag-processing.st-tag {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+::ng-deep .ant-tag-success.st-tag {
+  background-color: #f0fdf4;
+  color: #22c55e;
+}
+
+::ng-deep .ant-tag-error.st-tag {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+::ng-deep .ant-tag-cyan.st-tag {
+  background-color: #ecfeff;
+  color: #0891b2;
+}
+
+::ng-deep .ant-tag-geekblue.st-tag {
+  background-color: #f0f5ff;
+  color: #2f54eb;
+}
+
+::ng-deep .ant-tag-gold.st-tag {
+  background-color: #fffbe6;
+  color: #faad14;
+}
+
+::ng-deep .ant-tag-blue.st-tag {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+::ng-deep .ant-tag-default.st-tag {
+  background-color: #f8fafc;
+  color: #64748b;
+}
