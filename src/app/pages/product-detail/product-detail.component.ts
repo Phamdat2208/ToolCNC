@@ -22,7 +22,7 @@ import { WishlistService } from '../../services/wishlist.service';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
 import { QuantityInputComponent } from '../../shared/components/quantity-input/quantity-input.component';
-import { QuotationModalComponent } from '../../shared/components/quotation-modal/quotation-modal.component';
+import { QuotationModalComponent } from '../../shared/components/modal/quotation-modal/quotation-modal.component';
 import { UrlUtils } from '../../shared/utils/url-utils';
 
 @Component({

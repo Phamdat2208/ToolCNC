@@ -2,41 +2,73 @@
   <h2 class="page-title">Quản lý người dùng</h2>
 
   <app-loading [isLoading]="loading">
-    <nz-table
-      #usersTable
-      [nzData]="users.slice((page - 1) * size, page * size)"
-      [nzScroll]="{ x: '800px' }"
-      [nzFrontPagination]="false"
-      [nzShowPagination]="false"
-    >
-      <thead>
-        <tr>
-          <th>Người dùng</th>
-          <th>Email / Username</th>
-          <th>Họ tên</th>
-          <th>Quyền hạn</th>
-          <th>Trạng thái</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of usersTable.data">
-          <td>
-            <nz-avatar nzIcon="user" [nzSrc]="user.avatarUrl"></nz-avatar>
-          </td>
-          <td>
-            <div class="font-bold">{{ user.username }}</div>
-            <small class="text-secondary">{{ user.email }}</small>
-          </td>
-          <td>{{ user.fullName || "---" }}</td>
-          <td>
+    <!-- Desktop View Table -->
+    <div class="admin-users-desktop-view">
+      <nz-table
+        #usersTable
+        [nzData]="users.slice((page - 1) * size, page * size)"
+        [nzScroll]="{ x: '800px' }"
+        [nzFrontPagination]="false"
+        [nzShowPagination]="false"
+      >
+        <thead>
+          <tr>
+            <th>Người dùng</th>
+            <th>Email / Username</th>
+            <th>Họ tên</th>
+            <th>Quyền hạn</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of usersTable.data">
+            <td>
+              <nz-avatar nzIcon="user" [nzSrc]="user.avatarUrl"></nz-avatar>
+            </td>
+            <td>
+              <div class="font-bold">{{ user.username }}</div>
+              <small class="text-secondary">{{ user.email }}</small>
+            </td>
+            <td>{{ user.fullName || "---" }}</td>
+            <td>
+              <app-status-tag [status]="user.role" [statusMap]="USER_STATUS_MAP"></app-status-tag>
+            </td>
+            <td>
+              <nz-tag [nzColor]="'success'">Hoạt động</nz-tag>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+
+    <!-- Mobile View Cards -->
+    <div class="admin-users-mobile-view">
+      <div *ngFor="let user of users.slice((page - 1) * size, page * size)" class="user-mobile-card">
+        <div class="card-content">
+          <div class="user-brief">
+            <nz-avatar nzIcon="user" [nzSrc]="user.avatarUrl" [nzSize]="48"></nz-avatar>
+            <div class="user-meta">
+              <h4 class="username">{{ user.username }}</h4>
+              <p class="email-sub">{{ user.email }}</p>
+            </div>
+          </div>
+          <div class="user-status-mob">
             <app-status-tag [status]="user.role" [statusMap]="USER_STATUS_MAP"></app-status-tag>
-          </td>
-          <td>
+          </div>
+        </div>
+        
+        <div class="card-details">
+          <div class="info-row">
+            <span class="label">Họ tên:</span>
+            <span class="value">{{ user.fullName || "---" }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Trạng thái:</span>
             <nz-tag [nzColor]="'success'">Hoạt động</nz-tag>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
+          </div>
+        </div>
+      </div>
+    </div>
   </app-loading>
 
   <div class="pagination-container mt-16" *ngIf="users.length > 0">

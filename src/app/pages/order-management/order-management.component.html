@@ -39,32 +39,32 @@
           <table class="orders-table">
             <thead>
               <tr>
-                <th>Mã đơn hàng</th>
-                <th>Ngày đặt</th>
-                <th>Tổng tiền</th>
-                <th>Số lượng</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
+                <th class="flex-center-all">Mã đơn hàng</th>
+                <th class="flex-center-all">Ngày đặt</th>
+                <th class="flex-center-all">Tổng tiền</th>
+                <th class="flex-center-all">Số lượng</th>
+                <th class="flex-center-all">Trạng thái</th>
+                <th class="flex-center-all">Thao tác</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let order of orders" class="order-row">
-                <td>
+                <td class="flex-center-all">
                   <span class="tracking-number">{{ order.trackingNumber }}</span>
                 </td>
-                <td class="date-cell">
+                <td class="date-cell flex-center-all">
                   <nz-icon nzType="calendar" />
                   {{ order.dateCreated | date:'dd/MM/yyyy' }}
                   <span class="time-sub">{{ order.dateCreated | date:'HH:mm' }}</span>
                 </td>
-                <td class="price-cell">{{ order.totalPrice | currency:'VND':'symbol' }}</td>
-                <td class="qty-cell">
+                <td class="price-cell flex-center-all">{{ order.totalPrice | currency:'VND':'symbol' }}</td>
+                <td class="qty-cell flex-center-all">
                   <span class="qty-badge">{{ order.totalQuantity }}</span>
                 </td>
-                <td>
+                <td class="flex-center-all">
                   <app-status-tag [status]="order.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
                 </td>
-                <td>
+                <td class="flex-center-all">
                   <button class="btn-detail" (click)="viewOrderDetails(order)">
                     <nz-icon nzType="eye" /> Xem chi tiết
                   </button>

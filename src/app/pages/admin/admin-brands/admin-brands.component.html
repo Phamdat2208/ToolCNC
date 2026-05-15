@@ -7,67 +7,98 @@
   </div>
 
   <app-loading [isLoading]="loading">
-    <div class="table-card">
-      <nz-table 
-        #basicTable 
-        [nzData]="brands" 
-        [nzTotal]="total"
-        [nzPageIndex]="page"
-        [nzPageSize]="size"
-        [nzFrontPagination]="false"
-        [nzShowPagination]="false"
-        [nzScroll]="{ x: '600px' }">
-        <thead>
-          <tr>
-            <th nzWidth="50px">ID</th>
-            <th nzWidth="120px">Logo</th>
-            <th nzWidth="120px">Tên Thương hiệu</th>
-            <th nzWidth="100px">Mô tả</th>
-            <th nzWidth="100px">Thao tác</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of basicTable.data">
-            <td>{{ data.id }}</td>
-            <td>
-              <div class="logo-cell">
-                <img
-                  *ngIf="data.logoUrl"
-                  [src]="data.logoUrl"
-                  [alt]="data.name"
-                />
-              </div>
-            </td>
-            <td>
-              <strong>{{ data.name }}</strong>
-            </td>
-            <td class="text-secondary">{{ data.description }}</td>
-            <td>
-              <div class="action-buttons">
-                <button
-                  nz-button
-                  nzType="text"
-                  (click)="showEditModal(data)"
-                  nz-tooltip
-                  nzTooltipTitle="Chỉnh sửa"
-                >
-                  <nz-icon nzType="edit" class="edit-icon" />
-                </button>
-                <button
-                  nz-button
-                  nzType="text"
-                  nzDanger
-                  (click)="deleteBrand(data.id!)"
-                  nz-tooltip
-                  nzTooltipTitle="Xóa"
-                >
-                  <nz-icon nzType="delete" />
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
+    <!-- Desktop View Table -->
+    <div class="admin-brands-desktop-view">
+      <div class="table-card">
+        <nz-table 
+          #basicTable 
+          [nzData]="brands" 
+          [nzTotal]="total"
+          [nzPageIndex]="page"
+          [nzPageSize]="size"
+          [nzFrontPagination]="false"
+          [nzShowPagination]="false"
+          [nzScroll]="{ x: '600px' }">
+          <thead>
+            <tr>
+              <th class="flex-center-all" nzWidth="50px">ID</th>
+              <th nzWidth="120px">Logo</th>
+              <th nzWidth="120px">Tên Thương hiệu</th>
+              <th class="flex-center-all" nzWidth="100px">Mô tả</th>
+              <th class="flex-center-all" nzWidth="100px">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of basicTable.data">
+              <td class="flex-center-all">{{ data.id }}</td>
+              <td class="flex-center-all">
+                <div class="logo-cell flex-center-all">
+                  <img
+                    *ngIf="data.logoUrl"
+                    [src]="data.logoUrl"
+                    [alt]="data.name"
+                  />
+                </div>
+              </td>
+              <td>
+                <strong>{{ data.name }}</strong>
+              </td>
+              <td class="text-secondary">{{ data.description }}</td>
+              <td class="flex-center-all">
+                <div class="action-buttons flex-center-all">
+                  <button
+                    nz-button
+                    nzType="text"
+                    (click)="showEditModal(data)"
+                    nz-tooltip
+                    nzTooltipTitle="Chỉnh sửa"
+                  >
+                    <nz-icon nzType="edit" class="edit-icon" />
+                  </button>
+                  <button
+                    nz-button
+                    nzType="text"
+                    nzDanger
+                    (click)="deleteBrand(data.id!)"
+                    nz-tooltip
+                    nzTooltipTitle="Xóa"
+                  >
+                    <nz-icon nzType="delete" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </div>
+
+    <!-- Mobile View Cards -->
+    <div class="admin-brands-mobile-view">
+      <div *ngFor="let data of brands" class="brand-mobile-card">
+        <div class="card-content">
+          <div class="brand-brief">
+            <div class="mobile-logo-cell">
+              <img *ngIf="data.logoUrl" [src]="data.logoUrl" [alt]="data.name" />
+              <nz-icon *ngIf="!data.logoUrl" nzType="picture" />
+            </div>
+            <div class="brand-meta">
+              <span class="brand-id">#{{ data.id }}</span>
+              <h4 class="brand-name">{{ data.name }}</h4>
+              <p class="brand-desc text-secondary">{{ data.description }}</p>
+            </div>
+          </div>
+          
+          <div class="brand-actions">
+            <button nz-button nzType="text" (click)="showEditModal(data)" class="action-btn edit">
+              <nz-icon nzType="edit" />
+            </button>
+            <button nz-button nzType="text" nzDanger (click)="deleteBrand(data.id!)" class="action-btn delete">
+              <nz-icon nzType="delete" />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="pagination-container mt-16" *ngIf="total > 0">

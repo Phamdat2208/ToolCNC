@@ -7,9 +7,9 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { AuthService } from '../../../services/auth.service';
-import { QuotationService } from '../../../services/quotation.service';
-import { ToastService } from '../../../services/toast.service';
+import { AuthService } from '../../../../services/auth.service';
+import { QuotationService } from '../../../../services/quotation.service';
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-quotation-modal',

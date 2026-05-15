@@ -73,3 +73,115 @@
   padding: 48px;
   text-align: center;
 }
+
+/* Responsive Logic */
+.admin-quotations-mobile-view {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  .admin-quotations-desktop-view {
+    display: none;
+  }
+  
+  .admin-quotations-mobile-view {
+    display: block;
+  }
+  
+  .admin-quotations {
+    padding: 0;
+  }
+
+  .page-header {
+    padding: 0 16px;
+    margin-bottom: 16px;
+  }
+}
+
+/* Mobile Quotation Card Styles */
+.quotation-mobile-card {
+  background: #fff;
+  border-radius: 16px;
+  margin: 0 12px 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 14px 16px;
+  background: #f8fafc;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.customer-brief {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.index-no {
+  font-size: 11px;
+  background: #e2e8f0;
+  color: #64748b;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.customer-name-mob {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.card-body {
+  padding: 16px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-row .label {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.info-row .value {
+  text-align: right;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.info-row .value.font-bold {
+  font-weight: 700;
+}
+
+.info-row .value-text {
+  margin: 4px 0 0;
+  background: #f8fafc;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #475569;
+  width: 100%;
+}
+
+.card-footer {
+  padding: 16px;
+  background: #fff;
+  border-top: 1px dashed #e2e8f0;
+}
+

@@ -36,16 +36,16 @@
             >
               <thead>
                 <tr>
-                  <th class="flex-center-all" nzLeft nzWidth="320px">Sản phẩm</th>
+                  <th class="flex-center-all" nzWidth="320px">Sản phẩm</th>
                   <th class="flex-center-all" nzWidth="130px">Đơn giá</th>
                   <th class="flex-center-all" nzWidth="130px">Số lượng</th>
-                  <th class="flex-center-all" nzWidth="150px" nzRight>Thành tiền</th>
+                  <th class="flex-center-all" nzWidth="150px">Thành tiền</th>
                   <th class="flex-center-all" nzWidth="100px" nzRight>Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let data of cartTable.data; trackBy: trackById" class="cart-item-row">
-                  <td nzLeft>
+                  <td>
                     <div class="product-cell-modern">
                       <div class="product-img-box" (click)="goToProduct(data.productId)">
                         <img [src]="data.img" alt="{{ data.name }}" />
@@ -74,7 +74,7 @@
                       ></app-quantity-input>
                     </div>
                   </td>
-                  <td nzRight class="total-cell flex-center-all">
+                  <td class="total-cell flex-center-all">
                     {{ data.price * data.quantity | currency: "VND" : "symbol" : "1.0-0" }}
                   </td>
                   <td nzRight class="flex-center-all">

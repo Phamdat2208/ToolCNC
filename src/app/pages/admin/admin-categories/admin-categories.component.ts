@@ -8,6 +8,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { Category } from '../../../models/category.model';
 import { CategoryService } from '../../../services/category.service';
@@ -27,6 +28,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
     NzInputModule,
     NzSelectModule,
     NzModalModule,
+    NzTagModule,
     NzToolTipModule,
     FormsModule,
     ReactiveFormsModule,

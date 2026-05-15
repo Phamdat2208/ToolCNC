@@ -161,3 +161,129 @@
   font-size: 0.75rem;
   letter-spacing: 0.05em;
 }
+
+/* Responsive Logic */
+.admin-categories-mobile-view {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  .admin-categories-desktop-view {
+    display: none;
+  }
+  
+  .admin-categories-mobile-view {
+    display: block;
+    padding: 0 12px;
+  }
+}
+
+/* Mobile Category Card Styles */
+.category-mobile-card {
+  background: #fff;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+  position: relative;
+}
+
+.category-mobile-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #e2e8f0;
+}
+
+.category-mobile-card[style*="margin-left: 0px"]::before {
+  background: #2563eb;
+}
+
+.card-content {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.category-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.expand-trigger-mob {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.tree-icon-mob {
+  font-size: 10px;
+}
+
+.category-id {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+
+.category-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.category-name.parent-name {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.product-count-tag {
+  font-size: 10px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #64748b;
+  border: none;
+  width: fit-content;
+}
+
+.category-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.action-btn.edit {
+  color: #2563eb;
+}
+
+.action-btn.delete {
+  color: #ef4444;
+}

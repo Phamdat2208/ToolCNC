@@ -13,7 +13,7 @@ import { ToastService } from '../../../services/toast.service';
 import { WishlistService } from '../../../services/wishlist.service';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
 import { UrlUtils } from '../../utils/url-utils';
-import { QuickSelectModalComponent } from '../quick-select-modal/quick-select-modal.component';
+import { QuickSelectModalComponent } from '../modal/quick-select-modal/quick-select-modal.component';
 
 @Component({
   selector: 'app-product-card',

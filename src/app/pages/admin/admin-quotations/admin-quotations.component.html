@@ -5,77 +5,139 @@
   </div>
 
   <app-loading [isLoading]="isLoading">
-    <nz-table
-      #quotationTable
-      [nzData]="quotations"
-      [nzTotal]="totalItems"
-      [nzPageIndex]="page"
-      [nzPageSize]="size"
-      [nzFrontPagination]="false"
-      [nzShowPagination]="false"
-      (nzPageIndexChange)="onPageChange($event)"
-      [nzScroll]="{ x: '1200px' }"
-      class="quotation-table"
-    >
-      <thead>
-        <tr>
-          <th nzWidth="50px">#</th>
-          <th nzWidth="150px">Khách hàng</th>
-          <th nzWidth="180px">Email / SĐT</th>
-          <th nzWidth="120px">Công ty</th>
-          <th>Sản phẩm</th>
-          <th nzWidth="80px">Số lượng</th>
-          <th nzWidth="130px">Trạng thái</th>
-          <th nzWidth="120px">Ngày tạo</th>
-          <th nzWidth="160px">Hành động</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of quotationTable.data; let i = index">
-          <td>{{ (page - 1) * size + i + 1 }}</td>
-          <td>
-            <span class="customer-name">{{ item.customerName }}</span>
-          </td>
-          <td>
-            <div class="contact-info">
-              <span class="email">{{ item.customerEmail }}</span>
-              <span class="phone">{{ item.customerPhone }}</span>
+    <!-- Desktop View Table -->
+    <div class="admin-quotations-desktop-view">
+      <nz-table
+        #quotationTable
+        [nzData]="quotations"
+        [nzTotal]="totalItems"
+        [nzPageIndex]="page"
+        [nzPageSize]="size"
+        [nzFrontPagination]="false"
+        [nzShowPagination]="false"
+        (nzPageIndexChange)="onPageChange($event)"
+        [nzScroll]="{ x: '1200px' }"
+        class="quotation-table"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="50px" nzLeft>#</th>
+            <th nzWidth="150px">Khách hàng</th>
+            <th nzWidth="180px">Email / SĐT</th>
+            <th nzWidth="120px">Công ty</th>
+            <th>Sản phẩm</th>
+            <th nzWidth="80px">Số lượng</th>
+            <th nzWidth="130px">Trạng thái</th>
+            <th nzWidth="120px">Ngày tạo</th>
+            <th nzWidth="160px" nzRight>Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of quotationTable.data; let i = index">
+            <td nzLeft>{{ (page - 1) * size + i + 1 }}</td>
+            <td>
+              <span class="customer-name">{{ item.customerName }}</span>
+            </td>
+            <td>
+              <div class="contact-info">
+                <span class="email">{{ item.customerEmail }}</span>
+                <span class="phone">{{ item.customerPhone }}</span>
+              </div>
+            </td>
+            <td>{{ item.companyName || "—" }}</td>
+            <td>
+              <span class="product-name" [title]="item.productName">{{
+                item.productName
+              }}</span>
+              <span *ngIf="item.note" class="note-preview" [title]="item.note">{{
+                item.note
+              }}</span>
+            </td>
+            <td class="text-center">{{ item.quantity }}</td>
+            <td>
+              <app-status-tag [status]="item.status" [statusMap]="QUOTATION_STATUS_MAP"></app-status-tag>
+            </td>
+            <td class="date-cell">
+              {{ item.createdAt | date: "dd/MM/yyyy HH:mm" }}
+            </td>
+            <td nzRight>
+              <nz-select
+                [ngModel]="item.status"
+                (ngModelChange)="updateStatus(item.id, $event)"
+                nzSize="small"
+                class="status-select"
+                nzPlaceHolder="Cập nhật"
+              >
+                <nz-option
+                  *ngFor="let opt of statusOptions"
+                  [nzValue]="opt.value"
+                  [nzLabel]="opt.label"
+                ></nz-option>
+              </nz-select>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+
+    <!-- Mobile View Cards -->
+    <div class="admin-quotations-mobile-view">
+      <div *ngFor="let item of quotations; let i = index" class="quotation-mobile-card">
+        <div class="card-header">
+          <div class="customer-brief">
+            <span class="index-no">#{{ (page - 1) * size + i + 1 }}</span>
+            <h4 class="customer-name-mob">{{ item.customerName }}</h4>
+          </div>
+          <app-status-tag [status]="item.status" [statusMap]="QUOTATION_STATUS_MAP"></app-status-tag>
+        </div>
+
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">Sản phẩm:</span>
+            <span class="value font-bold">{{ item.productName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Số lượng:</span>
+            <span class="value">{{ item.quantity }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Công ty:</span>
+            <span class="value">{{ item.companyName || "—" }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Liên hệ:</span>
+            <div class="value">
+              <div>{{ item.customerEmail }}</div>
+              <div class="sub">{{ item.customerPhone }}</div>
             </div>
-          </td>
-          <td>{{ item.companyName || "—" }}</td>
-          <td>
-            <span class="product-name" [title]="item.productName">{{
-              item.productName
-            }}</span>
-            <span *ngIf="item.note" class="note-preview" [title]="item.note">{{
-              item.note
-            }}</span>
-          </td>
-          <td class="text-center">{{ item.quantity }}</td>
-          <td>
-            <app-status-tag [status]="item.status" [statusMap]="QUOTATION_STATUS_MAP"></app-status-tag>
-          </td>
-          <td class="date-cell">
-            {{ item.createdAt | date: "dd/MM/yyyy HH:mm" }}
-          </td>
-          <td>
-            <nz-select
-              [ngModel]="item.status"
-              (ngModelChange)="updateStatus(item.id, $event)"
-              nzSize="small"
-              class="status-select"
-              nzPlaceHolder="Cập nhật"
-            >
-              <nz-option
-                *ngFor="let opt of statusOptions"
-                [nzValue]="opt.value"
-                [nzLabel]="opt.label"
-              ></nz-option>
-            </nz-select>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
+          </div>
+          <div class="info-row" *ngIf="item.note">
+            <span class="label">Ghi chú:</span>
+            <p class="value-text">{{ item.note }}</p>
+          </div>
+          <div class="info-row">
+            <span class="label">Ngày tạo:</span>
+            <span class="value">{{ item.createdAt | date: "dd/MM/yyyy HH:mm" }}</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <nz-select
+            [ngModel]="item.status"
+            (ngModelChange)="updateStatus(item.id, $event)"
+            nzSize="default"
+            style="width: 100%"
+            nzPlaceHolder="Cập nhật trạng thái"
+          >
+            <nz-option
+              *ngFor="let opt of statusOptions"
+              [nzValue]="opt.value"
+              [nzLabel]="opt.label"
+            ></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
   </app-loading>
   <div *ngIf="!isLoading && quotations.length === 0" class="empty-state">
     <nz-empty nzNotFoundContent="Chưa có yêu cầu báo giá nào"></nz-empty>

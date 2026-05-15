@@ -2,74 +2,132 @@
   <h2 class="page-title">Quản lý đơn hàng</h2>
 
   <app-loading [isLoading]="loading">
-    <nz-table
-      #ordersTable
-      [nzData]="orders"
-      [nzScroll]="{ x: '1000px' }"
-      [nzFrontPagination]="false"
-      [nzShowPagination]="false"
-      class="text-center-table"
-    >
-      <thead>
-        <tr>
-          <th>Mã đơn hàng</th>
-          <th>Khách hàng</th>
-          <th>Ngày đặt</th>
-          <th>Tổng tiền</th>
-          <th nzWidth="100px">Số lượng</th>
-          <th>Trạng thái</th>
-          <th nzWidth="200px">Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let order of ordersTable.data">
-          <td class="font-bold">{{ order.trackingNumber || order.id }}</td>
-          <td>
-            <div>{{ order.customerName }}</div>
-            <small class="text-secondary">{{ order.phone }}</small>
-          </td>
-          <td>{{ order.dateCreated | date: "dd/MM/yyyy HH:mm" }}</td>
-          <td class="font-bold">
-            {{ order.totalPrice | currency: "VND" : "symbol" : "1.0-0" }}
-          </td>
-          <td>{{ order.totalQuantity }}</td>
-          <td>
-            <ng-container
-              *ngIf="
-                order.status === 'COMPLETED' || order.status === 'CANCELLED'
-              "
-            >
-              <app-status-tag [status]="order.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
-            </ng-container>
+    <!-- Desktop View Table -->
+    <div class="admin-orders-desktop-view">
+      <nz-table
+        #ordersTable
+        [nzData]="orders"
+        [nzScroll]="{ x: '1000px' }"
+        [nzFrontPagination]="false"
+        [nzShowPagination]="false"
+        class="text-center-table"
+      >
+        <thead>
+          <tr>
+            <th class="flex-center-all" nzWidth="150px" nzLeft>Mã đơn hàng</th>
+            <th class="flex-center-all">Khách hàng</th>
+            <th class="flex-center-all">Ngày đặt</th>
+            <th class="flex-center-all">Tổng tiền</th>
+            <th nzWidth="100px" class="flex-center-all">Số lượng</th>
+            <th class="flex-center-all" nzWidth="180px">Trạng thái</th>
+            <th class="flex-center-all" nzWidth="150px" nzRight>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of ordersTable.data">
+            <td class="font-bold" nzLeft>{{ order.trackingNumber || order.id }}</td>
+            <td>
+              <div>{{ order.customerName }}</div>
+              <small class="text-secondary">{{ order.phone }}</small>
+            </td>
+            <td>{{ order.dateCreated | date: "dd/MM/yyyy HH:mm" }}</td>
+            <td class="font-bold">
+              {{ order.totalPrice | currency: "VND" : "symbol" : "1.0-0" }}
+            </td>
+            <td>{{ order.totalQuantity }}</td>
+            <td>
+              <ng-container
+                *ngIf="
+                  order.status === 'COMPLETED' || order.status === 'CANCELLED'
+                "
+              >
+                <app-status-tag [status]="order.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
+              </ng-container>
+              <nz-select
+                *ngIf="
+                  order.status !== 'COMPLETED' && order.status !== 'CANCELLED'
+                "
+                [(ngModel)]="order.status"
+                (ngModelChange)="onStatusChange($event, order)"
+                [nzSize]="'small'"
+                style="width: 140px"
+              >
+                <nz-option nzValue="PENDING" nzLabel="Đang xử lý"></nz-option>
+                <nz-option
+                  nzValue="SHIPPING"
+                  nzLabel="Đang giao hàng"
+                ></nz-option>
+                <nz-option
+                  nzValue="COMPLETED"
+                  nzLabel="Đã hoàn thành"
+                ></nz-option>
+                <nz-option nzValue="CANCELLED" nzLabel="Đã hủy"></nz-option>
+              </nz-select>
+            </td>
+            <td nzRight class="flex-center-all">
+              <button class="btn-detail" (click)="viewOrderDetails(order)">
+                <nz-icon nzType="eye" /> Xem chi tiết
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+
+    <!-- Mobile View Cards -->
+    <div class="admin-orders-mobile-view">
+      <div *ngFor="let order of orders" class="order-mobile-card">
+        <div class="card-header">
+          <span class="tracking-no">#{{ order.trackingNumber || order.id }}</span>
+          <app-status-tag [status]="order.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
+        </div>
+        
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">Khách hàng:</span>
+            <div class="value">
+              <strong>{{ order.customerName }}</strong>
+              <div class="sub">{{ order.phone }}</div>
+            </div>
+          </div>
+          
+          <div class="info-row">
+            <span class="label">Ngày đặt:</span>
+            <span class="value">{{ order.dateCreated | date: "dd/MM/yyyy HH:mm" }}</span>
+          </div>
+          
+          <div class="info-row">
+            <span class="label">Số lượng:</span>
+            <span class="value">{{ order.totalQuantity }} sản phẩm</span>
+          </div>
+          
+          <div class="info-row">
+            <span class="label">Tổng cộng:</span>
+            <span class="value price">{{ order.totalPrice | currency: "VND" : "symbol" : "1.0-0" }}</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="status-action" *ngIf="order.status !== 'COMPLETED' && order.status !== 'CANCELLED'">
             <nz-select
-              *ngIf="
-                order.status !== 'COMPLETED' && order.status !== 'CANCELLED'
-              "
               [(ngModel)]="order.status"
               (ngModelChange)="onStatusChange($event, order)"
-              [nzSize]="'small'"
-              style="width: 140px"
+              [nzSize]="'default'"
+              style="width: 100%"
             >
               <nz-option nzValue="PENDING" nzLabel="Đang xử lý"></nz-option>
-              <nz-option
-                nzValue="SHIPPING"
-                nzLabel="Đang giao hàng"
-              ></nz-option>
-              <nz-option
-                nzValue="COMPLETED"
-                nzLabel="Đã hoàn thành"
-              ></nz-option>
+              <nz-option nzValue="SHIPPING" nzLabel="Đang giao hàng"></nz-option>
+              <nz-option nzValue="COMPLETED" nzLabel="Đã hoàn thành"></nz-option>
               <nz-option nzValue="CANCELLED" nzLabel="Đã hủy"></nz-option>
             </nz-select>
-          </td>
-          <td>
-            <button class="btn-detail" (click)="viewOrderDetails(order)">
-              <nz-icon nzType="eye" /> Xem chi tiết
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
+          </div>
+          
+          <button class="btn-detail-mobile" (click)="viewOrderDetails(order)">
+            <nz-icon nzType="eye" /> Xem chi tiết đơn hàng
+          </button>
+        </div>
+      </div>
+    </div>
 
     <div class="pagination-container mt-16" *ngIf="totalElements > 0">
       <app-pagination
