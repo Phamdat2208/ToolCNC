@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { catchError, distinctUntilChanged } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { ConfirmModalService } from './confirm-modal.service';
+import { ModalService } from './modal.service';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
@@ -40,7 +40,7 @@ export class WishlistService {
     });
   }
 
-  private confirmModalService = inject(ConfirmModalService);
+  private modalService = inject(ModalService);
   private router = inject(Router);
 
   loadWishlist() {
@@ -125,7 +125,7 @@ export class WishlistService {
 
   private requireLogin(actionContent: string): boolean {
     if (!this.authService.isLoggedIn()) {
-      this.confirmModalService.confirm({
+      this.modalService.confirm({
         title: 'Yêu cầu đăng nhập',
         content: `Bạn cần đăng nhập để ${actionContent}. Chuyển đến trang đăng nhập?`,
         okText: 'Đăng nhập',

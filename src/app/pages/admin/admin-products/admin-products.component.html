@@ -46,138 +46,102 @@
   <app-loading [isLoading]="loading">
     <!-- Desktop View Table -->
     <div class="admin-products-desktop-view">
-      <nz-table
-        #basicTable
-        [nzData]="products"
-        [nzTotal]="total"
-        [nzPageIndex]="page"
-        [nzPageSize]="size"
-        [nzFrontPagination]="false"
-        [nzShowPagination]="false"
-        [nzScroll]="{ x: '1000px' }"
-      >
-        <thead>
-          <tr>
-            <th class="flex-center-all" nzWidth="80px" nzLeft>ID</th>
-            <th class="flex-center-all" nzWidth="100px">Ảnh</th>
-            <th class="flex-center-all" nzWidth="300px">Tên sản phẩm</th>
-            <th class="flex-center-all" nzWidth="180px">Danh mục</th>
-            <th class="flex-center-all" nzWidth="150px">Thương hiệu</th>
-            <th class="flex-center-all" nzWidth="120px">Tồn kho</th>
-            <th class="flex-center-all" nzWidth="140px">Giá</th>
-            <th class="flex-center-all" nzWidth="120px">Trạng thái</th>
-            <th class="flex-center-all" nzWidth="100px" nzRight>Thao tác</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of basicTable.data">
-            <td class="flex-center-all" nzLeft>{{ data.id }}</td>
-            <td class="flex-center-all">
-              <div
-                class="img-wrapper-relative"
-                style="width: 50px; height: 50px; border-radius: 4px"
-              >
-                <img
-                  [src]="data.imageUrl || 'https://placehold.co/50x50'"
-                  [alt]="data.name"
-                  [class.img-out-of-stock]="data.totalStock === 0"
-                  style="
-                    width: 50px;
-                    height: 50px;
-                    object-fit: cover;
-                    border-radius: 4px;
-                  "
-                />
-                <div
-                  class="out-of-stock-banner"
-                  *ngIf="data.totalStock === 0"
-                  style="
-                    font-size: 6px;
-                    padding: 1px 4px;
-                    border: 1px solid white;
-                  "
-                >
-                  HẾT
-                </div>
-              </div>
-            </td>
-            <td
-              class="font-bold flex-center-all"
-              nzEllipsis
-              nz-tooltip
-              [nzTooltipTitle]="data.name"
-            >
-              {{ data.name }}
-            </td>
-            <td class="flex-center-all" nzEllipsis>
-              <nz-tag class="category-tag">{{ data.categoryName || "-" }}</nz-tag>
-            </td>
-            <td class="flex-center-all" nzEllipsis>
-              {{ data.brandName || "-" }}
-            </td>
-            <td class="flex-center-all">
-              <nz-tag [nzColor]="data.totalStock > 0 ? 'green' : 'red'">{{
-                data.totalStock
-              }}</nz-tag>
-            </td>
-            <ng-container
-              *ngIf="
-                data.hasVariants && data.minPrice !== data.maxPrice;
-                else singlePrice
-              "
-            >
-              <td class="text-danger font-bold flex-center-all">
-                {{ data.minPrice | currency: "VND" : "" }} -
-                {{ data.maxPrice | currency: "VND" : "symbol" }}
-              </td>
-            </ng-container>
-            <ng-template #singlePrice>
-              <td class="text-danger font-bold flex-center-all">
-                {{ data.price | currency: "VND" : "symbol" : "1.0-0" }}
-              </td>
-            </ng-template>
-            <td class="flex-center-all">
-              <app-status-tag [status]="data.isActive ? 'ACTIVE' : 'INACTIVE'" [statusMap]="PRODUCT_STATUS_MAP"></app-status-tag>
-            </td>
-            <td class="flex-center-all" nzRight>
-              <button
-                nz-button
-                nzType="text"
-                [routerLink]="['/admin/products', data.id, 'edit']"
-                class="edit-icon text-primary"
-                nz-tooltip
-                nzTooltipTitle="Sửa"
-              >
-                <nz-icon nzType="edit" />
-              </button>
-              <button
-                *ngIf="data.isActive"
-                nz-button
-                nzType="text"
-                nzDanger
-                (click)="deleteProduct(data.id)"
-                nz-tooltip
-                nzTooltipTitle="Xóa"
-                [nzLoading]="isDeleteProduct[data.id]"
-              >
-                <nz-icon nzType="delete" />
-              </button>
-              <button
-                *ngIf="!data.isActive"
-                nz-button
-                nzType="text"
-                class="text-success"
-                (click)="restoreProduct(data.id)"
-                nz-tooltip
-                nzTooltipTitle="Khôi phục"
-                [nzLoading]="isRestoreProduct[data.id]"
-              >
-                <nz-icon nzType="rollback" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
+      <app-base-table
+        [columns]="columns"
+        [dataSource]="products"
+        [total]="total"
+        [pageIndex]="page"
+        [isLoading]="loading"
+        [config]="tableConfig"
+        (pageChange)="onTablePageChange($event)"
+      ></app-base-table>
+
+      <!-- Cell Templates -->
+      <ng-template #imgCell let-row>
+        <div class="img-wrapper-relative" style="width: 50px; height: 50px; border-radius: 4px; margin: 0 auto;">
+          <img
+            [src]="row.imageUrl || 'https://placehold.co/50x50'"
+            [alt]="row.name"
+            [class.img-out-of-stock]="row.totalStock === 0"
+            style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"
+          />
+          <div class="out-of-stock-banner" *ngIf="row.totalStock === 0" style="font-size: 6px; padding: 1px 4px; border: 1px solid white;">
+            HẾT
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #nameCell let-row>
+        <div class="font-bold text-ellipsis" nz-tooltip [nzTooltipTitle]="row.name" style="max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+          {{ row.name }}
+        </div>
+      </ng-template>
+
+      <ng-template #categoryCell let-row>
+        <span class="category-tag">{{ row.categoryName || "-" }}</span>
+      </ng-template>
+
+      <ng-template #brandCell let-row>
+        {{ row.brandName || "-" }}
+      </ng-template>
+
+      <ng-template #stockCell let-row>
+        <span class="stock-tag" [class.in-stock]="row.totalStock > 0" [class.out-of-stock]="row.totalStock === 0">
+          {{ row.totalStock }}
+        </span>
+      </ng-template>
+
+      <ng-template #priceCell let-row>
+        <span class="text-danger font-bold">
+          <ng-container *ngIf="row.hasVariants && row.minPrice !== row.maxPrice; else singlePrice">
+            {{ row.minPrice | currency: "VND" : "" }} - {{ row.maxPrice | currency: "VND" : "symbol" }}
+          </ng-container>
+          <ng-template #singlePrice>
+            {{ row.price | currency: "VND" : "symbol" : "1.0-0" }}
+          </ng-template>
+        </span>
+      </ng-template>
+
+      <ng-template #statusCell let-row>
+        <app-status-tag [status]="row.isActive ? 'ACTIVE' : 'INACTIVE'" [statusMap]="PRODUCT_STATUS_MAP"></app-status-tag>
+      </ng-template>
+
+      <ng-template #actionCell let-row>
+        <button
+          nz-button
+          nzType="text"
+          [routerLink]="['/admin/products', row.id, 'edit']"
+          class="edit-icon text-primary"
+          nz-tooltip
+          nzTooltipTitle="Sửa"
+        >
+          <nz-icon nzType="edit" />
+        </button>
+        <button
+          *ngIf="row.isActive"
+          nz-button
+          nzType="text"
+          nzDanger
+          (click)="deleteProduct(row.id)"
+          nz-tooltip
+          nzTooltipTitle="Xóa"
+          [nzLoading]="isDeleteProduct[row.id]"
+        >
+          <nz-icon nzType="delete" />
+        </button>
+        <button
+          *ngIf="!row.isActive"
+          nz-button
+          nzType="text"
+          class="text-success"
+          (click)="restoreProduct(row.id)"
+          nz-tooltip
+          nzTooltipTitle="Khôi phục"
+          [nzLoading]="isRestoreProduct[row.id]"
+        >
+          <nz-icon nzType="rollback" />
+        </button>
+      </ng-template>
     </div>
 
     <!-- Mobile View Cards -->
@@ -197,7 +161,7 @@
         <div class="card-body">
           <div class="info-row">
             <span class="label">Danh mục:</span>
-            <nz-tag class="category-tag">{{ data.categoryName || "-" }}</nz-tag>
+            <span class="category-tag">{{ data.categoryName || "-" }}</span>
           </div>
           <div class="info-row">
             <span class="label">Thương hiệu:</span>
@@ -205,7 +169,9 @@
           </div>
           <div class="info-row">
             <span class="label">Tồn kho:</span>
-            <nz-tag [nzColor]="data.totalStock > 0 ? 'green' : 'red'">{{ data.totalStock }}</nz-tag>
+            <span class="stock-tag" [class.in-stock]="data.totalStock > 0" [class.out-of-stock]="data.totalStock === 0">
+              {{ data.totalStock }}
+            </span>
           </div>
           <div class="info-row">
             <span class="label">Giá bán:</span>
@@ -254,17 +220,6 @@
           </button>
         </div>
       </div>
-    </div>
-
-    <div class="pagination-container mt-16" *ngIf="total > 0">
-      <app-pagination
-        [total]="total"
-        [pageIndex]="page"
-        [pageSize]="size"
-        [pageSizeOptions]="[10, 20, 50, 100]"
-        (pageIndexChange)="onPageIndexChange($event)"
-        (pageSizeChange)="onPageSizeChange($event)"
-      ></app-pagination>
     </div>
   </app-loading>
 </div>

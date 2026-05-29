@@ -10,66 +10,58 @@
     <!-- Desktop View Table -->
     <div class="admin-brands-desktop-view">
       <div class="table-card">
-        <nz-table 
-          #basicTable 
-          [nzData]="brands" 
-          [nzTotal]="total"
-          [nzPageIndex]="page"
-          [nzPageSize]="size"
-          [nzFrontPagination]="false"
-          [nzShowPagination]="false"
-          [nzScroll]="{ x: '600px' }">
-          <thead>
-            <tr>
-              <th class="flex-center-all" nzWidth="50px">ID</th>
-              <th nzWidth="120px">Logo</th>
-              <th nzWidth="120px">Tên Thương hiệu</th>
-              <th class="flex-center-all" nzWidth="100px">Mô tả</th>
-              <th class="flex-center-all" nzWidth="100px">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let data of basicTable.data">
-              <td class="flex-center-all">{{ data.id }}</td>
-              <td class="flex-center-all">
-                <div class="logo-cell flex-center-all">
-                  <img
-                    *ngIf="data.logoUrl"
-                    [src]="data.logoUrl"
-                    [alt]="data.name"
-                  />
-                </div>
-              </td>
-              <td>
-                <strong>{{ data.name }}</strong>
-              </td>
-              <td class="text-secondary">{{ data.description }}</td>
-              <td class="flex-center-all">
-                <div class="action-buttons flex-center-all">
-                  <button
-                    nz-button
-                    nzType="text"
-                    (click)="showEditModal(data)"
-                    nz-tooltip
-                    nzTooltipTitle="Chỉnh sửa"
-                  >
-                    <nz-icon nzType="edit" class="edit-icon" />
-                  </button>
-                  <button
-                    nz-button
-                    nzType="text"
-                    nzDanger
-                    (click)="deleteBrand(data.id!)"
-                    nz-tooltip
-                    nzTooltipTitle="Xóa"
-                  >
-                    <nz-icon nzType="delete" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </nz-table>
+        <app-base-table
+          [columns]="columns"
+          [dataSource]="brands"
+          [total]="total"
+          [pageIndex]="page"
+          [isLoading]="loading"
+          [config]="tableConfig"
+          (pageChange)="onTablePageChange($event)"
+        ></app-base-table>
+
+        <!-- Cell Templates -->
+        <ng-template #logoCell let-row>
+          <div class="logo-cell flex-center-all" style="margin: 0 auto;">
+            <img
+              *ngIf="row.logoUrl"
+              [src]="row.logoUrl"
+              [alt]="row.name"
+            />
+          </div>
+        </ng-template>
+
+        <ng-template #nameCell let-row>
+          <strong>{{ row.name }}</strong>
+        </ng-template>
+
+        <ng-template #descCell let-row>
+          <span class="text-secondary">{{ row.description }}</span>
+        </ng-template>
+
+        <ng-template #actionCell let-row>
+          <div class="action-buttons flex-center-all">
+            <button
+              nz-button
+              nzType="text"
+              (click)="showEditModal(row)"
+              nz-tooltip
+              nzTooltipTitle="Chỉnh sửa"
+            >
+              <nz-icon nzType="edit" class="edit-icon" />
+            </button>
+            <button
+              nz-button
+              nzType="text"
+              nzDanger
+              (click)="deleteBrand(row.id!)"
+              nz-tooltip
+              nzTooltipTitle="Xóa"
+            >
+              <nz-icon nzType="delete" />
+            </button>
+          </div>
+        </ng-template>
       </div>
     </div>
 
@@ -99,17 +91,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="pagination-container mt-16" *ngIf="total > 0">
-      <app-pagination
-        [total]="total"
-        [pageIndex]="page"
-        [pageSize]="size"
-        [pageSizeOptions]="[10, 20, 50, 100]"
-        (pageIndexChange)="onPageIndexChange($event)"
-        (pageSizeChange)="onPageSizeChange($event)"
-      ></app-pagination>
     </div>
   </app-loading>
 

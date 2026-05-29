@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
-import { ConfirmModalService } from './confirm-modal.service';
+import { ModalService } from './modal.service';
 import { StorageSecurityService } from './storage-security.service';
 
 export interface User {
@@ -19,7 +19,7 @@ export interface User {
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private confirmModal = inject(ConfirmModalService);
+  private modalService = inject(ModalService);
   private storageSecurityService = inject(StorageSecurityService);
   private apiUrl = `${environment.apiUrl}/api/v1/auth`;
   private readonly TOKEN_KEY = 'tool_cnc_auth_token';
@@ -120,7 +120,7 @@ export class AuthService {
       console.log('SSE Logout event received:', event.data);
       this.clearLocalSession();
 
-      this.confirmModal.confirm(
+      this.modalService.confirm(
         {
           title: 'Thông báo đăng nhập',
           content: 'Tài khoản của bạn đã được đăng nhập ở một nơi khác. Bạn có muốn đăng nhập lại không?',

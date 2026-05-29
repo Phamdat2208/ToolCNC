@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
@@ -10,6 +10,7 @@ export interface ConfirmModalData {
   okText?: string;
   cancelText?: string;
   type?: 'warning' | 'info' | 'success' | 'danger';
+  isOkLoading?: boolean;
 }
 
 @Component({
@@ -22,6 +23,8 @@ export interface ConfirmModalData {
 export class ConfirmModalComponent {
   modal = inject(NzModalRef);
   data: ConfirmModalData = inject(NZ_MODAL_DATA);
+
+  isOkLoading = signal(this.data.isOkLoading ?? false);
 
   get iconType(): string {
     switch (this.data.type) {

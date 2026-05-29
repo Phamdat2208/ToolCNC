@@ -1,0 +1,72 @@
+<div class="modal-content-wrapper">
+  <!-- Header Section -->
+  <div class="modal-header">
+    <div class="modal-header-left">
+      <div class="modal-header-icon">
+        <i nz-icon nzType="file-text"></i>
+      </div>
+      <div class="header-info">
+        <h2 class="title">Chi tiết báo giá</h2>
+        <div class="header-tags">
+          <app-status-tag [status]="quotation.status" type="QUOTATION"></app-status-tag>
+          <div class="date-info">
+            <i nz-icon nzType="calendar" nzTheme="outline"></i>
+            <span>{{ quotation.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nz-divider></nz-divider>
+
+  <!-- Body Section -->
+  <div class="info-section">
+    <h3 class="section-title"><i nz-icon nzType="user" nzTheme="outline"></i> Thông tin khách hàng</h3>
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-label">Khách hàng</span>
+        <span class="info-value font-medium">{{ quotation.customerName }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Công ty</span>
+        <span class="info-value">{{ quotation.companyName || 'Không có' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Email</span>
+        <span class="info-value text-primary">{{ quotation.customerEmail }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Số điện thoại</span>
+        <span class="info-value">{{ quotation.customerPhone }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <h3 class="section-title"><i nz-icon nzType="shopping" nzTheme="outline"></i> Thông tin sản phẩm</h3>
+    <div class="product-card">
+      <div class="product-info">
+        <div class="product-name">{{ quotation.productName }}</div>
+        <div class="product-qty">Số lượng yêu cầu: {{ quotation.quantity }}</div>
+      </div>
+      <div style="font-size: 32px; color: #9ca3af; opacity: 0.5;">
+        <i nz-icon nzType="inbox" nzTheme="outline"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-section" *ngIf="quotation.note">
+    <h3 class="section-title"><i nz-icon nzType="file-text" nzTheme="outline"></i> Ghi chú từ khách hàng</h3>
+    <div class="note-box">
+      {{ quotation.note }}
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="modal-actions">
+    <button nz-button nzType="primary" nzGhost (click)="close()">
+      Đóng
+    </button>
+  </div>
+</div>

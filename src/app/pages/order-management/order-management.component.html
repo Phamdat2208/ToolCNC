@@ -18,107 +18,53 @@
 
   <!-- Content -->
   <div class="orders-card">
-    <app-loading [isLoading]="isLoadingOrders">
 
-      <!-- Empty State -->
-      <div *ngIf="orders.length === 0 && !isLoadingOrders" class="empty-state">
-        <div class="empty-icon">
-          <nz-icon nzType="inbox" />
-        </div>
-        <h3>Chưa có đơn hàng nào</h3>
-        <p>Bạn chưa thực hiện đơn hàng nào. Hãy khám phá sản phẩm ngay!</p>
-        <a routerLink="/products" class="btn-explore">
-          <nz-icon nzType="appstore" /> Khám phá sản phẩm
-        </a>
-      </div>
+    <!-- Base Table -->
+    <app-base-table
+      [columns]="orderColumns"
+      [dataSource]="orders"
+      [total]="totalElements"
+      [pageIndex]="page"
+      [isLoading]="isLoadingOrders"
+      [config]="tableConfig"
+      (pageChange)="onTablePageChange($event)"
+      (rowClick)="viewOrderDetails($event)"
+    ></app-base-table>
 
-      <!-- Orders Table -->
-      <ng-container *ngIf="orders.length > 0">
-        <!-- Desktop Table -->
-        <div class="table-wrapper">
-          <table class="orders-table">
-            <thead>
-              <tr>
-                <th class="flex-center-all">Mã đơn hàng</th>
-                <th class="flex-center-all">Ngày đặt</th>
-                <th class="flex-center-all">Tổng tiền</th>
-                <th class="flex-center-all">Số lượng</th>
-                <th class="flex-center-all">Trạng thái</th>
-                <th class="flex-center-all">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let order of orders" class="order-row">
-                <td class="flex-center-all">
-                  <span class="tracking-number">{{ order.trackingNumber }}</span>
-                </td>
-                <td class="date-cell flex-center-all">
-                  <nz-icon nzType="calendar" />
-                  {{ order.dateCreated | date:'dd/MM/yyyy' }}
-                  <span class="time-sub">{{ order.dateCreated | date:'HH:mm' }}</span>
-                </td>
-                <td class="price-cell flex-center-all">{{ order.totalPrice | currency:'VND':'symbol' }}</td>
-                <td class="qty-cell flex-center-all">
-                  <span class="qty-badge">{{ order.totalQuantity }}</span>
-                </td>
-                <td class="flex-center-all">
-                  <app-status-tag [status]="order.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
-                </td>
-                <td class="flex-center-all">
-                  <button class="btn-detail" (click)="viewOrderDetails(order)">
-                    <nz-icon nzType="eye" /> Xem chi tiết
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Mobile Cards -->
-        <div class="order-cards-mobile">
-          <div *ngFor="let order of orders" class="order-card-mobile" (click)="viewOrderDetails(order)">
-            <div class="ocm-header">
-              <span class="tracking-number">#{{ order.trackingNumber }}</span>
-              <app-status-tag [status]="order.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
-            </div>
-            <div class="ocm-body">
-              <div class="ocm-row">
-                <span class="ocm-label">Ngày đặt</span>
-                <span>{{ order.dateCreated | date:'dd/MM/yyyy HH:mm' }}</span>
-              </div>
-              <div class="ocm-row">
-                <span class="ocm-label">Tổng tiền</span>
-                <span class="price-cell">{{ order.totalPrice | currency:'VND':'symbol' }}</span>
-              </div>
-              <div class="ocm-row">
-                <span class="ocm-label">Số lượng</span>
-                <span class="qty-badge">{{ order.totalQuantity }}</span>
-              </div>
-            </div>
-            <div class="ocm-footer">
-              <span class="ocm-cta">Xem chi tiết <nz-icon nzType="arrow-right" /></span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="pagination-container mt-16" *ngIf="totalElements > 0">
-          <app-pagination
-            [total]="totalElements"
-            [pageIndex]="page"
-            [pageSize]="size"
-            [pageSizeOptions]="[5, 10, 20]"
-            (pageIndexChange)="onPageChange($event)"
-            (pageSizeChange)="onPageSizeChange($event)"
-          ></app-pagination>
-        </div>
-
-      </ng-container>
-    </app-loading>
-
-    <!-- <ng-template #loadingTpl>
-      <app-loading></app-loading>
-    </ng-template> -->
   </div>
+
+  <!-- ===== Cell Templates ===== -->
+
+  <ng-template #dateCell let-row>
+    <div class="date-cell">
+      <nz-icon nzType="calendar" />
+      <span>{{ row.dateCreated | date:'dd/MM/yyyy' }}</span>
+      <span class="time-sub">{{ row.dateCreated | date:'HH:mm' }}</span>
+    </div>
+  </ng-template>
+
+  <ng-template #priceCell let-row>
+    <span class="price-cell">{{ row.totalPrice | currency:'VND':'symbol':'1.0-0' }}</span>
+  </ng-template>
+
+  <ng-template #qtyCell let-row>
+    <span class="qty-badge">{{ row.totalQuantity }}</span>
+  </ng-template>
+
+  <ng-template #statusCell let-row>
+    <app-status-tag [status]="row.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
+  </ng-template>
+
+  <ng-template #actionCell let-row>
+    <button
+      class="btn-detail"
+      nz-tooltip
+      nzTooltipTitle="Xem chi tiết"
+      (click)="viewOrderDetails(row); $event.stopPropagation()"
+    >
+      <nz-icon nzType="eye" />
+    </button>
+  </ng-template>
 
   <!-- ===== MODALS ===== -->
 
@@ -210,4 +156,5 @@
       </div>
     </ng-container>
   </nz-modal>
+
 </div>

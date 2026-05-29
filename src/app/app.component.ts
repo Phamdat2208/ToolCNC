@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private modalObserver?: MutationObserver;
 
   isLoginRoute = false;
+  isRegisterRoute = false;
   isAdminRoute = false;
   isModalOpen = false;
 
@@ -38,6 +39,7 @@ export class AppComponent implements OnInit, OnDestroy {
         filter(event => event instanceof NavigationEnd)
       ).subscribe((event: any) => {
         this.isLoginRoute = event.urlAfterRedirects.startsWith('/login');
+        this.isRegisterRoute = event.urlAfterRedirects.startsWith('/register');
         this.isAdminRoute = event.urlAfterRedirects.startsWith('/admin');
       })
     );

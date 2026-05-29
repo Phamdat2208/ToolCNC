@@ -1,0 +1,196 @@
+/* ===== Base Table Wrapper ===== */
+.base-table-wrapper {
+  background: white;
+  border-radius: 20px;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f1f5f9;
+}
+
+/* ===== Table Overrides (thiết kế từ cart.component) ===== */
+.base-table {
+  background: transparent;
+}
+
+::ng-deep .base-table .ant-table {
+  background: transparent;
+}
+
+::ng-deep .base-table .ant-table-thead > tr > th {
+  background: #f8fafc !important;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+::ng-deep .base-table .ant-table-tbody > tr > td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f8fafc;
+  color: #1e293b;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+/* ===== Row Styles ===== */
+.base-table-row {
+  animation: rowSlideIn 0.35s ease backwards;
+}
+
+.base-table-row.row-clickable {
+  cursor: pointer;
+}
+
+::ng-deep .base-table .ant-table-tbody > tr.base-table-row:hover > td {
+  background: #f8fafc !important;
+}
+
+::ng-deep .base-table .ant-table-tbody > tr.base-table-row.row-expanded > td {
+  background: #f0f9ff !important;
+  border-bottom: none;
+}
+
+/* ===== Expand Toggle ===== */
+.expand-th {
+  width: 48px;
+}
+
+.expand-toggle-cell {
+  text-align: center;
+}
+
+.expand-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.expand-toggle-btn:hover {
+  border-color: #0ea5e9;
+  color: #0ea5e9;
+  background: #f0f9ff;
+}
+
+.expand-toggle-btn.expanded {
+  background: #0ea5e9;
+  border-color: #0ea5e9;
+  color: white;
+  transform: rotate(180deg);
+}
+
+/* ===== Expand Content Row ===== */
+::ng-deep .base-table .ant-table-tbody > tr.expand-content-row > td {
+  padding: 0;
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.expand-content-cell {
+  padding: 0 !important;
+}
+
+.expand-content-inner {
+  padding: 16px 24px;
+  animation: expandSlide 0.25s ease;
+}
+
+/* ===== Empty State ===== */
+.empty-state-block {
+  padding: 56px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.empty-icon-wrapper {
+  animation: float 3s ease-in-out infinite;
+}
+
+.empty-text {
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ===== Pagination ===== */
+.table-pagination {
+  padding: 16px 4px 4px;
+  border-top: 1px solid #f1f5f9;
+  margin-top: 4px;
+}
+
+/* ===== Sort Column Header ===== */
+::ng-deep .base-table .ant-table-column-sorter {
+  color: #cbd5e1;
+}
+
+::ng-deep .base-table .ant-table-column-sorter-up.active,
+::ng-deep .base-table .ant-table-column-sorter-down.active {
+  color: #0ea5e9;
+}
+
+/* ===== Animations ===== */
+@keyframes rowSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes expandSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .base-table-wrapper {
+    padding: 0;
+    border-radius: 12px;
+  }
+
+  ::ng-deep .base-table .ant-table-thead > tr > th {
+    padding: 12px;
+    font-size: 10px;
+  }
+
+  ::ng-deep .base-table .ant-table-tbody > tr > td {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .empty-state-block {
+    padding: 40px 16px;
+  }
+}

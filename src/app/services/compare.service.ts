@@ -33,7 +33,6 @@ export class CompareService {
     const updated = [...current, product];
     this.compareSubject.next(updated);
     this.saveToStorage(updated);
-    this.toastService.showSuccess(`Đã thêm "${product.name}" vào danh sách so sánh`);
   }
 
   removeFromCompare(productId: number): void {

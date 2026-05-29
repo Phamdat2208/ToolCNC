@@ -20,9 +20,9 @@
             <thead>
               <tr>
                 <th nzLeft nzWidth="300px">Sản phẩm</th>
-                <th nzWidth="100px">Số lượng</th>
-                <th nzWidth="180px">Ngày gửi</th>
-                <th nzWidth="150px">Trạng thái</th>
+                <th class="flex-center-all" nzWidth="100px">Số lượng</th>
+                <th class="flex-center-all" nzWidth="180px">Ngày gửi</th>
+                <th class="flex-center-all" nzWidth="180px">Trạng thái</th>
                 <th nzWidth="250px">Ghi chú</th>
               </tr>
             </thead>
@@ -39,13 +39,13 @@
                     </div>
                   </div>
                 </td>
-                <td class="quantity-cell">
+                <td class="quantity-cell flex-center-all">
                   <span class="quantity-value">{{ data.quantity }}</span>
                 </td>
-                <td>
+                <td class="flex-center-all">
                   <span class="date-value">{{ data.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
                 </td>
-                <td>
+                <td class="flex-center-all">
                   <app-status-tag [status]="data.status" [statusMap]="QUOTATION_STATUS_MAP" class="status-tag"></app-status-tag>
                 </td>
                 <td class="note-cell">

@@ -8,7 +8,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { AuthService } from '../../services/auth.service';
-import { ConfirmModalService } from '../../services/confirm-modal.service';
+import { ModalService } from '../../services/modal.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
 
@@ -26,7 +26,7 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private toastService = inject(ToastService);
-  private confirmModalService = inject(ConfirmModalService);
+  private modalService = inject(ModalService);
 
   loginForm: FormGroup = this.fb.group({
     username: ['', [Validators.required]],
@@ -53,7 +53,7 @@ export class LoginComponent {
           this.isLoading = false;
 
           if (err.status === 409 || err.error?.error_code === 'CONCURRENT_LOGIN_DETECTED') {
-            this.confirmModalService.confirm({
+            this.modalService.confirm({
               title: 'Xác nhận đăng nhập',
               content: err.error?.message || 'Tài khoản này đang được đăng nhập ở một nơi khác, bạn có muốn tiếp tục?',
               okText: 'Đồng ý',
@@ -66,7 +66,11 @@ export class LoginComponent {
           }
 
           let errorMsg = 'Có lỗi xảy ra, vui lòng thử lại sau.';
-          if (err.status === 401 || err.status === 403) {
+          if (err.status === 403) {
+            errorMsg = err.error?.message || 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.';
+          } else if (err.status === 404) {
+            errorMsg = 'Tài khoản của bạn đã bị xóa hoặc không tồn tại trong hệ thống.';
+          } else if (err.status === 401) {
             errorMsg = 'Tên đăng nhập hoặc mật khẩu không đúng.';
           }
           this.toastService.showError(errorMsg);

@@ -3,12 +3,12 @@ import { inject, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { ConfirmModalService } from '../../services/confirm-modal.service';
+import { ModalService } from '../../services/modal.service';
 import { StorageSecurityService } from '../../services/storage-security.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
-  const confirmModalService = inject(ConfirmModalService);
+  const modalService = inject(ModalService);
   const injector = inject(Injector);
   const storage = inject(StorageSecurityService);
 
@@ -29,7 +29,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401 && !req.url.includes('/auth/login')) {
         const authService = injector.get(AuthService);
         authService.clearLocalSession();
-        confirmModalService.confirm({
+        modalService.confirm({
           title: 'Phiên đăng nhập hết hạn',
           content: 'Tài khoản của bạn đã được đăng nhập ở một nơi khác. Vui lòng đăng nhập lại.',
           okText: 'Đồng ý'

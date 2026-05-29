@@ -24,4 +24,16 @@ export class UserService {
   getAllUsers(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl, this.getAuthHeaders());
   }
+
+  lockUser(id: any): Observable<any[]> {
+    return this.http.post<any[]>(`${this.apiUrl}/${id}/lock`, {}, this.getAuthHeaders());
+  }
+
+  unlockUser(id: any): Observable<any[]> {
+    return this.http.post<any[]>(`${this.apiUrl}/${id}/unlock`, {}, this.getAuthHeaders());
+  }
+
+  deleteUser(id: any): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`, this.getAuthHeaders());
+  }
 }

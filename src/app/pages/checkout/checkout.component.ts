@@ -227,8 +227,8 @@ export class CheckoutComponent implements OnInit {
       items: this.cartService.cartItems().map(item => ({
         productId: item.productId,
         variantId: item.variantId || null,
-        quantity: item.quantity,
-        unitPrice: item.price
+        quantity: item.quantity
+        // unitPrice is intentionally omitted: backend resolves price from the database
       }))
     };
 

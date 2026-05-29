@@ -10,6 +10,7 @@ import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { AuthService } from '../../../../services/auth.service';
 import { QuotationService } from '../../../../services/quotation.service';
 import { ToastService } from '../../../../services/toast.service';
+import { QuantityInputComponent } from '../../quantity-input/quantity-input.component';
 
 @Component({
   selector: 'app-quotation-modal',
@@ -21,25 +22,37 @@ import { ToastService } from '../../../../services/toast.service';
     NzInputModule,
     NzInputNumberModule,
     NzButtonModule,
-    NzIconModule
+    NzIconModule,
+    QuantityInputComponent
   ],
   templateUrl: './quotation-modal.component.html',
   styleUrl: './quotation-modal.component.css'
 })
 export class QuotationModalComponent implements OnInit {
-  readonly modalData: { productId: number; productName: string; variantId?: number } = inject(NZ_MODAL_DATA);
+  readonly modalData: { productId: number; productName: string; variantId?: number; maxStock?: number } = inject(NZ_MODAL_DATA);
   private modalRef = inject(NzModalRef);
   private fb = inject(FormBuilder);
   private quotationService = inject(QuotationService);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
+  quantity = 1;
+  /** Số lượng tồn kho hiện có — chỉ dùng để hiển thị thông tin cho user */
+  availableStock = 0;
+  /** Giới hạn nhập liệu cho ô số lượng — báo giá có thể yêu cầu vượt tồn kho hiện tại */
+  readonly quantityLimit = 99999;
 
   isSubmitting = false;
 
   form!: FormGroup;
 
+  onQuantityChange(value: number): void {
+    this.quantity = value;
+    this.form.get('quantity')?.setValue(value);
+  }
+
   ngOnInit(): void {
     const user = this.authService.currentUserValue;
+    this.availableStock = this.modalData.maxStock ?? 0;
     this.form = this.fb.group({
       customerName: [user?.fullName || '', Validators.required],
       customerEmail: [(user as any)?.['email'] || '', [Validators.required, Validators.email]],
@@ -60,8 +73,9 @@ export class QuotationModalComponent implements OnInit {
     this.isSubmitting = true;
     const payload = {
       ...this.form.value,
+      quantity: this.quantity, // Dùng trực tiếp this.quantity để đảm bảo giá trị chính xác nhất
       productId: this.modalData.productId,
-      productName: this.modalData.productName,
+      // productName is intentionally omitted: backend resolves it from the database using productId
       variantId: this.modalData.variantId
     };
 

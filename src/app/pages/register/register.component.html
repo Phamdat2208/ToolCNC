@@ -8,6 +8,7 @@
   >
     <nz-icon nzType="arrow-left" />
   </button>
+  
   <div class="register-box">
     <div class="brand-logo-container">
       <img src="Logo.ico" alt="Logo" class="auth-logo" />
@@ -21,90 +22,61 @@
       <p>Điền thông tin của bạn để tạo tài khoản mới</p>
     </div>
 
-    <div class="brand-decoration">
-      <div class="deco-circle deco-1"></div>
-      <div class="deco-circle deco-2"></div>
-      <div class="deco-circle deco-3"></div>
-    </div>
-  </div>
+    <form
+      nz-form
+      [formGroup]="registerForm"
+      class="register-form"
+      (ngSubmit)="submitForm()"
+    >
+      <app-custom-input
+        formControlName="username"
+        placeholder="Tên đăng nhập (tối thiểu 4 ký tự)"
+        prefixIcon="user"
+        errorTip="Vui lòng nhập tên đăng nhập dài hơn 4 ký tự!"
+        class="register-form-margin"
+      ></app-custom-input>
 
-  <div class="form-panel">
-    <div class="form-card">
-      <a routerLink="/" class="mobile-back-link">
-        <nz-icon nzType="arrow-left" /> Về trang chủ
-      </a>
-      <div class="form-header">
-        <div class="form-icon-badge register-badge">
-          <nz-icon nzType="user-add" />
-        </div>
-        <h2 class="form-title">Tạo tài khoản</h2>
-        <p class="form-subtitle">Điền thông tin bên dưới để đăng ký tài khoản mới.</p>
+      <app-custom-input
+        formControlName="email"
+        type="email"
+        placeholder="Email (example@gmail.com)"
+        prefixIcon="mail"
+        errorTip="Vui lòng nhập Email hợp lệ!"
+        class="register-form-margin"
+      ></app-custom-input>
+
+      <app-custom-input
+        formControlName="password"
+        type="password"
+        placeholder="Mật khẩu (tối thiểu 6 ký tự)"
+        prefixIcon="lock"
+        errorTip="Vui lòng nhập mật khẩu dài hơn 6 ký tự!"
+        (ngModelChange)="updateConfirmValidator()"
+        class="register-form-margin"
+      ></app-custom-input>
+
+      <app-custom-input
+        formControlName="confirmPassword"
+        type="password"
+        placeholder="Xác nhận mật khẩu"
+        prefixIcon="lock"
+        [errorTip]="confirmPasswordError"
+        class="register-form-margin"
+      ></app-custom-input>
+
+      <button
+        nz-button
+        class="register-form-button register-form-margin"
+        [nzType]="'primary'"
+        [nzLoading]="isLoading"
+        nzBlock
+      >
+        Tạo tài khoản
+      </button>
+
+      <div class="register-footer">
+        Đã có tài khoản? <a routerLink="/login">Đăng nhập ngay</a>
       </div>
-
-      <form [formGroup]="registerForm" (ngSubmit)="submitForm()" class="auth-form">
-
-        <div class="field-group">
-          <label class="field-label">Tên đăng nhập</label>
-          <app-custom-input
-            formControlName="username"
-            placeholder="Tối thiểu 4 ký tự"
-            prefixIcon="user"
-            errorTip="Vui lòng nhập tên đăng nhập dài hơn 4 ký tự!"
-          ></app-custom-input>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Email</label>
-          <app-custom-input
-            formControlName="email"
-            type="email"
-            placeholder="example@gmail.com"
-            prefixIcon="mail"
-            errorTip="Vui lòng nhập Email hợp lệ!"
-          ></app-custom-input>
-        </div>
-
-        <div class="form-row">
-          <div class="field-group">
-            <label class="field-label">Mật khẩu</label>
-            <app-custom-input
-              formControlName="password"
-              type="password"
-              placeholder="Tối thiểu 6 ký tự"
-              prefixIcon="lock"
-              errorTip="Vui lòng nhập mật khẩu dài hơn 6 ký tự!"
-              (ngModelChange)="updateConfirmValidator()"
-            ></app-custom-input>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Xác nhận mật khẩu</label>
-            <app-custom-input
-              formControlName="confirmPassword"
-              type="password"
-              placeholder="Nhập lại mật khẩu"
-              prefixIcon="lock"
-              [errorTip]="confirmPasswordError"
-            ></app-custom-input>
-          </div>
-        </div>
-
-        <button
-          nz-button
-          nzType="primary"
-          nzBlock
-          [nzLoading]="isLoading"
-          class="submit-btn register-btn"
-        >
-          <nz-icon nzType="user-add" *ngIf="!isLoading" />
-          Tạo tài khoản
-        </button>
-
-        <div class="form-switch">
-          Đã có tài khoản?
-          <a routerLink="/login" class="switch-link">Đăng nhập ngay</a>
-        </div>
-      </form>
-    </div>
+    </form>
   </div>
-
 </div>

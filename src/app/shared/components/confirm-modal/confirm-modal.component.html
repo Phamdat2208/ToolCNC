@@ -11,12 +11,15 @@
   </div>
 
   <div class="modal-footer-actions">
-    <button class="btn-cancel" (click)="handleCancel()">
+    <button class="btn-cancel" [disabled]="isOkLoading()" (click)="handleCancel()">
       {{ data.cancelText || 'Hủy' }}
     </button>
-    <button 
-            [ngClass]="data.type === 'danger' ? 'btn-danger' : 'btn-primary'"
-            (click)="handleOk()">
+    <button
+      nz-button
+      class="btn-confirm"
+      [ngClass]="data.type === 'danger' ? 'btn-danger' : 'btn-primary'"
+      [nzLoading]="isOkLoading()"
+      (click)="handleOk()">
       {{ data.okText || 'Xác nhận' }}
     </button>
   </div>

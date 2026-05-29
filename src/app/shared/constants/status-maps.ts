@@ -19,9 +19,15 @@ export const QUOTATION_STATUS_MAP: StatusMap = {
   SENT:      { color: 'geekblue',   label: 'Đã gửi báo giá' },
 };
 
-export const USER_STATUS_MAP: StatusMap = {
+export const USER_ROLE_MAP: StatusMap = {
   ADMIN:     { color: 'gold',       label: 'Quản trị viên' },
-  USER:      { color: 'blue',       label: 'Khách hàng' },
+  CUSTOMER:  { color: 'blue',       label: 'Khách hàng' },
+};
+
+export const USER_STATUS_MAP: StatusMap = {
+  ACTIVE:    { color: 'success',    label: 'Hoạt động' },
+  LOCKED:  { color: 'default',    label: 'Khóa' },
+  DELETED:  { color: 'error',      label: 'Tạm ngưng' },
 };
 
 export const PRODUCT_STATUS_MAP: StatusMap = {

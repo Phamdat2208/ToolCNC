@@ -15,7 +15,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { debounceTime, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
-import { ConfirmModalService } from '../../services/confirm-modal.service';
+import { ModalService } from '../../services/modal.service';
 import { ToastService } from '../../services/toast.service';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { PageBreadcrumbComponent } from '../../shared/components/page-breadcrumb/page-breadcrumb.component';
@@ -48,7 +48,7 @@ export class CartComponent implements OnDestroy {
   cartService = inject(CartService);
   private router = inject(Router);
   private toastService = inject(ToastService);
-  private confirmModalService = inject(ConfirmModalService);
+  private modalService = inject(ModalService);
   authService = inject(AuthService);
   
   private destroy$ = new Subject<void>();
@@ -125,7 +125,7 @@ export class CartComponent implements OnDestroy {
       event.stopPropagation();
     }
 
-    this.confirmModalService.confirm({
+    this.modalService.confirm({
       title: 'Xóa toàn bộ giỏ hàng?',
       content: 'Tất cả sản phẩm trong giỏ hàng sẽ bị gỡ bỏ. Bạn có chắc chắn muốn thực hiện?',
       okText: 'Xác nhận xóa',

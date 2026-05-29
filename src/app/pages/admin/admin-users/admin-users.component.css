@@ -7,6 +7,11 @@
   margin-bottom: 24px;
 }
 
+.lock-icon {
+  font-size: 1.1rem;
+  color: #2563eb;
+}
+
 /* Responsive Logic */
 .admin-users-mobile-view {
   display: none;
@@ -16,11 +21,11 @@
   .admin-users-desktop-view {
     display: none;
   }
-  
+
   .admin-users-mobile-view {
     display: block;
   }
-  
+
   .page-title {
     font-size: 20px;
     padding: 0 12px;
@@ -88,4 +93,64 @@
   color: #1e293b;
   font-weight: 500;
 }
+
+/* Filter bar styles */
+.search-bar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-label {
+  font-weight: 500;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.card-actions-mob {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.mr-8 {
+  margin-right: 8px;
+}
+
+.mt-12 {
+  margin-top: 12px;
+}
+
+.flex-end {
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .search-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+    margin: 0 12px 16px;
+  }
+
+  .filter-group {
+    justify-content: space-between;
+  }
+
+  .filter-group nz-select {
+    flex: 1;
+  }
+}
+
 

@@ -91,6 +91,35 @@
   white-space: nowrap;
   display: inline-block;
   vertical-align: middle;
+  background-color: #f1f5f9;
+  color: #475569;
+  border: none;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.stock-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  text-align: center;
+  min-width: 40px;
+}
+
+.stock-tag.in-stock {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.stock-tag.out-of-stock {
+  background-color: #fef2f2;
+  color: #dc2626;
 }
 
 /* Mobile Optimizations */

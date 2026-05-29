@@ -269,8 +269,7 @@
   gap: 6px;
   padding: 7px 16px;
   background: transparent;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  border: none;
   color: #475569;
   font-size: 13px;
   font-weight: 600;
@@ -280,9 +279,9 @@
 }
 
 .btn-detail:hover {
-  border-color: #ea580c;
-  color: #ea580c;
-  background: #f0f9ff;
+  border-radius: 10px;
+  border-color: #9b9b9b;
+  background: #f0f2f3;
 }
 
 .button-order-action {

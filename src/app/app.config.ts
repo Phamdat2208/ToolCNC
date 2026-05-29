@@ -103,7 +103,9 @@ import {
   UserOutline,
   WalletOutline,
   WarningFill,
-  WarningOutline
+  WarningOutline,
+  UnlockOutline,
+  UnorderedListOutline,
 } from '@ant-design/icons-angular/icons';
 import { maskingInterceptor } from './shared/interceptors/masking.interceptor';
 import { authInterceptor } from './shared/interceptors/auth.interceptor';
@@ -193,7 +195,7 @@ const icons = [
   CopyOutline,
   UndoOutline,
   ThunderboltOutline,
-  LoginOutline, 
+  LoginOutline,
   GiftOutline,
   UserAddOutline,
   IdcardOutline,
@@ -203,7 +205,9 @@ const icons = [
   ReloadOutline,
   RollbackOutline,
   BarChartOutline,
-  BankOutline
+  BankOutline,
+  UnlockOutline,
+  UnorderedListOutline
 ];
 
 registerLocaleData(vi);

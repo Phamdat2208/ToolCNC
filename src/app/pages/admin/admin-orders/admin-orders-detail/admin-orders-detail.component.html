@@ -1,0 +1,87 @@
+<div class="modal-content-wrapper">
+  <!-- Header Section -->
+  <div class="modal-header">
+    <div class="modal-header-left">
+      <div class="modal-header-icon">
+        <i nz-icon nzType="shopping"></i>
+      </div>
+      <div class="header-info">
+        <h2 class="title">Chi tiết đơn hàng <span class="text-primary">#{{ selectedOrder.trackingNumber || selectedOrder.id }}</span></h2>
+        <div class="header-tags">
+          <app-status-tag [status]="selectedOrder.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
+          <div class="date-info">
+            <i nz-icon nzType="calendar" nzTheme="outline"></i>
+            <span>{{ selectedOrder.dateCreated | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nz-divider></nz-divider>
+
+  <div *ngIf="selectedOrder.status === 'CANCELLED' && selectedOrder.cancelReason" class="alert-box-danger">
+    <strong class="text-danger"><i nz-icon nzType="info-circle"></i> Lý do hủy:</strong>
+    <span style="margin-left: 8px">{{ selectedOrder.cancelReason }}</span>
+  </div>
+
+  <!-- Body Section -->
+  <div class="info-section">
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-label"><i nz-icon nzType="user"></i> Thông tin Người mua</span>
+        <span class="info-value font-medium" style="font-size: 16px">{{ selectedOrder.fullName || selectedOrder.customerName }}</span>
+        <span class="info-value text-secondary" style="margin-top: 4px;">SĐT: {{ selectedOrder.phone }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label"><i nz-icon nzType="environment"></i> Địa chỉ giao hàng</span>
+        <span class="info-value">{{ selectedOrder.address }}</span>
+        <span class="info-value text-secondary" style="margin-top: 4px;">{{ selectedOrder.wardName }}, {{ selectedOrder.provinceName }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <h3 class="section-title"><i nz-icon nzType="unordered-list"></i> Danh sách sản phẩm</h3>
+    <div class="product-list-wrapper">
+      <div *ngFor="let item of selectedOrder.items" class="product-item">
+        <img [src]="item.imageUrl || 'https://placehold.co/80x80?text=No+Image'" alt="product image" class="product-img" />
+        <div class="product-info-flex">
+          <h4 class="product-name">{{ item.productName }}</h4>
+          <div class="product-tags">
+            <nz-tag *ngIf="item.sku" [nzColor]="'blue'" style="font-size: 11px; margin: 0; line-height: 20px">{{ item.sku }}</nz-tag>
+            <span *ngIf="item.variantName" class="text-secondary" style="font-size: 12px">
+              P.loại: <strong>{{ item.variantName }}</strong>
+            </span>
+          </div>
+          <p class="product-price-info">
+            Đơn giá: {{ item.unitPrice | currency: "VND" : "symbol" : "1.0-0" }} x {{ item.quantity }}
+          </p>
+        </div>
+        <div class="product-total-price">
+          {{ item.unitPrice * item.quantity | currency: "VND" : "symbol" : "1.0-0" }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-section">
+    <div class="summary-row">
+      <span class="summary-label">Hình thức thanh toán:</span>
+      <span class="summary-value text-primary font-medium">{{ selectedOrder.paymentMethod === "TRANSFER" ? "Chuyển khoản" : "Thanh toán trực tiếp" }}</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">Tổng số lượng:</span>
+      <span class="summary-value font-medium">{{ selectedOrder.totalQuantity }}</span>
+    </div>
+    <div class="summary-row total-row">
+      <span class="summary-label">Thành tiền:</span>
+      <strong class="summary-total">{{ selectedOrder.totalPrice | currency: "VND" : "symbol" : "1.0-0" }}</strong>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="modal-actions">
+    <button nz-button nzType="primary" (click)="close()">Đóng</button>
+  </div>
+</div>

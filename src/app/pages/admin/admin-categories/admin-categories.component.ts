@@ -12,7 +12,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { Category } from '../../../models/category.model';
 import { CategoryService } from '../../../services/category.service';
-import { ConfirmModalService } from '../../../services/confirm-modal.service';
+import { ModalService } from '../../../services/modal.service';
 import { ToastService } from '../../../services/toast.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
@@ -39,7 +39,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 })
 export class AdminCategoriesComponent implements OnInit {
   private categoryService = inject(CategoryService);
-  private confirmModalService = inject(ConfirmModalService);
+  private modalService = inject(ModalService);
   private fb = inject(FormBuilder);
   private toastService = inject(ToastService);
 
@@ -210,7 +210,7 @@ export class AdminCategoriesComponent implements OnInit {
   }
 
   deleteCategory(id: number) {
-    this.confirmModalService.confirm({
+    this.modalService.confirm({
       title: 'Xác nhận xóa',
       content: 'Xóa danh mục này có thể ảnh hưởng đến các sản phẩm liên quan. Bạn có chắc chắn?',
       okText: 'Xóa',

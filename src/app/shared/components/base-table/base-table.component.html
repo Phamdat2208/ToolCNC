@@ -1,0 +1,120 @@
+<div class="base-table-wrapper">
+  <!-- Loading overlay -->
+  <app-loading [isLoading]="isLoading">
+
+    <!-- Table -->
+    <nz-table
+      *ngIf="!showEmptyState"
+      [nzData]="safeDataSource"
+      [nzShowPagination]="false"
+      [nzScroll]="tableScroll ?? {}"
+      [nzBordered]="mergedConfig.bordered ?? false"
+      [nzSize]="mergedConfig.size ?? 'default'"
+      class="base-table"
+    >
+      <thead>
+        <tr>
+          <!-- Expand toggle column -->
+          <th *ngIf="rowExpand" nzWidth="48px" class="expand-th"></th>
+
+          <th
+            *ngFor="let col of columns; trackBy: trackByColumnKey"
+            [nzWidth]="col.width || null"
+            [nzAlign]="col.align || 'left'"
+            [nzLeft]="col.fixed === 'left'"
+            [nzRight]="col.fixed === 'right'"
+            [nzShowSort]="col.sortable ?? false"
+            (nzSortOrderChange)="onSortChange(col.key, $event)"
+          >
+            {{ col.label }}
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let row of safeDataSource; let i = index; trackBy: trackByRowIndex">
+          <!-- Main row -->
+          <tr
+            class="base-table-row"
+            [class.row-clickable]="rowClick.observed"
+            [class.row-expanded]="isRowExpanded(i)"
+            (click)="onRowClick(row, $event)"
+          >
+            <!-- Expand toggle cell -->
+            <td *ngIf="rowExpand" class="expand-toggle-cell">
+              <button
+                class="expand-toggle-btn"
+                [class.expanded]="isRowExpanded(i)"
+                (click)="toggleRowExpand(i); $event.stopPropagation()"
+                type="button"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                  <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </td>
+
+            <!-- Data cells -->
+            <td
+              *ngFor="let col of columns; trackBy: trackByColumnKey"
+              [nzLeft]="col.fixed === 'left'"
+              [nzRight]="col.fixed === 'right'"
+              [nzAlign]="col.align || 'left'"
+            >
+              <!-- Custom template cell -->
+              <ng-container
+                *ngIf="col.cellTemplate; else defaultCell"
+                [ngTemplateOutlet]="col.cellTemplate"
+                [ngTemplateOutletContext]="{ $implicit: row, index: i }"
+              ></ng-container>
+
+              <!-- Default text cell -->
+              <ng-template #defaultCell>
+                {{ getCellValue(row, col.key) }}
+              </ng-template>
+            </td>
+          </tr>
+
+          <!-- Expand content row -->
+          <tr *ngIf="rowExpand && isRowExpanded(i)" class="expand-content-row">
+            <td [attr.colspan]="columns.length + 1" class="expand-content-cell">
+              <div class="expand-content-inner">
+                <ng-container
+                  [ngTemplateOutlet]="rowExpand"
+                  [ngTemplateOutletContext]="{ $implicit: row }"
+                ></ng-container>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </nz-table>
+
+    <!-- Empty state -->
+    <div *ngIf="showEmptyState" class="empty-state-block">
+      <div class="empty-icon-wrapper">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <rect width="64" height="64" rx="32" fill="#f8fafc"/>
+          <rect x="12" y="20" width="40" height="28" rx="4" stroke="#cbd5e1" stroke-width="2" fill="white"/>
+          <line x1="12" y1="28" x2="52" y2="28" stroke="#e2e8f0" stroke-width="2"/>
+          <line x1="22" y1="34" x2="42" y2="34" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="22" y1="38" x2="38" y2="38" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="empty-text">{{ mergedConfig.emptyText }}</p>
+    </div>
+
+  </app-loading>
+
+  <!-- Pagination -->
+  <div *ngIf="mergedConfig.showPagination && !showEmptyState" class="table-pagination">
+    <app-pagination
+      [total]="total"
+      [pageIndex]="pageIndex"
+      [pageSize]="mergedConfig.pageSize"
+      [pageSizeOptions]="mergedConfig.pageSizeOptions"
+      (pageIndexChange)="onPageIndexChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    ></app-pagination>
+  </div>
+</div>

@@ -57,15 +57,19 @@
     </div>
 
     <nz-form-item>
-      <nz-form-label nzRequired>Số lượng cần báo giá</nz-form-label>
-      <nz-form-control nzErrorTip="Số lượng tối thiểu là 1">
-        <nz-input-number
-          formControlName="quantity"
-          [nzMin]="1"
-          [nzStep]="1"
-          class="qty-input"
-        />
-      </nz-form-control>
+      <div nz-col [nzSpan]="12">
+        <nz-form-label nzRequired>Số lượng cần báo giá</nz-form-label>
+        <p class="stock-info">Có sẵn: {{ availableStock }}</p>
+      </div>
+      <div nz-col [nzSpan]="12">
+        <nz-form-control>
+          <app-quantity-input 
+            [(quantity)]="quantity" 
+            [maxStock]="quantityLimit"
+            (quantityChange)="onQuantityChange($event)"
+          ></app-quantity-input>
+        </nz-form-control>
+      </div>
     </nz-form-item>
 
     <nz-form-item>

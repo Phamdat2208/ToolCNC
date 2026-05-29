@@ -1,9 +1,9 @@
-<div [class.has-compare-bar]="(compareService.compareList$ | async)?.length && !isAdminRoute && !isLoginRoute">
+<div [class.has-compare-bar]="(compareService.compareList$ | async)?.length && !isAdminRoute && !isLoginRoute && !isRegisterRoute">
 <router-outlet></router-outlet>
-<app-speed-dial *ngIf="!isLoginRoute && !isAdminRoute && !isModalOpen"></app-speed-dial>
+<app-speed-dial *ngIf="!isLoginRoute && !isRegisterRoute && !isAdminRoute && !isModalOpen"></app-speed-dial>
 
 <!-- Nút cuộn lên đầu trang -->
-<nz-back-top *ngIf="!isLoginRoute && !isAdminRoute && !isModalOpen" [nzTemplate]="tpl" [nzVisibilityHeight]="400">
+<nz-back-top *ngIf="!isLoginRoute && !isRegisterRoute && !isAdminRoute && !isModalOpen" [nzTemplate]="tpl" [nzVisibilityHeight]="400">
   <ng-template #tpl>
     <div class="back-top-inner shadow-premium">
       <nz-icon nzType="arrow-up" />

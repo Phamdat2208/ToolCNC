@@ -113,6 +113,11 @@
   box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
 }
 
+.btn-confirm {
+  height: 56px;
+  border-radius: 12px !important;
+}
+
 /* Override NG-ZORRO styles for this component in modal */
 :host-context(.ant-modal-content) {
   padding: 0 !important;

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -8,22 +8,21 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
-import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { Brand, BrandService } from '../../../services/brand.service';
 import { CloudinaryService } from '../../../services/cloudinary.service';
-import { ConfirmModalService } from '../../../services/confirm-modal.service';
+import { ModalService } from '../../../services/modal.service';
 import { ToastService } from '../../../services/toast.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
-import { PaginationComponent } from "../../../shared/components/pagination/pagination.component";
+import { BaseTableComponent } from '../../../shared/components/base-table/base-table.component';
+import { TableColumn, TableConfig, TablePageEvent } from '../../../models/table.model';
 
 @Component({
   selector: 'app-admin-brands',
   standalone: true,
   imports: [
     CommonModule,
-    NzTableModule,
     NzButtonModule,
     NzIconModule,
     NzFormModule,
@@ -35,18 +34,24 @@ import { PaginationComponent } from "../../../shared/components/pagination/pagin
     ReactiveFormsModule,
     ImageCropperComponent,
     LoadingComponent,
-    PaginationComponent
-],
+    BaseTableComponent
+  ],
   templateUrl: './admin-brands.component.html',
   styleUrl: './admin-brands.component.css'
 })
-export class AdminBrandsComponent implements OnInit {
+export class AdminBrandsComponent implements OnInit, AfterViewInit {
+  @ViewChild('logoCell') logoCell!: TemplateRef<any>;
+  @ViewChild('nameCell') nameCell!: TemplateRef<any>;
+  @ViewChild('descCell') descCell!: TemplateRef<any>;
+  @ViewChild('actionCell') actionCell!: TemplateRef<any>;
+
   private brandService = inject(BrandService);
-  private confirmModalService = inject(ConfirmModalService);
+  private modalService = inject(ModalService);
   private fb = inject(FormBuilder);
   private cloudinaryService = inject(CloudinaryService);
   private message = inject(NzMessageService);
   private toastService = inject(ToastService);
+  private cdr = inject(ChangeDetectorRef);
   public isLoadingModal = false;
 
   brands: Brand[] = [];
@@ -75,8 +80,28 @@ export class AdminBrandsComponent implements OnInit {
     description: ['']
   });
 
+  columns: TableColumn<any>[] = [];
+  tableConfig: TableConfig = {
+    showPagination: true,
+    pageSize: 10,
+    pageSizeOptions: [10, 20, 50, 100],
+    showSizeChanger: true,
+    scrollX: '600px'
+  };
+
   ngOnInit() {
     this.loadBrands();
+  }
+
+  ngAfterViewInit() {
+    this.columns = [
+      { key: 'id', label: 'ID', width: '50px', align: 'center' },
+      { key: 'logoUrl', label: 'Logo', width: '120px', align: 'center', cellTemplate: this.logoCell },
+      { key: 'name', label: 'Tên Thương hiệu', width: '150px', align: 'left', cellTemplate: this.nameCell },
+      { key: 'description', label: 'Mô tả', width: '200px', align: 'left', cellTemplate: this.descCell },
+      { key: 'action', label: 'Thao tác', width: '100px', align: 'center', cellTemplate: this.actionCell }
+    ];
+    this.cdr.detectChanges();
   }
 
   loadBrands() {
@@ -98,6 +123,13 @@ export class AdminBrandsComponent implements OnInit {
       }
     });
   }
+
+  onTablePageChange(event: TablePageEvent): void {
+      this.page = event.pageIndex;
+      this.size = event.pageSize;
+      this.loadBrands();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
   showAddModal() {
     this.isEditMode = false;
@@ -247,7 +279,7 @@ export class AdminBrandsComponent implements OnInit {
   }
 
   deleteBrand(id: number) {
-    this.confirmModalService.confirm({
+    this.modalService.confirm({
       title: 'Xác nhận xóa',
       content: 'Dữ liệu thương hiệu này sẽ bị gỡ bỏ khỏi hệ thống. Bạn có chắc chắn?',
       okText: 'Xóa',

@@ -1,44 +1,89 @@
 <div class="admin-users-container">
-  <h2 class="page-title">Quản lý người dùng</h2>
+  <div class="page-header">
+    <h2 class="page-title">Quản lý người dùng</h2>
+  </div>
+
+  <div class="search-bar">
+    <div class="filter-group">
+      <span class="filter-label">Trạng thái:</span>
+      <nz-select [(ngModel)]="statusFilter" (ngModelChange)="applyFilter()" style="width: 180px;">
+        <nz-option nzValue="ALL" nzLabel="Tất cả"></nz-option>
+        <nz-option nzValue="ACTIVE" nzLabel="Hoạt động"></nz-option>
+        <nz-option nzValue="LOCKED" nzLabel="Đã khóa"></nz-option>
+        <nz-option nzValue="DELETED" nzLabel="Đã xóa"></nz-option>
+      </nz-select>
+    </div>
+  </div>
 
   <app-loading [isLoading]="loading">
     <!-- Desktop View Table -->
     <div class="admin-users-desktop-view">
-      <nz-table
-        #usersTable
-        [nzData]="users.slice((page - 1) * size, page * size)"
-        [nzScroll]="{ x: '800px' }"
-        [nzFrontPagination]="false"
-        [nzShowPagination]="false"
-      >
-        <thead>
-          <tr>
-            <th>Người dùng</th>
-            <th>Email / Username</th>
-            <th>Họ tên</th>
-            <th>Quyền hạn</th>
-            <th>Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let user of usersTable.data">
-            <td>
-              <nz-avatar nzIcon="user" [nzSrc]="user.avatarUrl"></nz-avatar>
-            </td>
-            <td>
-              <div class="font-bold">{{ user.username }}</div>
-              <small class="text-secondary">{{ user.email }}</small>
-            </td>
-            <td>{{ user.fullName || "---" }}</td>
-            <td>
-              <app-status-tag [status]="user.role" [statusMap]="USER_STATUS_MAP"></app-status-tag>
-            </td>
-            <td>
-              <nz-tag [nzColor]="'success'">Hoạt động</nz-tag>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
+      <app-base-table
+        [columns]="columns"
+        [dataSource]="users.slice((page - 1) * size, page * size)"
+        [total]="users.length"
+        [pageIndex]="page"
+        [isLoading]="loading"
+        [config]="tableConfig"
+      ></app-base-table>
+
+      <!-- Cell Templates -->
+      <ng-template #avatarCell let-row>
+        <nz-avatar nzIcon="user" [nzSrc]="row.avatarUrl"></nz-avatar>
+      </ng-template>
+
+      <ng-template #usernameCell let-row>
+        <div class="font-bold">{{ row.username }}</div>
+        <small class="text-secondary">{{ row.email }}</small>
+      </ng-template>
+
+      <ng-template #fullNameCell let-row>
+        {{ row.fullName || "---" }}
+      </ng-template>
+
+      <ng-template #roleCell let-row>
+        <app-status-tag [status]="row.role" [statusMap]="USER_ROLE_MAP"></app-status-tag>
+      </ng-template>
+
+      <ng-template #statusCell let-row>
+        <app-status-tag [status]="row.status" [statusMap]="USER_STATUS_MAP"></app-status-tag>
+      </ng-template>
+
+      <ng-template #actionCell let-row>
+        <button
+          *ngIf="row.status === 'ACTIVE'"
+          nz-button
+          nzType="text"
+          class="lock-icon text-primary"
+          (click)="lockUser(row.id)"
+          nz-tooltip
+          nzTooltipTitle="Khóa"
+        >
+          <nz-icon nzType="lock" />
+        </button>
+        <button
+          *ngIf="row.status === 'LOCKED'"
+          nz-button
+          nzType="text"
+          nzDanger
+          (click)="unlockUser(row.id)"
+          nz-tooltip
+          nzTooltipTitle="Mở khóa"
+        >
+          <nz-icon nzType="unlock" />
+        </button>
+        <button
+          *ngIf="row.status !== 'DELETED'"
+          nz-button
+          nzType="text"
+          nzDanger
+          (click)="deleteUser(row.id)"
+          nz-tooltip
+          nzTooltipTitle="Xóa"
+        >
+          <nz-icon nzType="delete" />
+        </button>
+      </ng-template>
     </div>
 
     <!-- Mobile View Cards -->
@@ -53,10 +98,10 @@
             </div>
           </div>
           <div class="user-status-mob">
-            <app-status-tag [status]="user.role" [statusMap]="USER_STATUS_MAP"></app-status-tag>
+            <app-status-tag [status]="user.role" [statusMap]="USER_ROLE_MAP"></app-status-tag>
           </div>
         </div>
-        
+
         <div class="card-details">
           <div class="info-row">
             <span class="label">Họ tên:</span>
@@ -64,21 +109,40 @@
           </div>
           <div class="info-row">
             <span class="label">Trạng thái:</span>
-            <nz-tag [nzColor]="'success'">Hoạt động</nz-tag>
+            <app-status-tag [status]="user.status" [statusMap]="USER_STATUS_MAP"></app-status-tag>
+          </div>
+          
+          <div class="card-actions-mob mt-12 flex-end" *ngIf="user.status !== 'DELETED'">
+            <button
+              *ngIf="user.status === 'ACTIVE'"
+              nz-button
+              nzType="default"
+              (click)="lockUser(user.id)"
+              class="mr-8"
+            >
+              <nz-icon nzType="lock" /> Khóa
+            </button>
+            <button
+              *ngIf="user.status === 'LOCKED'"
+              nz-button
+              nzType="default"
+              (click)="unlockUser(user.id)"
+              class="mr-8"
+            >
+              <nz-icon nzType="unlock" /> Mở khóa
+            </button>
+            <button
+              nz-button
+              nzType="primary"
+              nzDanger
+              (click)="deleteUser(user.id)"
+            >
+              <nz-icon nzType="delete" /> Xóa
+            </button>
           </div>
         </div>
       </div>
     </div>
   </app-loading>
-
-  <div class="pagination-container mt-16" *ngIf="users.length > 0">
-    <app-pagination
-      [total]="users.length"
-      [pageIndex]="page"
-      [pageSize]="size"
-      [pageSizeOptions]="[10, 20, 50, 100]"
-      (pageIndexChange)="onPageChange($event)"
-      (pageSizeChange)="onPageSizeChange($event)"
-    ></app-pagination>
-  </div>
 </div>
+

@@ -28,24 +28,24 @@ import { UrlUtils } from '../../shared/utils/url-utils';
 @Component({
   selector: 'app-product-detail',
   imports: [
-    CommonModule, 
-    FormsModule, 
-    NzGridModule, 
-    NzButtonModule, 
-    NzIconModule, 
-    NzTabsModule, 
-    NzInputNumberModule, 
-    NzDividerModule, 
-    NzSpinModule, 
+    CommonModule,
+    FormsModule,
+    NzGridModule,
+    NzButtonModule,
+    NzIconModule,
+    NzTabsModule,
+    NzInputNumberModule,
+    NzDividerModule,
+    NzSpinModule,
     NzModalModule,
-    PageBreadcrumbComponent, 
-    QuantityInputComponent, 
+    PageBreadcrumbComponent,
+    QuantityInputComponent,
     LoadingComponent,
     NzToolTipModule,
     NzImageModule,
   ],
   templateUrl: './product-detail.component.html',
-  styleUrl: './product-detail.component.css'
+  styleUrl: './product-detail.component.css',
 })
 export class ProductDetailComponent implements OnInit {
   cartService = inject(CartService);
@@ -71,7 +71,7 @@ export class ProductDetailComponent implements OnInit {
   selectedVariant: any = null;
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
         this.loadProduct(+id);
@@ -84,25 +84,26 @@ export class ProductDetailComponent implements OnInit {
     this.productService.getProductById(id).subscribe({
       next: (res) => {
         this.product = res;
-        
+
         // Build the image gallery array
         const gallery: any[] = [];
         if (this.product.imageUrl) {
           gallery.push(this.product.imageUrl.trim());
         }
-        
+
         if (this.product.images && Array.isArray(this.product.images)) {
           this.product.images.forEach((img: any) => {
-            const url = (img && typeof img === 'object') ? img.url : img;
+            const url = img && typeof img === 'object' ? img.url : img;
             if (url && !gallery.includes(url.trim())) {
               gallery.push(url.trim());
             }
           });
         }
-        
-        this.product.images = gallery.length > 0 
-          ? gallery.map(url => UrlUtils.getFullUrl(url)) 
-          : ['https://placehold.co/600x400?text=No+Image'];
+
+        this.product.images =
+          gallery.length > 0
+            ? gallery.map((url) => UrlUtils.getFullUrl(url))
+            : ['https://placehold.co/600x400?text=No+Image'];
         this.mainImage = this.product.images[0];
 
         // Parse specifications JSON
@@ -111,12 +112,12 @@ export class ProductDetailComponent implements OnInit {
           try {
             const specs = JSON.parse(this.product.specifications);
             if (Array.isArray(specs)) {
-              this.parsedSpecs = specs.filter(s => s.key && s.value);
+              this.parsedSpecs = specs.filter((s) => s.key && s.value);
             } else if (typeof specs === 'object' && specs !== null) {
               // Chuyển đổi { "Key": "Value" } sang [ {key, value} ]
               this.parsedSpecs = Object.entries(specs).map(([key, value]) => ({
                 key: key,
-                value: String(value)
+                value: String(value),
               }));
             }
           } catch (e) {
@@ -127,13 +128,14 @@ export class ProductDetailComponent implements OnInit {
         // Map description images
         if (this.product.descriptionImages) {
           try {
-            const descImages = typeof this.product.descriptionImages === 'string' 
-              ? JSON.parse(this.product.descriptionImages) 
-              : this.product.descriptionImages;
-              
+            const descImages =
+              typeof this.product.descriptionImages === 'string'
+                ? JSON.parse(this.product.descriptionImages)
+                : this.product.descriptionImages;
+
             if (Array.isArray(descImages)) {
               this.product.descriptionImages = descImages.map((img: any) => {
-                const url = (img && typeof img === 'object') ? img.url : img;
+                const url = img && typeof img === 'object' ? img.url : img;
                 return UrlUtils.getFullUrl(url);
               });
             } else {
@@ -148,19 +150,24 @@ export class ProductDetailComponent implements OnInit {
         }
 
         // Setup features mock if description is plain
-        this.product.features = this.product.description ? this.product.description.split('\n').filter((f: string) => f.trim().length > 0) : ['Sản phẩm chưa có đặc điểm nổi bật'];
+        this.product.features = this.product.description
+          ? this.product.description
+              .split('\n')
+              .filter((f: string) => f.trim().length > 0)
+          : ['Sản phẩm chưa có đặc điểm nổi bật'];
 
         this.breadcrumbItems = [
           { label: 'Trang chủ', url: '/' },
-          { label: 'Sản phẩm', url: '/products' }
+          { label: 'Sản phẩm', url: '/products' },
         ];
 
         if (this.product.categoryName || this.product.category?.name) {
-          const catName = this.product.categoryName || this.product.category?.name;
-          this.breadcrumbItems.push({ 
-            label: catName, 
+          const catName =
+            this.product.categoryName || this.product.category?.name;
+          this.breadcrumbItems.push({
+            label: catName,
             url: '/products',
-            queryParams: { category: catName }
+            queryParams: { category: catName },
           });
         }
 
@@ -179,7 +186,7 @@ export class ProductDetailComponent implements OnInit {
       error: (err) => {
         this.toastService.showError('Không thể tải chi tiết sản phẩm');
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -224,7 +231,7 @@ export class ProductDetailComponent implements OnInit {
     }
 
     this.isAddingToCart = true;
-    
+
     // Create a modified product object with selected variant info for the cart service
     const cartProduct = { ...this.product };
     if (this.selectedVariant) {
@@ -233,16 +240,18 @@ export class ProductDetailComponent implements OnInit {
       cartProduct.variantName = this.selectedVariant.variantName;
     }
 
-    this.cartService.addToCart(cartProduct, this.quantity, this.mainImage).subscribe(success => {
-      this.isAddingToCart = false;
-      if (success) {
-        let msg = `Đã thêm ${this.quantity} sản phẩm vào giỏ hàng`;
-        if (this.selectedVariant) {
-          msg = `Đã thêm ${this.quantity} sản phẩm (${this.selectedVariant.variantName}) vào giỏ hàng`;
+    this.cartService
+      .addToCart(cartProduct, this.quantity, this.mainImage)
+      .subscribe((success) => {
+        this.isAddingToCart = false;
+        if (success) {
+          let msg = `Đã thêm ${this.quantity} sản phẩm vào giỏ hàng`;
+          if (this.selectedVariant) {
+            msg = `Đã thêm ${this.quantity} sản phẩm (${this.selectedVariant.variantName}) vào giỏ hàng`;
+          }
+          this.toastService.showSuccess(msg);
         }
-        this.toastService.showSuccess(msg);
-      }
-    });
+      });
   }
 
   buyNow() {
@@ -253,7 +262,7 @@ export class ProductDetailComponent implements OnInit {
     }
 
     this.isBuyingNow = true;
-    
+
     const cartProduct = { ...this.product };
     if (this.selectedVariant) {
       cartProduct.price = this.selectedVariant.price;
@@ -261,12 +270,14 @@ export class ProductDetailComponent implements OnInit {
       cartProduct.variantName = this.selectedVariant.variantName;
     }
 
-    this.cartService.addToCart(cartProduct, this.quantity, this.mainImage).subscribe(success => {
-      this.isBuyingNow = false;
-      if (success) {
-        this.router.navigate(['/cart']);
-      }
-    });
+    this.cartService
+      .addToCart(cartProduct, this.quantity, this.mainImage)
+      .subscribe((success) => {
+        this.isBuyingNow = false;
+        if (success) {
+          this.router.navigate(['/cart']);
+        }
+      });
   }
 
   toggleWishlist(product: any) {
@@ -276,9 +287,13 @@ export class ProductDetailComponent implements OnInit {
       this.isTogglingWishlist = false;
       if (added === null) return;
       if (added) {
-        this.toastService.showSuccess(`Đã thêm ${this.product.name} vào danh sách yêu thích ♥`);
+        this.toastService.showSuccess(
+          `Đã thêm ${this.product.name} vào danh sách yêu thích ♥`,
+        );
       } else {
-        this.toastService.showInfo(`Đã xóa ${this.product.name} khỏi danh sách yêu thích`);
+        this.toastService.showInfo(
+          `Đã xóa ${this.product.name} khỏi danh sách yêu thích`,
+        );
       }
     });
   }
@@ -297,10 +312,11 @@ export class ProductDetailComponent implements OnInit {
       nzData: {
         productId: this.product.id,
         productName: this.product.name,
-        variantId: this.selectedVariant?.id
+        variantId: this.selectedVariant?.id,
+        maxStock: this.displayStock,
       },
       nzFooter: null,
-      nzWidth: 680
+      nzWidth: 680,
     });
   }
 
@@ -316,7 +332,7 @@ export class ProductDetailComponent implements OnInit {
       brand: this.product.brand || this.product.brandName,
       category: this.product.category || this.product.categoryName,
       specs: this.product.specifications || this.product.specs,
-      stock: this.displayStock
+      stock: this.displayStock,
     };
     if (this.compareService.isInCompare(this.product.id)) {
       this.compareService.removeFromCompare(this.product.id);
@@ -325,4 +341,3 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 }
-

@@ -17,7 +17,7 @@ import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
 import { WishlistService } from '../../services/wishlist.service';
-import { ConfirmModalService } from '../../services/confirm-modal.service';
+import { ModalService } from '../../services/modal.service';
  
 @Component({
   selector: 'app-header',
@@ -30,7 +30,7 @@ export class HeaderComponent {
   authService = inject(AuthService);
   private wishlistService = inject(WishlistService);
   private router = inject(Router);
-  private confirmModalService = inject(ConfirmModalService);
+  private modalService = inject(ModalService);
   private productService = inject(ProductService);
   private el = inject(ElementRef);
 
@@ -142,7 +142,7 @@ export class HeaderComponent {
 
   goToCart() {
     if (!this.authService.isLoggedIn()) {
-      this.confirmModalService.confirm({
+      this.modalService.confirm({
         title: 'Yêu cầu đăng nhập',
         content: 'Bạn cần đăng nhập để xem danh sách giỏ hàng. Chuyển đến trang Đăng nhập?',
         okText: 'Đăng nhập',
@@ -156,7 +156,7 @@ export class HeaderComponent {
 
   gotoWishList() {
     if (!this.authService.isLoggedIn()) {
-      this.confirmModalService.confirm({
+      this.modalService.confirm({
         title: 'Yêu cầu đăng nhập',
         content: 'Bạn cần đăng nhập để xem danh sách yêu thích. Chuyển đến trang Đăng nhập?',
         okText: 'Đăng nhập',
