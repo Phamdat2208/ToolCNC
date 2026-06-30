@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
+import { User, PageResponse } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,19 +22,30 @@ export class UserService {
     return { headers };
   }
 
-  getAllUsers(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, this.getAuthHeaders());
+  getAllUsers(page: number, size: number, status?: string): Observable<PageResponse<User>> {
+    let params = new HttpParams()
+      .set('page', (page - 1).toString())
+      .set('size', size.toString());
+      
+    if (status && status !== 'ALL') {
+      params = params.set('status', status);
+    }
+
+    return this.http.get<PageResponse<User>>(this.apiUrl, {
+      ...this.getAuthHeaders(),
+      params
+    });
   }
 
-  lockUser(id: any): Observable<any[]> {
-    return this.http.post<any[]>(`${this.apiUrl}/${id}/lock`, {}, this.getAuthHeaders());
+  lockUser(id: number): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/${id}/lock`, {}, this.getAuthHeaders());
   }
 
-  unlockUser(id: any): Observable<any[]> {
-    return this.http.post<any[]>(`${this.apiUrl}/${id}/unlock`, {}, this.getAuthHeaders());
+  unlockUser(id: number): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/${id}/unlock`, {}, this.getAuthHeaders());
   }
 
-  deleteUser(id: any): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`, this.getAuthHeaders());
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, this.getAuthHeaders());
   }
 }

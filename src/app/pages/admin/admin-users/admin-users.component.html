@@ -20,11 +20,12 @@
     <div class="admin-users-desktop-view">
       <app-base-table
         [columns]="columns"
-        [dataSource]="users.slice((page - 1) * size, page * size)"
-        [total]="users.length"
+        [dataSource]="users"
+        [total]="totalUsers"
         [pageIndex]="page"
         [isLoading]="loading"
         [config]="tableConfig"
+        (pageChange)="onTablePageChange($event)"
       ></app-base-table>
 
       <!-- Cell Templates -->
@@ -88,7 +89,7 @@
 
     <!-- Mobile View Cards -->
     <div class="admin-users-mobile-view">
-      <div *ngFor="let user of users.slice((page - 1) * size, page * size)" class="user-mobile-card">
+      <div *ngFor="let user of users" class="user-mobile-card">
         <div class="card-content">
           <div class="user-brief">
             <nz-avatar nzIcon="user" [nzSrc]="user.avatarUrl" [nzSize]="48"></nz-avatar>
@@ -141,6 +142,18 @@
             </button>
           </div>
         </div>
+      </div>
+
+      <!-- Mobile View Pagination -->
+      <div class="mobile-pagination mt-16" *ngIf="users && users.length > 0" style="margin-top: 16px; display: flex; justify-content: center;">
+        <app-pagination
+          [total]="totalUsers"
+          [pageIndex]="page"
+          [pageSize]="size"
+          [pageSizeOptions]="[10, 20, 50]"
+          (pageIndexChange)="onMobilePageChange($event)"
+          (pageSizeChange)="onMobilePageSizeChange($event)"
+        ></app-pagination>
       </div>
     </div>
   </app-loading>

@@ -84,6 +84,12 @@
       </nz-form-control>
     </nz-form-item>
 
+    <div style="margin-bottom: 24px; padding-left: 4px;">
+      <label nz-checkbox [(ngModel)]="exportExcel" [ngModelOptions]="{standalone: true}">
+        <span style="font-weight: 500; font-size: 14px;">Tải file báo giá Excel ngay khi gửi</span>
+      </label>
+    </div>
+
     <div class="form-actions">
       <button nz-button nzType="default" (click)="cancel()" [disabled]="isSubmitting">
         Hủy

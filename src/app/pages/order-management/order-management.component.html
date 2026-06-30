@@ -19,17 +19,83 @@
   <!-- Content -->
   <div class="orders-card">
 
-    <!-- Base Table -->
-    <app-base-table
-      [columns]="orderColumns"
-      [dataSource]="orders"
-      [total]="totalElements"
-      [pageIndex]="page"
-      [isLoading]="isLoadingOrders"
-      [config]="tableConfig"
-      (pageChange)="onTablePageChange($event)"
-      (rowClick)="viewOrderDetails($event)"
-    ></app-base-table>
+    <!-- Desktop Table -->
+    <div class="table-wrapper">
+      <app-base-table
+        [columns]="orderColumns"
+        [dataSource]="orders"
+        [total]="totalElements"
+        [pageIndex]="page"
+        [isLoading]="isLoadingOrders"
+        [config]="tableConfig"
+        (pageChange)="onTablePageChange($event)"
+        (rowClick)="viewOrderDetails($event)"
+      ></app-base-table>
+    </div>
+
+    <!-- Mobile View -->
+    <div class="order-cards-mobile">
+      <div *ngIf="isLoadingOrders" class="loading-state">
+        <nz-icon nzType="loading" nzTheme="outline" style="font-size: 24px;" />
+        <span>Đang tải danh sách đơn hàng...</span>
+      </div>
+      
+      <div *ngIf="!isLoadingOrders && orders.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <nz-icon nzType="inbox" />
+        </div>
+        <h3>Không có đơn hàng nào</h3>
+        <p>Bạn chưa có đơn hàng nào trong hệ thống.</p>
+      </div>
+
+      <ng-container *ngIf="!isLoadingOrders && orders.length > 0">
+        <div *ngFor="let order of orders" class="order-card-mobile" (click)="viewOrderDetails(order)">
+          <div class="ocm-header">
+            <span class="tracking-number">{{ order.trackingNumber }}</span>
+            <app-status-tag [status]="order.status" [statusMap]="ORDER_STATUS_MAP"></app-status-tag>
+          </div>
+          <div class="ocm-body">
+            <div class="ocm-row">
+              <span class="ocm-label">Ngày đặt:</span>
+              <span>{{ order.dateCreated | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            <div class="ocm-row">
+              <span class="ocm-label">Số lượng:</span>
+              <span class="qty-badge">{{ order.totalQuantity }}</span>
+            </div>
+            <div class="ocm-row">
+              <span class="ocm-label">Tổng tiền:</span>
+              <span class="price-cell">{{ order.totalPrice | currency:'VND':'symbol':'1.0-0' }}</span>
+            </div>
+          </div>
+          <div class="ocm-footer" style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex: 1;">
+              <button
+                *ngIf="order.status === 'PENDING'"
+                nz-button nzType="text" nzDanger nzSize="small"
+                (click)="selectedOrder = order; openCancelModal(); $event.stopPropagation()">
+                <nz-icon nzType="close-circle" /> Hủy đơn
+              </button>
+            </div>
+            <div class="ocm-cta" style="margin-left: auto;">
+              Xem chi tiết <nz-icon nzType="right" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Pagination -->
+        <div class="mobile-pagination mt-16" style="display: flex; justify-content: center;">
+          <app-pagination
+            [total]="totalElements"
+            [pageIndex]="page"
+            [pageSize]="size"
+            [pageSizeOptions]="[5, 10, 20]"
+            (pageIndexChange)="onMobilePageChange($event)"
+            (pageSizeChange)="onMobilePageSizeChange($event)"
+          ></app-pagination>
+        </div>
+      </ng-container>
+    </div>
 
   </div>
 

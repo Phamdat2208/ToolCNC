@@ -13,6 +13,7 @@ import { OrderService } from '../../services/order.service';
 import { ToastService } from '../../services/toast.service';
 import { BaseTableComponent } from '../../shared/components/base-table/base-table.component';
 import { CustomInputComponent } from '../../shared/components/custom-input/custom-input.component';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { StatusTagComponent } from '../../shared/components/status-tag/status-tag.component';
 import { ORDER_STATUS_MAP } from '../../shared/constants/status-maps';
 import { TableColumn, TableConfig, TablePageEvent } from '../../models/table.model';
@@ -32,6 +33,7 @@ import { TableColumn, TableConfig, TablePageEvent } from '../../models/table.mod
     NzToolTipModule,
     BaseTableComponent,
     CustomInputComponent,
+    PaginationComponent,
     StatusTagComponent,
   ],
   templateUrl: './order-management.component.html',
@@ -113,6 +115,19 @@ export class OrderManagementComponent implements OnInit {
   onTablePageChange(event: TablePageEvent): void {
     this.page = event.pageIndex;
     this.size = event.pageSize;
+    this.loadOrders();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onMobilePageChange(pageIndex: number): void {
+    this.page = pageIndex;
+    this.loadOrders();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onMobilePageSizeChange(pageSize: number): void {
+    this.size = pageSize;
+    this.page = 1;
     this.loadOrders();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }

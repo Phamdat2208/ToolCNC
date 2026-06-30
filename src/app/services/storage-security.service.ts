@@ -4,7 +4,7 @@ import * as CryptoJS from 'crypto-js';
 /**
  * StorageSecurityService
  *
- * Encrypts and decrypts data before writing to / reading from sessionStorage.
+ * Encrypts and decrypts data before writing to / reading from localStorage.
  * Uses AES-256 via CryptoJS for synchronous, reliable encryption without
  * requiring async Web Crypto API which would break the existing auth flow.
  *
@@ -28,14 +28,14 @@ export class StorageSecurityService {
 
   /**
    * Derives the encryption key from the app secret + a per-session random nonce.
-   * The nonce is generated once per session and stored in sessionStorage as plain text.
+   * The nonce is generated once per session and stored in localStorage as plain text.
    * Without both components an attacker cannot reconstruct the key.
    */
   private buildEncryptionKey(): string {
-    let nonce = sessionStorage.getItem(this.SESSION_NONCE_KEY);
+    let nonce = localStorage.getItem(this.SESSION_NONCE_KEY);
     if (!nonce) {
       nonce = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
-      sessionStorage.setItem(this.SESSION_NONCE_KEY, nonce);
+      localStorage.setItem(this.SESSION_NONCE_KEY, nonce);
     }
     return CryptoJS.SHA256(this.APP_SECRET + nonce).toString(CryptoJS.enc.Hex);
   }
@@ -56,20 +56,20 @@ export class StorageSecurityService {
     }
   }
 
-  /** Encrypts and sets a value in sessionStorage. */
+  /** Encrypts and sets a value in localStorage. */
   setItem(key: string, value: string): void {
-    sessionStorage.setItem(key, this.encrypt(value));
+    localStorage.setItem(key, this.encrypt(value));
   }
 
-  /** Gets and decrypts a value from sessionStorage. Returns null if missing or invalid. */
+  /** Gets and decrypts a value from localStorage. Returns null if missing or invalid. */
   getItem(key: string): string | null {
-    const raw = sessionStorage.getItem(key);
+    const raw = localStorage.getItem(key);
     if (!raw) return null;
     return this.decrypt(raw);
   }
 
-  /** Removes an item from sessionStorage. */
+  /** Removes an item from localStorage. */
   removeItem(key: string): void {
-    sessionStorage.removeItem(key);
+    localStorage.removeItem(key);
   }
 }

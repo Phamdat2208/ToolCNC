@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -37,6 +38,7 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
     NzSelectModule, 
     NzButtonModule, 
     NzRadioModule, 
+    NzCheckboxModule,
     NzGridModule, 
     NzDividerModule, 
     NzResultModule, 
@@ -58,6 +60,7 @@ export class CheckoutComponent implements OnInit {
   isSubmitting = false;
   orderTrackingNumber = '';
   finalTotal = 0;
+  exportQuotation = false;
 
   // New Location Fields
   provinces: Province[] = [];
@@ -240,6 +243,25 @@ export class CheckoutComponent implements OnInit {
         // Lấy items ra review trước khi clear giỏ hàng
         this.checkedOutItems = [...this.cartService.cartItems()];
         this.finalTotal = this.cartService.totalAmount;
+
+        // Export Excel if checked
+        if (this.exportQuotation) {
+          const email = (this.authService.currentUserValue as any)?.['email'] || '';
+          this.helperService.exportQuotationExcel({
+            customerName: formVal.fullName,
+            customerPhone: formVal.phone,
+            customerEmail: email,
+            address: `${formVal.address}, ${formVal.wardName}, ${formVal.provinceName}`,
+            paymentMethod: this.paymentMethod,
+            trackingNumber: res.trackingNumber,
+            items: this.checkedOutItems.map(item => ({
+              name: item.name,
+              variantName: item.variantName,
+              quantity: item.quantity,
+              price: item.price
+            }))
+          }, `Bao_Gia_Don_Hang_${res.trackingNumber}.xlsx`);
+        }
 
         this.cartService.clearCart();
 

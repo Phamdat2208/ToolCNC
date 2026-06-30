@@ -313,6 +313,8 @@ export class ProductDetailComponent implements OnInit {
         productId: this.product.id,
         productName: this.product.name,
         variantId: this.selectedVariant?.id,
+        variantName: this.selectedVariant?.name,
+        price: this.displayPrice,
         maxStock: this.displayStock,
       },
       nzFooter: null,

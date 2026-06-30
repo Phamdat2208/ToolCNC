@@ -15,7 +15,9 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ModalService } from '../../../services/modal.service';
 import { BaseTableComponent } from '../../../shared/components/base-table/base-table.component';
-import { TableColumn, TableConfig } from '../../../models/table.model';
+import { TableColumn, TableConfig, TablePageEvent } from '../../../models/table.model';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-admin-users',
@@ -31,7 +33,8 @@ import { TableColumn, TableConfig } from '../../../models/table.model';
     NzDividerModule,
     NzIconModule,
     NzButtonModule,
-    BaseTableComponent
+    BaseTableComponent,
+    PaginationComponent
   ],
   templateUrl: './admin-users.component.html',
   styleUrl: './admin-users.component.css'
@@ -49,8 +52,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit {
   private modalService = inject(ModalService);
   private cdr = inject(ChangeDetectorRef);
   
-  allUsers: any[] = [];
-  users: any[] = [];
+  users: User[] = [];
+  totalUsers = 0;
   statusFilter: 'ALL' | 'ACTIVE' | 'LOCKED' | 'DELETED' = 'ALL';
   
   loading = true;
@@ -59,7 +62,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit {
   page = 1;
   size = 10;
 
-  columns: TableColumn<any>[] = [];
+  columns: TableColumn<User>[] = [];
   tableConfig: TableConfig = {
     showPagination: true,
     pageSize: 10,
@@ -86,13 +89,15 @@ export class AdminUsersComponent implements OnInit, AfterViewInit {
 
   loadUsers() {
     this.loading = true;
-    this.userService.getAllUsers().subscribe({
-      next: (data) => {
-        this.allUsers = data;
-        this.applyFilter();
+    this.userService.getAllUsers(this.page, this.size, this.statusFilter).subscribe({
+      next: (res) => {
+        this.users = res?.content || [];
+        this.totalUsers = res?.totalElements || 0;
         this.loading = false;
       },
       error: (err) => {
+        this.users = [];
+        this.totalUsers = 0;
         this.toastService.showError('Không thể tải danh sách người dùng');
         this.loading = false;
         console.error(err);
@@ -101,12 +106,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter() {
-    if (this.statusFilter === 'ALL') {
-      this.users = this.allUsers;
-    } else {
-      this.users = this.allUsers.filter(user => user.status === this.statusFilter);
-    }
     this.page = 1;
+    this.loadUsers();
   }
 
   lockUser(id: number) {
@@ -166,13 +167,22 @@ export class AdminUsersComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onPageChange(index: number) {
-    this.page = index;
+  onTablePageChange(event: TablePageEvent) {
+    this.page = event.pageIndex;
+    this.size = event.pageSize;
+    this.loadUsers();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  onPageSizeChange(size: number) {
+  onMobilePageChange(index: number) {
+    this.page = index;
+    this.loadUsers();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onMobilePageSizeChange(size: number) {
     this.size = size;
     this.page = 1;
+    this.loadUsers();
   }
 }
