@@ -13,12 +13,12 @@ import { CustomInputComponent } from '../../shared/components/custom-input/custo
   selector: 'app-register',
   standalone: true,
   imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
+    CommonModule,
+    ReactiveFormsModule,
     RouterLink,
-    NzFormModule, 
-    NzButtonModule, 
-    NzIconModule, 
+    NzFormModule,
+    NzButtonModule,
+    NzIconModule,
     CustomInputComponent
   ],
   templateUrl: './register.component.html',
@@ -32,6 +32,8 @@ export class RegisterComponent {
 
   isLoading = false;
 
+  private passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
   confirmationValidator: ValidatorFn = (control: AbstractControl): { [s: string]: boolean } => {
     if (!control.value) {
       return { required: true };
@@ -44,9 +46,20 @@ export class RegisterComponent {
   registerForm: FormGroup = this.fb.group({
     username: ['', [Validators.required, Validators.minLength(4)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.pattern(this.passwordPattern)]],
     confirmPassword: ['', [Validators.required, this.confirmationValidator]]
   });
+
+  get passwordError(): string {
+    const control = this.registerForm.get('password');
+    if (control?.hasError('required')) {
+      return 'Vui lòng nhập mật khẩu!';
+    }
+    if (control?.hasError('pattern')) {
+      return 'Mật khẩu phải ít nhất 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt.';
+    }
+    return '';
+  }
 
   get confirmPasswordError(): string {
     const control = this.registerForm.get('confirmPassword');

@@ -8,7 +8,7 @@
   >
     <nz-icon nzType="arrow-left" />
   </button>
-  
+
   <div class="register-box">
     <div class="brand-logo-container">
       <img src="Logo.ico" alt="Logo" class="auth-logo" />
@@ -48,9 +48,9 @@
       <app-custom-input
         formControlName="password"
         type="password"
-        placeholder="Mật khẩu (tối thiểu 6 ký tự)"
+        placeholder="Mật khẩu (ít nhất 8 ký tự, chữ hoa, chữ thường, số, ký tự đặc biệt)"
         prefixIcon="lock"
-        errorTip="Vui lòng nhập mật khẩu dài hơn 6 ký tự!"
+        [errorTip]="passwordError"
         (ngModelChange)="updateConfirmValidator()"
         class="register-form-margin"
       ></app-custom-input>
