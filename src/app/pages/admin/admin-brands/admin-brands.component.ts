@@ -59,13 +59,13 @@ export class AdminBrandsComponent implements OnInit, AfterViewInit {
   total = 0;
   page = 1;
   size = 10;
-  
+
   // Modal state
   isModalVisible = false;
   isEditMode = false;
   currentBrandId: number | null = null;
   uploadMode: 'url' | 'upload' = 'url';
-  
+
   // Cropper state
   imageChangedEvent: any = null;
   croppedImage: string = '';
@@ -157,17 +157,6 @@ export class AdminBrandsComponent implements OnInit, AfterViewInit {
     this.isModalVisible = false;
   }
 
-  onPageIndexChange(index: number) {
-    this.page = index;
-    this.loadBrands();
-  }
-
-  onPageSizeChange(size: number) {
-    this.size = size;
-    this.page = 1;
-    this.loadBrands();
-  }
-
   onFileSelected(event: any) {
     const file = event.target.files?.[0];
     if (file) {
@@ -191,7 +180,7 @@ export class AdminBrandsComponent implements OnInit, AfterViewInit {
 
   confirmCrop() {
     this.showCropper = false;
-    
+
     // Auto-resize to exactly 400x400 (Centered with contain logic)
     const img = new Image();
     img.onload = () => {
@@ -199,7 +188,7 @@ export class AdminBrandsComponent implements OnInit, AfterViewInit {
       canvas.width = 400;
       canvas.height = 400;
       const ctx = canvas.getContext('2d')!;
-      
+
       // Clear background to white (good for logos)
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, 400, 400);
@@ -266,7 +255,7 @@ export class AdminBrandsComponent implements OnInit, AfterViewInit {
   uploadLogo(): Promise<string> {
     return new Promise((resolve, reject) => {
       if (!this._resizedBlob) return reject('Không có logo để tải lên');
-      
+
       this.cloudinaryService.uploadImage(this._resizedBlob)
         .subscribe({
           next: (res) => resolve(res.secure_url),

@@ -11,6 +11,7 @@
         [pageIndex]="page"
         [isLoading]="loading"
         [config]="tableConfig"
+        (pageChange)="onTablePageChange($event)"
       ></app-base-table>
 
       <!-- Cell Templates -->

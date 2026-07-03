@@ -14,6 +14,7 @@
         [pageIndex]="page"
         [isLoading]="isLoading"
         [config]="tableConfig"
+        (pageChange)="onTablePageChange($event)"
       ></app-base-table>
 
       <!-- Cell Templates -->
@@ -70,7 +71,7 @@
           <button class="btn-detail" nz-tooltip nzTooltipTitle="Xem chi tiết" (click)="viewDetails(row)">
             <nz-icon nzType="eye" />
           </button>
-          
+
         </div>
       </ng-template>
     </div>

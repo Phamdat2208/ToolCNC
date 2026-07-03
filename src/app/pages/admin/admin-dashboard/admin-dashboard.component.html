@@ -76,18 +76,18 @@
                 <nz-icon nzType="file-text" style="color: #64748b;" />
               </div>
               <div class="item-body">
-                <div class="item-title">Đơn hàng {{ order.id }} - {{ order.customer }}</div>
-                <div class="item-desc">{{ order.date }}</div>
+                <div class="item-title">Đơn hàng #{{ order.id }} - {{ order.customerName }}</div>
+                <div class="item-desc">{{ order.dateCreated | date: 'HH:mm, dd/MM/yyyy' }}</div>
               </div>
               <div class="item-action">
                 <div class="mb-4" style="text-align: right; font-weight: 700;">{{ order.amount | number }}đ</div>
-                <span class="status-badge" [ngClass]="'status-' + order.status">
-                  {{ order.status === 'pending' ? 'Chờ xử lý' : 'Đã giao' }}
+                <span class="status-badge" [ngClass]="'status-' + (order.status === 'COMPLETED' ? 'completed' : 'pending')">
+                  {{ order.status === 'PENDING' ? 'Chờ xử lý' : (order.status === 'PROCESSING' ? 'Đang xử lý' : (order.status === 'COMPLETED' ? 'Đã giao' : 'Đã hủy')) }}
                 </span>
               </div>
             </div>
           </div>
-          <button nz-button nzType="primary" routerLink="/admin/order" class="btn-view-orders mt-16">Xem tất cả
+          <button nz-button nzType="primary" routerLink="/admin/orders" class="btn-view-orders mt-16">Xem tất cả
             đơn hàng</button>
         </nz-card>
       </div>
@@ -109,7 +109,7 @@
               </div>
             </div>
           </div>
-          <button nz-button nzType="primary" routerLink="/admin/product" class="btn-view-products mt-16">Quản lý
+          <button nz-button nzType="primary" routerLink="/admin/products" class="btn-view-products mt-16">Quản lý
             kho hàng</button>
         </nz-card>
       </div>

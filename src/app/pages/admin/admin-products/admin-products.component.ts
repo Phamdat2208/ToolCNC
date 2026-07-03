@@ -104,7 +104,7 @@ export class AdminProductsComponent implements OnInit, AfterViewInit {
           ...p,
           imageUrl: UrlUtils.getFullUrl(p.imageUrl)
         }));
-        this.total = res.totalElements;                                                                                                                                                                                                                                           
+        this.total = res.totalElements;
         this.loading = false;
       },
       error: () => {
@@ -114,23 +114,12 @@ export class AdminProductsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onPageIndexChange(index: number) {
-    this.page = index;
-    this.loadProducts();
-  }
-
-  onPageSizeChange(size: number) {
-    this.size = size;
-    this.page = 1;
-    this.loadProducts();
-  }
-
   onTablePageChange(event: TablePageEvent): void {
-      this.page = event.pageIndex;
-      this.size = event.pageSize;
-      this.loadProducts();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    this.page = event.pageIndex;
+    this.size = event.pageSize;
+    this.loadProducts();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   deleteProduct(id: number) {
     this.modalService.confirm({

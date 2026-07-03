@@ -263,7 +263,7 @@ export class CheckoutComponent implements OnInit {
           }, `Bao_Gia_Don_Hang_${res.trackingNumber}.xlsx`);
         }
 
-        this.cartService.clearCart();
+        this.cartService.clearCart().subscribe();
 
         this.currentStep = onSuccessStep;
         this.toastService.showSuccess(successMsg);
@@ -271,7 +271,7 @@ export class CheckoutComponent implements OnInit {
       error: (err) => {
         this.isSubmitting = false;
         console.error('Lỗi đặt hàng', err);
-        this.toastService.showError('Đặt hàng thất bại, vui lòng thử lại!');
+        this.toastService.showError(err.error.message);
       }
     });
   }

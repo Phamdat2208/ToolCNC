@@ -16,7 +16,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { TableColumn, TableConfig } from '../../../models/table.model';
+import { TableColumn, TableConfig, TablePageEvent } from '../../../models/table.model';
 import { ModalService } from '../../../services/modal.service';
 import { OrderService } from '../../../services/order.service';
 import { ToastService } from '../../../services/toast.service';
@@ -217,20 +217,15 @@ export class AdminOrdersComponent implements OnInit, AfterViewInit {
       order,
       800,
       true,
-      () => {},
-      () => {}
+      () => { },
+      () => { }
     );
   }
 
-  onPageChange(index: number) {
-    this.page = index;
+  onTablePageChange(event: TablePageEvent) {
+    this.page = event.pageIndex;
+    this.size = event.pageSize;
     this.loadOrders();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  onPageSizeChange(size: number) {
-    this.size = size;
-    this.page = 1;
-    this.loadOrders();
   }
 }
