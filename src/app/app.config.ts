@@ -109,6 +109,7 @@ import {
 } from '@ant-design/icons-angular/icons';
 import { maskingInterceptor } from './shared/interceptors/masking.interceptor';
 import { authInterceptor } from './shared/interceptors/auth.interceptor';
+import { tokenRefreshInterceptor } from './shared/interceptors/token-refresh.interceptor';
 
 const icons = [
   CheckCircleOutline,
@@ -220,6 +221,6 @@ export const appConfig: ApplicationConfig = {
     provideNzI18n(vi_VN),
     provideNzIcons(icons),
     importProvidersFrom(NzModalModule),
-    provideHttpClient(withInterceptors([authInterceptor, maskingInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, tokenRefreshInterceptor, maskingInterceptor])),
   ]
 };

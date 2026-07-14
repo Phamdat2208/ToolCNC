@@ -25,13 +25,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Bỏ qua logic 401 cho endpoint /login
-      if (error.status === 401 && !req.url.includes('/auth/login')) {
+      // Skip 401 cho /auth/login và /auth/refresh - tokenRefreshInterceptor sẽ xử lý refresh
+      if (error.status === 401 && !req.url.includes('/auth/login') && !req.url.includes('/auth/refresh')) {
         const authService = injector.get(AuthService);
         authService.clearLocalSession();
         modalService.confirm({
-          title: 'Phiên đăng nhập hết hạn',
-          content: 'Tài khoản của bạn đã được đăng nhập ở một nơi khác. Vui lòng đăng nhập lại.',
+          title: 'Phiên đăng nhập không hợp lệ',
+          content: 'Phiên đăng nhập của bạn đã hết hạn hoặc không còn hợp lệ. Vui lòng đăng nhập lại.',
           okText: 'Đồng ý'
         }, () => {
           router.navigate(['/login']);

@@ -75,7 +75,8 @@
               "buildTarget": "tool-cnc-app:build:production"
             },
             "development": {
-              "buildTarget": "tool-cnc-app:build:development"
+              "buildTarget": "tool-cnc-app:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
