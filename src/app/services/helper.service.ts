@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as ExcelJS from 'exceljs';
+import type ExcelJS from 'exceljs';
 
 export interface QuotationExcelData {
   customerName: string;
@@ -39,6 +39,9 @@ const C = {
 };
 
 // ── Reusable style helpers ────────────────────────────────────────
+// Note: these only need ExcelJS *types*, never the runtime module,
+// so `import type` above is sufficient and keeps them free of the
+// dynamic-import concern entirely.
 function applyBorder(cell: ExcelJS.Cell, color = C.borderColor) {
   const side: ExcelJS.BorderStyle = 'thin';
   cell.border = {
@@ -75,6 +78,18 @@ function vndFormat(cell: ExcelJS.Cell) {
 
 @Injectable({ providedIn: 'root' })
 export class HelperService {
+  // Cache the loaded module so repeated exports don't re-fetch the chunk.
+  private exceljsModulePromise: Promise<typeof ExcelJS> | null = null;
+
+  private loadExcelJS(): Promise<typeof ExcelJS> {
+    if (!this.exceljsModulePromise) {
+      this.exceljsModulePromise = import(
+        /* webpackChunkName: "exceljs" */ 'exceljs'
+      ).then((mod: any) => (mod.default ?? mod) as typeof ExcelJS);
+    }
+    return this.exceljsModulePromise;
+  }
+
   public scrollToInvalidControl(modalElement?: HTMLElement | Element) {
     const container = modalElement ?? document;
     const invalidElements = container.querySelectorAll('.ng-invalid');
@@ -99,6 +114,9 @@ export class HelperService {
     data: QuotationExcelData,
     fileName = 'Bao_Gia_ToolCNC.xlsx',
   ): Promise<void> {
+    // ExcelJS is only pulled into the bundle when this method actually runs.
+    const ExcelJS = await this.loadExcelJS();
+
     const wb = new ExcelJS.Workbook();
     wb.creator = 'ToolCNC System';
     wb.created = new Date();
